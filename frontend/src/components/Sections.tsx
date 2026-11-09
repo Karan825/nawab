@@ -1,7 +1,6 @@
-import { SNACKS, MERCH, INSTAGRAM_POSTS, STORE_PHOTO, HOURS, OUTLETS, Outlet } from '../data';
+import { SNACKS, MERCH, INSTAGRAM_POSTS, OUTLETS, Outlet } from '../data';
 import type { Snack, MerchItem, InstagramPost } from '../data';
-import { Clock, MapPin, Phone, Instagram, Facebook, Twitter, Heart, ShieldCheck } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { Clock, MapPin, Instagram, Facebook, Twitter, Heart } from 'lucide-react';
 
 function SectionHeading({
   kicker,

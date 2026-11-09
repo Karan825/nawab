@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, CheckCircle2, Clock, ChefHat, Bike, MapPin } from 'lucide-react';
+import { X, CheckCircle2, Clock, ChefHat, Bike, MapPin, type LucideIcon } from 'lucide-react';
 import { Order, OrderStatus } from '../data';
 
 interface OrderTrackModalProps {
@@ -7,7 +7,7 @@ interface OrderTrackModalProps {
   onClose: () => void;
 }
 
-const STATUS_STEPS: { status: OrderStatus; label: string; icon: any }[] = [
+const STATUS_STEPS: { status: OrderStatus; label: string; icon: LucideIcon }[] = [
   { status: 'PLACED', label: 'Order Placed', icon: CheckCircle2 },
   { status: 'ACCEPTED', label: 'Kitchen Accepted', icon: ChefHat },
   { status: 'PREPARING', label: 'Handi on Dum', icon: Clock },

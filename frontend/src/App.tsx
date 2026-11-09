@@ -9,6 +9,7 @@ import CartDrawer from './components/CartDrawer';
 import KDSModal from './components/KDSModal';
 import AdminModal from './components/AdminModal';
 import OrderTrackModal from './components/OrderTrackModal';
+import OutletPicker from './components/OutletPicker';
 import {
   OUTLETS,
   MENU_ITEMS,
@@ -33,6 +34,7 @@ function App() {
   const [isKDSOpen, setIsKDSOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
+  const [isOutletPickerOpen, setIsOutletPickerOpen] = useState(true);
 
   // Cart Management
   const handleSelectOutlet = (newOutlet: Outlet) => {
@@ -44,6 +46,7 @@ function App() {
       setCartItems([]);
     }
     setSelectedOutlet(newOutlet);
+    setIsOutletPickerOpen(false);
   };
 
   const handleAddToCart = (item: MenuItem) => {
@@ -180,6 +183,13 @@ function App() {
       </main>
 
       <Footer />
+
+      <OutletPicker
+        isOpen={isOutletPickerOpen}
+        outlets={OUTLETS}
+        selectedOutlet={selectedOutlet}
+        onSelect={handleSelectOutlet}
+      />
 
       {/* Cart Drawer */}
       <CartDrawer

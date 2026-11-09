@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShieldAlert, Check, Search, SlidersHorizontal, Edit2 } from 'lucide-react';
+import { X, ShieldAlert, Search } from 'lucide-react';
 import { MenuItem, OUTLETS, Outlet } from '../data';
 
 interface AdminModalProps {
@@ -21,8 +21,6 @@ export default function AdminModal({
   const [activeOutletId, setActiveOutletId] = useState(selectedOutlet.id);
 
   if (!isOpen) return null;
-
-  const currentOutlet = OUTLETS.find((o) => o.id === activeOutletId) || OUTLETS[0];
 
   const filtered = menuItems.filter(
     (it) =>

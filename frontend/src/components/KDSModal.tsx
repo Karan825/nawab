@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ChefHat, Clock, AlertTriangle, CheckCircle2, Bike, MapPin, RefreshCw } from 'lucide-react';
+import { X, ChefHat, AlertTriangle, CheckCircle2, Bike, MapPin } from 'lucide-react';
 import { Order, OrderStatus, OUTLETS, Outlet } from '../data';
 
 interface KDSModalProps {

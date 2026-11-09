@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Check, Flame, RotateCcw, Sparkles, ShoppingBag } from 'lucide-react';
-import { MenuItem, PortionOption, AddonOption } from '../data';
+import { useState } from 'react';
+import { Check, ShoppingBag } from 'lucide-react';
+import { MenuItem } from '../data';
 
 interface Option {
   id: string;
@@ -17,7 +17,7 @@ const BASES: Option[] = [
   { id: 'b-egg', label: 'Spiced Farm Egg Dum', tag: 'Roasted Brown Onions', price: 260, color: '#F0AD4E' },
 ];
 
-const SIZES: { id: string; label: string; price: number; serves: string }[] = [
+const SIZES: { id: 's' | 'm' | 'l'; label: string; price: number; serves: string }[] = [
   { id: 's', label: 'Regular Handi', price: 0, serves: 'Serves 1 person' },
   { id: 'm', label: 'Family Pack Handi', price: 420, serves: 'Serves 3–4 persons' },
   { id: 'l', label: 'Jumbo Royal Handi', price: 850, serves: 'Serves 6–8 persons' },
@@ -275,7 +275,7 @@ export default function Builder({ onAddToCart }: BuilderProps) {
                 {SIZES.map((s) => (
                   <button
                     key={s.id}
-                    onClick={() => setSize(s.id as any)}
+                    onClick={() => setSize(s.id)}
                     className={`p-3 rounded-2xl border-2 text-center transition-all ${
                       size === s.id
                         ? 'border-cocoa bg-tangerine shadow-pop-sm font-black text-cocoa'

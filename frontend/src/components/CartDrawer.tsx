@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, CreditCard, QrCode, ShieldCheck, AlertCircle, ShoppingBag } from 'lucide-react';
+import { X, Trash2, Plus, Minus, CreditCard, QrCode, ShieldCheck, AlertCircle } from 'lucide-react';
 import { CartItem, Outlet, Order } from '../data';
 
 interface CartDrawerProps {
