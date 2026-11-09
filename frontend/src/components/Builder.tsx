@@ -1,411 +1,374 @@
 import { useMemo, useState } from 'react';
-import { Check, PartyPopper, RotateCcw } from 'lucide-react';
+import { Check, Flame, RotateCcw, Sparkles, ShoppingBag } from 'lucide-react';
+import { MenuItem, PortionOption, AddonOption } from '../data';
 
 interface Option {
   id: string;
   label: string;
+  tag: string;
   price: number;
   color: string;
 }
 
 const BASES: Option[] = [
-  { id: 'chicken', label: 'Kachhi Marinated Chicken', price: 380, color: '#E5A94A' },
-  { id: 'mutton', label: 'Royal Nizami Mutton', price: 490, color: '#A64B32' },
-  { id: 'veg', label: 'Subz Malai Paneer', price: 290, color: '#7FA84A' },
-  { id: 'egg', label: 'Spiced Farm Egg Dum', price: 260, color: '#E1A83D' },
+  { id: 'b-chk', label: 'Tender Farm Chicken', tag: 'Kachhi Marinated', price: 380, color: '#FFC96B' },
+  { id: 'b-mut', label: 'Royal Nizami Mutton', tag: 'Slow Dum 4-Hrs', price: 490, color: '#D9534F' },
+  { id: 'b-veg', label: 'Subz Malai Paneer', tag: 'Fresh Farm & Ghee', price: 290, color: '#5CB85C' },
+  { id: 'b-egg', label: 'Spiced Farm Egg Dum', tag: 'Roasted Brown Onions', price: 260, color: '#F0AD4E' },
 ];
 
-const SYRUPS: Option[] = [
-  { id: 'saffron', label: 'Extra saffron masala', price: 50, color: '#E78C12' },
-  { id: 'onion', label: 'Double crispy birista', price: 35, color: '#7E421F' },
-  { id: 'mint', label: 'Fresh mint layer', price: 20, color: '#517C36' },
-  { id: 'ghee', label: 'Pure desi ghee tadka', price: 40, color: '#F4CB50' },
+const SIZES: { id: string; label: string; price: number; serves: string }[] = [
+  { id: 's', label: 'Regular Handi', price: 0, serves: 'Serves 1 person' },
+  { id: 'm', label: 'Family Pack Handi', price: 420, serves: 'Serves 3–4 persons' },
+  { id: 'l', label: 'Jumbo Royal Handi', price: 850, serves: 'Serves 6–8 persons' },
 ];
 
-const CREAMS: Option[] = [
-  { id: 'classic', label: 'Classic dum seal', price: 0, color: '#E8D1A7' },
-  { id: 'ghee-finish', label: 'Saffron ghee finish', price: 45, color: '#F4D56E' },
-  { id: 'spicy-finish', label: 'Guntur chilli finish', price: 35, color: '#D64B2A' },
+const GHEE_LAYERS: Option[] = [
+  { id: 'g-asli', label: 'Pure Buffalo Desi Ghee Tadka', tag: '+ Aroma', price: 40, color: '#FFE066' },
+  { id: 'g-masala', label: 'Extra Saffron Masala Layer', tag: '+ Spicy', price: 50, color: '#E85D04' },
+  { id: 'g-onion', label: 'Double Crispy Brown Onions (Birista)', tag: '+ Sweet Crunch', price: 35, color: '#6A040F' },
 ];
 
 const TOPPINGS: Option[] = [
-  { id: 'salan', label: 'Extra Mirchi Ka Salan', price: 60, color: '#7E6A2D' },
-  { id: 'raita', label: 'Double Burani Raita', price: 40, color: '#F6F1E6' },
-  { id: 'eggs', label: 'Boiled eggs (2 pcs)', price: 40, color: '#F0C75E' },
-  { id: 'cashews', label: 'Roasted cashews & onions', price: 50, color: '#D8B77C' },
+  { id: 't-salan', label: 'Extra Mirchi Ka Salan', tag: 'Peanut-Sesame Gravy', price: 60, color: '#D00000' },
+  { id: 't-raita', label: 'Double Burani Garlic Raita', tag: 'Thick Curd', price: 40, color: '#FFFFFF' },
+  { id: 't-eggs', label: 'Boiled Eggs (2 pcs)', tag: 'Golden Fried', price: 40, color: '#FFD166' },
+  { id: 't-cashew', label: 'Roasted Cashews & Pistachios', tag: 'Royal Garnish', price: 50, color: '#E9D8A6' },
 ];
 
-const SIZES: { id: string; label: string; price: number; multiplier: number }[] = [
-  { id: 's', label: 'Regular Handi', price: 0, multiplier: 1 },
-  { id: 'm', label: 'Family Pack · serves 3–4', price: 420, multiplier: 1 },
-  { id: 'l', label: 'Jumbo Handi · serves 6–8', price: 850, multiplier: 1 },
-];
-
-function CupPreview({
-  baseColor,
-  syrupColors,
-  creamColor,
-  toppingColor,
+function HandiPreview({
+  base,
   size,
+  gheeLayers,
+  toppings,
 }: {
-  baseColor: string;
-  syrupColors: string[];
-  creamColor: string;
-  toppingColor: string;
+  base: Option;
   size: string;
+  gheeLayers: string[];
+  toppings: string[];
 }) {
-  const cupHeight = size === 's' ? 220 : size === 'l' ? 300 : 260;
-  // mix syrups into the base color
-  const mixed = useMemo(() => {
-    if (syrupColors.length === 0) return baseColor;
-    // average hex channels
-    const all = [baseColor, ...syrupColors].map(
-      (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [number, number, number]
-    );
-    const avg = all
-      .reduce((acc, c) => [acc[0] + c[0], acc[1] + c[1], acc[2] + c[2]], [0, 0, 0])
-      .map((v) => Math.round(v / all.length));
-    return `#${avg.map((v) => v.toString(16).padStart(2, '0')).join('')}`;
-  }, [baseColor, syrupColors]);
+  const scale = size === 's' ? 0.85 : size === 'l' ? 1.15 : 1;
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative flex flex-col items-center" style={{ height: cupHeight }}>
-        {/* handi lid */}
-        <div className="relative z-[5] h-8 w-[85%] rounded-t-full border-[3px] border-b-0 border-cocoa bg-tangerine" />
-        {/* cream layer */}
-        {creamColor ? (
-          <div
-            className="relative z-[4] -mt-1 w-[88%] border-[3px] border-cocoa"
-            style={{
-              height: 22,
-              background: `linear-gradient(180deg, ${creamColor}, ${creamColor} 60%, rgba(0,0,0,0.06))`,
-              borderRadius: '10px 10px 4px 4px',
-            }}
-          />
-        ) : null}
-        {/* topping garnish */}
-        {toppingColor ? (
-          <div
-            className="absolute z-[6] rounded-full border-2 border-cocoa"
-            style={{
-              top: creamColor ? 18 : 6,
-              right: '18%',
-              width: 22,
-              height: 22,
-              background: toppingColor,
-              boxShadow: '-8px 2px 0 -6px ' + toppingColor,
-            }}
-          />
-        ) : null}
-        {/* cup body */}
+    <div className="flex flex-col items-center justify-center p-6 select-none" style={{ transform: `scale(${scale})` }}>
+      <div className="relative flex flex-col items-center">
+        
+        {/* Steam Animation */}
+        <div className="absolute -top-12 flex gap-3 opacity-75">
+          <span className="h-8 w-2 rounded-full bg-white/60 animate-rise" />
+          <span className="h-10 w-2.5 rounded-full bg-lemon/60 animate-rise [animation-delay:0.5s]" />
+          <span className="h-7 w-2 rounded-full bg-white/60 animate-rise [animation-delay:1s]" />
+        </div>
+
+        {/* Handi Lid & Atta Seal */}
+        <div className="relative z-20 flex flex-col items-center">
+          {/* Lid Knob */}
+          <div className="h-5 w-6 rounded-t-full border-[3px] border-cocoa bg-lemon shadow-pop-sm" />
+          {/* Lid Dome */}
+          <div className="h-8 w-44 rounded-t-full border-[3px] border-b-0 border-cocoa bg-tangerine shadow-pop-sm flex items-center justify-center">
+            <span className="text-[10px] font-black uppercase text-cocoa tracking-widest">Atta Dum Seal</span>
+          </div>
+          {/* Dough Rim */}
+          <div className="h-3 w-48 rounded-full border-2 border-cocoa bg-cream-dark -mt-1" />
+        </div>
+
+        {/* Earthen Clay Handi Pot */}
         <div
-            className="relative flex w-full flex-col justify-end overflow-hidden rounded-b-[45%] rounded-t-lg border-[3px] border-t-0 border-cocoa shadow-pop transition-colors duration-500"
+          className="relative z-10 w-56 rounded-b-[60px] border-[4px] border-cocoa p-4 shadow-pop-lg flex flex-col items-center overflow-hidden transition-colors duration-300"
           style={{
-            height: cupHeight - 30,
-            background: `linear-gradient(180deg, ${mixed} 0%, ${mixed} 100%)`,
+            height: '180px',
+            backgroundColor: '#3A2318',
+            backgroundImage: 'radial-gradient(circle at 50% 30%, #5C3A28, #3A2318)',
           }}
         >
-          {/* fragrant layers */}
-          {syrupColors.map((c, i) => (
-            <div
-              key={i}
-              className="absolute h-full w-3 rounded-full opacity-70 transition-all duration-500"
-              style={{
-                background: c,
-                left: `${18 + i * 24}%`,
-                top: `${-10 + (i % 3) * 18}%`,
-                transform: `rotate(${i % 2 === 0 ? 8 : -8}deg)`,
-              }}
-            />
-          ))}
-          {/* steam */}
-          {[0, 1, 2, 3].map((i) => (
-            <span
-              key={i}
-              className="absolute rounded-full bg-white/50"
-              style={{
-                width: 6 + (i % 3) * 3,
-                height: 6 + (i % 3) * 3,
-                left: `${15 + i * 20}%`,
-                bottom: 8,
-                animation: `rise ${3 + i * 0.7}s linear ${i * 0.5}s infinite`,
-              }}
-            />
-          ))}
-          {/* brand mark */}
-          <span className="relative m-auto -rotate-3 font-display text-lg text-white/90 outline-text [text-stroke-width:0.5px]">
-            Nawaab’s Handi
-          </span>
+          {/* Saffron Basmati Layer */}
+          <div
+            className="w-full rounded-t-2xl border-2 border-cocoa p-2 text-center transition-colors"
+            style={{ backgroundColor: base.color }}
+          >
+            <p className="font-display text-xs text-cocoa leading-none">{base.label}</p>
+          </div>
+
+          {/* Ghee and Masala Layer */}
+          {gheeLayers.length > 0 && (
+            <div className="mt-1 w-full flex justify-center gap-1.5 py-1">
+              {gheeLayers.map((g, i) => (
+                <span
+                  key={i}
+                  className="h-3 w-8 rounded-full border border-cocoa bg-lemon animate-pulse"
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Handi Emblem */}
+          <div className="mt-auto mb-2 text-center">
+            <span className="font-display text-sm text-lemon outline-text [text-stroke-width:0.5px]">
+              Nawaab's Handi
+            </span>
+            <p className="text-[9px] font-bold text-cream/70">Kachhi Dum Sealed</p>
+          </div>
+
+          {/* Topping tags inside pot */}
+          {toppings.length > 0 && (
+            <div className="absolute bottom-1 flex gap-1">
+              {toppings.map((t, idx) => (
+                <span key={idx} className="h-2 w-2 rounded-full border border-cocoa bg-cherry" />
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* Serving Stand */}
+        <div className="relative -mt-2 h-4 w-36 rounded-full border-[3px] border-cocoa bg-lemon shadow-pop-sm" />
+
       </div>
-      <div className="mt-1 h-2 w-[120%] rounded-full bg-cocoa/10 blur-[2px]" />
     </div>
   );
 }
 
-function StepCard({
-  step,
-  title,
-  children,
-}: {
-  step: number;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="card-pop p-5 sm:p-6">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[3px] border-cocoa bg-lemon font-display text-base shadow-pop-sm">
-          {step}
-        </span>
-        <h3 className="font-display text-lg text-cocoa sm:text-xl">{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
+interface BuilderProps {
+  onAddToCart: (customItem: MenuItem) => void;
 }
 
-function OptionButton({
-  option,
-  selected,
-  onToggle,
-}: {
-  option: Option;
-  selected: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={selected}
-      className={`flex items-center gap-2 rounded-full border-[3px] border-cocoa px-4 py-2 text-sm font-extrabold transition-all ${
-        selected ? 'bg-cocoa text-lemon shadow-pop-sm' : 'bg-white hover:bg-lemon/60'
-      }`}
-    >
-      {option.color ? (
-        <span
-          className="inline-block h-4 w-4 rounded-full border-2 border-cocoa"
-          style={{ background: option.color }}
-        />
-      ) : null}
-      {option.label}
-      <span className={`text-xs font-bold ${selected ? 'text-cream/80' : 'text-cocoa-fade'}`}>
-        +₹{option.price}
-      </span>
-      {selected && <Check size={15} strokeWidth={3.5} />}
-    </button>
-  );
-}
-
-export default function Builder() {
+export default function Builder({ onAddToCart }: BuilderProps) {
   const [base, setBase] = useState<Option>(BASES[0]);
-  const [syrups, setSyrups] = useState<Option[]>([SYRUPS[0]]);
-  const [cream, setCream] = useState<Option>(CREAMS[1]);
-  const [toppings, setToppings] = useState<Option[]>([TOPPINGS[0]]);
-  const [size, setSize] = useState(SIZES[1]);
-  const [ordered, setOrdered] = useState(false);
+  const [size, setSize] = useState<'s' | 'm' | 'l'>('m');
+  const [gheeLayers, setGheeLayers] = useState<string[]>([GHEE_LAYERS[0].id]);
+  const [toppings, setToppings] = useState<string[]>([TOPPINGS[0].id, TOPPINGS[1].id]);
 
-  const total = useMemo(() => {
-    const items =
-      base.price +
-      syrups.reduce((s, o) => s + o.price, 0) +
-      cream.price +
-      toppings.reduce((s, o) => s + o.price, 0);
-    return Math.round((items + size.price) * 100) / 100;
-  }, [base, syrups, cream, toppings, size]);
-
-  const drinkName = useMemo(() => {
-    const cut = base.label.replace('Kachhi Marinated ', '').replace('Royal Nizami ', '');
-    return `${cut} Dum Handi`;
-  }, [base]);
-
-  const toggleFrom = <T extends Option>(list: T[], setList: (v: T[]) => void, item: T) => {
-    setList(list.some((o) => o.id === item.id) ? list.filter((o) => o.id !== item.id) : [...list, item]);
+  const toggleGhee = (id: string) => {
+    setGheeLayers((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
-  const reset = () => {
-    setBase(BASES[0]);
-    setSyrups([SYRUPS[0]]);
-    setCream(CREAMS[1]);
-    setToppings([TOPPINGS[0]]);
-    setSize(SIZES[1]);
-    setOrdered(false);
+  const toggleTopping = (id: string) => {
+    setToppings((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const currentSizeObj = SIZES.find((s) => s.id === size) || SIZES[1];
+  const gheeCost = gheeLayers.reduce(
+    (sum, id) => sum + (GHEE_LAYERS.find((g) => g.id === id)?.price || 0),
+    0
+  );
+  const toppingCost = toppings.reduce(
+    (sum, id) => sum + (TOPPINGS.find((t) => t.id === id)?.price || 0),
+    0
+  );
+
+  const totalPrice = base.price + currentSizeObj.price + gheeCost + toppingCost;
+  const gstInclusive = Math.round(((totalPrice * 5) / 105) * 100) / 100;
+
+  const handleAddCustomHandi = () => {
+    const customItem: MenuItem = {
+      id: `custom-handi-${Date.now()}`,
+      name: `Custom Handi (${base.label})`,
+      tagline: `${currentSizeObj.label} · Sealed with Atta Dum`,
+      description: `Custom handcrafted handi with ${base.label}, ${currentSizeObj.label}, and ${
+        toppings.length + gheeLayers.length
+      } special royal accompaniments.`,
+      ingredients: [base.label, currentSizeObj.label, 'Pure Desi Ghee', 'Saffron Rice'],
+      price: totalPrice,
+      category: 'Biryani',
+      photo: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80',
+      colors: { top: '#FFC96B', bottom: '#D96E14', foam: '#FFF4E2' },
+      dietary: base.id === 'b-veg' ? 'VEG' : 'NON_VEG',
+      spiceLevel: 'MEDIUM',
+      allergens: ['Dairy (Ghee)'],
+      portions: [{ id: currentSizeObj.id, name: currentSizeObj.label, priceModifier: 0, serves: currentSizeObj.serves }],
+      addons: [],
+    };
+
+    onAddToCart(customItem);
   };
 
   return (
-    <section id="builder" className="relative overflow-hidden bg-aqua py-16 sm:py-24">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07]">
-        <div className="h-full w-full checkerboard" />
-      </div>
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+    <section id="builder" className="relative bg-cream-dark py-16 sm:py-24 border-b-[3px] border-cocoa">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        
+        {/* Section Heading */}
         <div className="text-center">
-          <span className="inline-block rotate-1 rounded-full border-[3px] border-cocoa bg-lemon px-4 py-1 text-xs font-extrabold uppercase tracking-[0.25em] shadow-pop-sm">
-            Dum craft station
+          <span className="inline-block -rotate-1 rounded-full border-[3px] border-cocoa bg-lemon px-4 py-1 text-xs font-extrabold uppercase tracking-[0.25em] shadow-pop-sm">
+            Dum Craft Station
           </span>
-          <h2 className="mt-4 font-display text-4xl text-white outline-text sm:text-5xl">
-            Build Your Handi
+          <h2 className="mt-4 font-display text-4xl text-cherry outline-text sm:text-5xl">
+            Craft Your Royal Handi
           </h2>
-          <p className="mx-auto mt-5 w-fit max-w-lg -rotate-1 rounded-xl border-[3px] border-cocoa bg-cream px-5 py-2.5 font-semibold text-cocoa shadow-pop-sm">
-            Choose your dum base, capacity, aromatic layers, finish, and accompaniments.
+          <p className="mx-auto mt-3 max-w-lg font-semibold text-cocoa-soft">
+            Choose your dum marinated cut, handi size, ghee aroma, and shahi salan accompaniments.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_340px]">
-          {/* steps */}
-          <div className="space-y-5">
-            <StepCard step={1} title="Pick your dum-marinated base">
-              <div className="flex flex-wrap gap-2">
+        <div className="mt-12 grid items-start gap-10 lg:grid-cols-12">
+          
+          {/* Left: Interactive Preview Frame */}
+          <div className="lg:col-span-5 sticky top-28">
+            <div className="card-pop p-6 bg-white border-[3px] border-cocoa text-center">
+              <span className="text-[11px] font-black uppercase text-cocoa-fade tracking-widest block">
+                Live Handi Preview
+              </span>
+
+              <HandiPreview
+                base={base}
+                size={size}
+                gheeLayers={gheeLayers}
+                toppings={toppings}
+              />
+
+              <div className="mt-4 pt-4 border-t-2 border-dashed border-cocoa/20">
+                <h3 className="font-display text-xl text-cocoa">{base.label}</h3>
+                <p className="text-xs font-bold text-cherry">{currentSizeObj.label} ({currentSizeObj.serves})</p>
+
+                <div className="mt-3 flex items-center justify-between text-xs font-bold text-cocoa">
+                  <span>Price (Incl. 5% GST):</span>
+                  <span className="font-display text-2xl text-cherry">₹{totalPrice}</span>
+                </div>
+                <p className="text-[10px] text-cocoa-fade mt-0.5">
+                  5% GST included: ₹{gstInclusive.toFixed(2)}
+                </p>
+
+                <button
+                  onClick={handleAddCustomHandi}
+                  className="pill-btn w-full mt-4 bg-cherry text-white text-sm !py-3 flex items-center justify-center gap-2 hover:bg-cherry-deep"
+                >
+                  <ShoppingBag size={16} />
+                  <span>Add Handi to Feast &bull; ₹{totalPrice}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Step-by-Step Options */}
+          <div className="lg:col-span-7 space-y-6">
+            
+            {/* 1. Base Marinated Cut */}
+            <div className="card-pop p-5 bg-white border-[3px] border-cocoa space-y-3">
+              <span className="text-xs font-black uppercase tracking-wider text-cocoa block">
+                1. Select Dum Marinated Base
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {BASES.map((b) => (
-                  <OptionButton
+                  <button
                     key={b.id}
-                    option={b}
-                    selected={base.id === b.id}
-                    onToggle={() => {
-                      setBase(b);
-                      setOrdered(false);
-                    }}
-                  />
+                    onClick={() => setBase(b)}
+                    className={`p-3 rounded-2xl border-2 text-left transition-all ${
+                      base.id === b.id
+                        ? 'border-cocoa bg-lemon shadow-pop-sm font-black'
+                        : 'border-cocoa/30 hover:border-cocoa bg-cream/40'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black text-cocoa">{b.label}</span>
+                      <span className="text-xs font-extrabold text-cherry">₹{b.price}</span>
+                    </div>
+                    <span className="text-[10px] text-cocoa-fade block font-bold mt-0.5">{b.tag}</span>
+                  </button>
                 ))}
               </div>
-            </StepCard>
+            </div>
 
-            <StepCard step={2} title="Add aromatic layers">
-              <p className="mb-3 text-sm font-bold text-cocoa-fade">Pick up to 3 for your perfect handi.</p>
-              <div className="flex flex-wrap gap-2">
-                {SYRUPS.map((s) => (
-                  <OptionButton
-                    key={s.id}
-                    option={s}
-                    selected={syrups.some((o) => o.id === s.id)}
-                    onToggle={() => {
-                      setSyrups((prev) => {
-                        const has = prev.some((o) => o.id === s.id);
-                        if (has) return prev.filter((o) => o.id !== s.id);
-                        if (prev.length >= 3) return prev;
-                        setOrdered(false);
-                        return [...prev, s];
-                      });
-                    }}
-                  />
-                ))}
-              </div>
-            </StepCard>
-
-            <StepCard step={3} title="Choose your dum finish">
-              <div className="flex flex-wrap gap-2">
-                {CREAMS.map((c) => (
-                  <OptionButton
-                    key={c.id}
-                    option={c}
-                    selected={cream.id === c.id}
-                    onToggle={() => {
-                      setCream(c);
-                      setOrdered(false);
-                    }}
-                  />
-                ))}
-              </div>
-            </StepCard>
-
-            <StepCard step={4} title="Choose accompaniments">
-              <div className="flex flex-wrap gap-2">
-                {TOPPINGS.map((t) => (
-                  <OptionButton
-                    key={t.id}
-                    option={t}
-                    selected={toppings.some((o) => o.id === t.id)}
-                    onToggle={() => toggleFrom(toppings, setToppings, t)}
-                  />
-                ))}
-              </div>
-            </StepCard>
-
-            <StepCard step={5} title="Choose handi capacity">
-              <div className="grid gap-2 sm:grid-cols-3">
+            {/* 2. Handi Size / Servings */}
+            <div className="card-pop p-5 bg-white border-[3px] border-cocoa space-y-3">
+              <span className="text-xs font-black uppercase tracking-wider text-cocoa block">
+                2. Select Handi Capacity
+              </span>
+              <div className="grid grid-cols-3 gap-2">
                 {SIZES.map((s) => (
                   <button
                     key={s.id}
-                    type="button"
-                    onClick={() => {
-                      setSize(s);
-                      setOrdered(false);
-                    }}
-                    aria-pressed={size.id === s.id}
-                    className={`rounded-2xl border-[3px] border-cocoa px-4 py-3 text-center font-extrabold transition-all ${
-                      size.id === s.id ? 'bg-lemon shadow-pop-sm' : 'bg-white hover:bg-lemon/50'
+                    onClick={() => setSize(s.id as any)}
+                    className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                      size === s.id
+                        ? 'border-cocoa bg-tangerine shadow-pop-sm font-black text-cocoa'
+                        : 'border-cocoa/30 hover:border-cocoa bg-cream/40 text-cocoa'
                     }`}
                   >
-                    <span className="block text-sm">{s.label}</span>
-                    <span className="text-xs font-bold text-cocoa-fade">
-                      {s.price === 0 ? 'one hungry person' : `+₹${s.price}`}
-                    </span>
+                    <p className="text-xs font-black">{s.label}</p>
+                    <p className="text-[10px] font-bold opacity-80">{s.serves}</p>
+                    <p className="text-xs font-extrabold text-cherry mt-1">
+                      {s.price === 0 ? 'Base' : `+₹${s.price}`}
+                    </p>
                   </button>
                 ))}
               </div>
-            </StepCard>
+            </div>
+
+            {/* 3. Desi Ghee & Dum Spices */}
+            <div className="card-pop p-5 bg-white border-[3px] border-cocoa space-y-3">
+              <span className="text-xs font-black uppercase tracking-wider text-cocoa block">
+                3. Royal Ghee &amp; Spice Infusions (Optional)
+              </span>
+              <div className="space-y-2">
+                {GHEE_LAYERS.map((g) => {
+                  const isChecked = gheeLayers.includes(g.id);
+                  return (
+                    <button
+                      key={g.id}
+                      onClick={() => toggleGhee(g.id)}
+                      className={`w-full p-2.5 rounded-xl border-2 flex items-center justify-between text-left transition-all ${
+                        isChecked
+                          ? 'border-cocoa bg-lemon shadow-pop-sm font-black'
+                          : 'border-cocoa/30 bg-cream/30 hover:border-cocoa'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`h-4 w-4 rounded border-2 border-cocoa flex items-center justify-center ${
+                            isChecked ? 'bg-cocoa text-lemon' : 'bg-white'
+                          }`}
+                        >
+                          {isChecked && <Check size={12} strokeWidth={3} />}
+                        </span>
+                        <span className="text-xs font-bold text-cocoa">{g.label}</span>
+                      </div>
+                      <span className="text-xs font-extrabold text-cherry">+₹{g.price}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 4. Shahi Accompaniments */}
+            <div className="card-pop p-5 bg-white border-[3px] border-cocoa space-y-3">
+              <span className="text-xs font-black uppercase tracking-wider text-cocoa block">
+                4. Salan &amp; Shahi Accompaniments
+              </span>
+              <div className="space-y-2">
+                {TOPPINGS.map((t) => {
+                  const isChecked = toppings.includes(t.id);
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => toggleTopping(t.id)}
+                      className={`w-full p-2.5 rounded-xl border-2 flex items-center justify-between text-left transition-all ${
+                        isChecked
+                          ? 'border-cocoa bg-lemon shadow-pop-sm font-black'
+                          : 'border-cocoa/30 bg-cream/30 hover:border-cocoa'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`h-4 w-4 rounded border-2 border-cocoa flex items-center justify-center ${
+                            isChecked ? 'bg-cocoa text-lemon' : 'bg-white'
+                          }`}
+                        >
+                          {isChecked && <Check size={12} strokeWidth={3} />}
+                        </span>
+                        <div>
+                          <p className="text-xs font-bold text-cocoa">{t.label}</p>
+                          <p className="text-[10px] text-cocoa-fade font-semibold">{t.tag}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-extrabold text-cherry">+₹{t.price}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
 
-          {/* preview */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <div className="card-pop bg-cream p-6 text-center">
-              <div className="rounded-3xl border-[3px] border-dashed border-cocoa/30 bg-white/60 px-6 py-8">
-                <CupPreview
-                  baseColor={base.color}
-                  syrupColors={syrups.map((s) => s.color)}
-                  creamColor={cream.color}
-                  toppingColor={toppings[0]?.color ?? ''}
-                  size={size.id}
-                />
-              </div>
-              <h3 className="mt-5 font-display text-2xl text-cherry">{drinkName}</h3>
-              <ul className="mx-auto mt-2 max-w-[240px] space-y-1 text-left text-sm font-bold text-cocoa-soft">
-                <li>· {base.label}</li>
-                {syrups.length > 0 && <li>· {syrups.map((s) => s.label).join(', ')}</li>}
-                <li>· {cream.label.toLowerCase()}</li>
-                {toppings.length > 0 && <li>· {toppings.map((t) => t.label).join(', ')}</li>}
-                <li>· {size.label}</li>
-              </ul>
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <span className="text-sm font-extrabold uppercase tracking-widest text-cocoa-fade">Total</span>
-                <span className="rounded-full border-[3px] border-cocoa bg-lemon px-5 py-1.5 font-display text-2xl shadow-pop-sm">
-                  ₹{total}
-                </span>
-              </div>
-              <div className="mt-5 space-y-3">
-                {ordered ? (
-                  <div className="rounded-2xl border-[3px] border-cocoa bg-white p-4 shadow-pop-sm">
-                    <p className="flex items-center justify-center gap-2 font-display text-lg text-aqua-deep">
-                      <PartyPopper size={20} className="text-tangerine" /> Order placed!
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-cocoa-soft">
-                      Your {drinkName} is now placed with the outlet kitchen. We’ll keep the status and promised time live.
-                    </p>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setOrdered(true)}
-                    className="pill-btn w-full bg-cherry text-white text-lg animate-wiggle hover:animate-none"
-                  >
-                    Place test order · ₹{total}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={reset}
-                  className="mx-auto flex items-center gap-1.5 text-sm font-extrabold uppercase tracking-wider text-cocoa-fade underline decoration-2 underline-offset-4 hover:text-cherry"
-                >
-                  <RotateCcw size={14} strokeWidth={3} /> Start over
-                </button>
-              </div>
-              <p className="mt-4 text-[11px] font-bold text-cocoa-fade">
-                Demo payment only — no payment is captured. Prices shown include 5% GST.
-              </p>
-            </div>
-          </div>
         </div>
+
       </div>
     </section>
   );
