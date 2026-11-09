@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { ArrowRight, Sparkles, MapPin, Phone, ShieldCheck, Check } from 'lucide-react';
-import { HERO_PHOTO, OUTLETS, type Outlet } from '../data';
+import { useMemo } from 'react';
+import { ArrowDown, ArrowRight, Sparkles } from 'lucide-react';
+import { HERO_PHOTO } from '../data';
 
 const BUBBLES = [
   { left: '6%', size: 14, delay: '0s', duration: '5s' },
@@ -34,23 +34,14 @@ function Starburst({ className = '', petals = 'lemon' }: { className?: string; p
 }
 
 interface HeroProps {
-  onStartOrder: (outlet?: Outlet) => void;
-  selectedOutlet: Outlet;
+  onStartOrder: () => void;
 }
 
-export default function Hero({ onStartOrder, selectedOutlet }: HeroProps) {
+export default function Hero({ onStartOrder }: HeroProps) {
   const bubbles = useMemo(() => BUBBLES, []);
-  const [phone, setPhone] = useState('+91 98765 43210');
-  const [chosenOutletId, setChosenOutletId] = useState(selectedOutlet.id);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const matched = OUTLETS.find((o) => o.id === chosenOutletId) || selectedOutlet;
-    onStartOrder(matched);
-  };
 
   return (
-    <section id="top" className="relative overflow-hidden bg-cream pt-24 sm:pt-28 lg:pt-32 pb-6">
+    <section id="top" className="relative overflow-hidden bg-cream pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16">
       
       {/* Sunburst background rays */}
       <div
@@ -85,7 +76,7 @@ export default function Hero({ onStartOrder, selectedOutlet }: HeroProps) {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
           
-          {/* Left Column: Bold Copy & Customer Order Access Card (7 cols) */}
+          {/* Left Column: Story & CTAs (7 cols) */}
           <div className="relative z-10 text-center lg:text-left lg:col-span-7 space-y-6">
             
             {/* Tagline Badge */}
@@ -100,82 +91,47 @@ export default function Hero({ onStartOrder, selectedOutlet }: HeroProps) {
 
             {/* Subtitle */}
             <p className="max-w-xl mx-auto lg:mx-0 text-base sm:text-lg lg:text-xl font-bold text-cocoa-soft leading-relaxed">
-              Authentic slow-dummed biryani sealed with dough on coal fires. Order direct to save 15% on app fees with honest prep times across 17 Hyderabad kitchens.
+              Slow-cooked handis sealed with dough, aged long-grain basmati infused with pure Kashmiri saffron, and secret Nizami spices. Hyderabad's royal feast cooked on slow coal fires.
             </p>
 
-            {/* Customer Direct Order & Login Card */}
-            <div className="card-pop bg-white p-5 sm:p-6 rounded-3xl border-[3px] border-cocoa text-left shadow-pop-md max-w-xl mx-auto lg:mx-0">
-              <div className="flex items-center justify-between mb-3 border-b-2 border-cocoa/20 pb-2">
-                <span className="text-xs font-black uppercase tracking-wider text-cherry flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" /> Direct Ordering Portal
-                </span>
-                <span className="text-[10px] font-black uppercase tracking-wider bg-lemon px-2.5 py-0.5 rounded-full border border-cocoa">
-                  Save 15% Comm.
-                </span>
-              </div>
+            {/* Main Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <button
+                type="button"
+                onClick={onStartOrder}
+                className="pill-btn bg-cherry text-white text-base sm:text-lg !py-4 !px-8 flex items-center justify-center gap-2.5 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+              >
+                <span>Order Online Now</span>
+                <ArrowRight size={20} strokeWidth={2.5} />
+              </button>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <div className="grid sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-black uppercase text-cocoa-fade mb-1 flex items-center gap-1">
-                      <Phone size={12} /> Mobile Phone
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
-                      className="w-full px-3 py-2 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-black uppercase text-cocoa-fade mb-1 flex items-center gap-1">
-                      <MapPin size={12} /> Select Locality
-                    </label>
-                    <select
-                      value={chosenOutletId}
-                      onChange={(e) => setChosenOutletId(e.target.value)}
-                      className="w-full px-3 py-2 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white cursor-pointer"
-                    >
-                      {OUTLETS.map((outlet) => (
-                        <option key={outlet.id} value={outlet.id}>
-                          {outlet.name} ({outlet.type === 'CLOUD_KITCHEN' ? 'Cloud' : 'Dine-In'})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
-                  <button
-                    type="submit"
-                    className="pill-btn flex-1 w-full bg-cherry text-white text-sm sm:text-base !py-3 flex items-center justify-center gap-2 shadow-pop-sm hover:scale-[1.02] active:scale-95"
-                  >
-                    <span>Enter Ordering Menu &bull; 15% Off</span>
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </form>
-
-              <div className="mt-3 pt-2 border-t border-dashed border-cocoa/20 flex items-center justify-between text-[11px] font-bold text-cocoa-fade">
-                <span>⚡ Auto-routes to station kitchen</span>
-                <span className="text-emerald-700 font-black">All prices include 5% GST</span>
-              </div>
+              <a
+                href="#heritage"
+                className="pill-btn bg-lemon text-cocoa text-base sm:text-lg !py-4 !px-7 flex items-center justify-center gap-2 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+              >
+                <span>Our Heritage</span>
+                <ArrowDown size={18} strokeWidth={2.5} />
+              </a>
             </div>
 
             {/* Trust Badges */}
-            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+            <div className="pt-4 border-t-2 border-dashed border-cocoa/20 flex flex-wrap items-center justify-center lg:justify-start gap-6">
+              <div className="flex items-center gap-3">
+                <Starburst className="h-14 w-14 animate-twinkle shrink-0" petals="pink" />
+                <div className="text-left">
+                  <p className="font-display text-2xl text-aqua outline-text [text-stroke-width:0.5px]">4.9 stars</p>
+                  <p className="text-xs font-bold text-cocoa-fade">18,400+ biryani lovers</p>
+                </div>
+              </div>
+
+              <div className="h-8 w-0.5 bg-cocoa/20 hidden sm:block" />
+
               <div className="flex items-center gap-2 text-xs font-black text-cocoa">
                 <span className="flex items-center gap-1 bg-white border border-cocoa px-3 py-1 rounded-full shadow-sm">
                   🧈 100% Desi Ghee
                 </span>
                 <span className="flex items-center gap-1 bg-white border border-cocoa px-3 py-1 rounded-full shadow-sm">
-                  ⭐ 4.9 Rating (18k+ Reviews)
-                </span>
-                <span className="flex items-center gap-1 bg-white border border-cocoa px-3 py-1 rounded-full shadow-sm">
-                  📜 FSSAI Licensed
+                  📜 All Prices 5% GST Included
                 </span>
               </div>
             </div>
@@ -217,7 +173,7 @@ export default function Hero({ onStartOrder, selectedOutlet }: HeroProps) {
       </div>
 
       {/* Wavy Retro Divider */}
-      <div aria-hidden="true" className="relative mt-10">
+      <div aria-hidden="true" className="relative mt-12">
         <svg viewBox="0 0 1440 70" preserveAspectRatio="none" className="block h-[44px] sm:h-[52px] w-full fill-lemon">
           <path d="M0,35 C120,65 240,5 360,35 C480,65 600,5 720,35 C840,65 960,5 1080,35 C1200,65 1320,5 1440,35 L1440,70 L0,70 Z" />
         </svg>

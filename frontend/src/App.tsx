@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
-import Menu from './components/Menu';
-import { FindUs, Footer, PopularStrip, Divider } from './components/Sections';
+import {
+  ShopHeritageSection,
+  SignatureSpecialtiesSection,
+  DirectOrderingBenefitsSection,
+  BulkPartyCateringSection,
+  Footer,
+  PopularStrip,
+  Divider,
+} from './components/Sections';
+import LoginModal from './components/LoginModal';
 import CartDrawer from './components/CartDrawer';
 import OrderTrackModal from './components/OrderTrackModal';
 import KDSPage from './pages/KDSPage';
@@ -20,7 +28,6 @@ import {
   type CartItem,
   type Order,
   type OrderStatus,
-  getMenuItemsForOutlet,
 } from './data';
 
 export default function App() {
@@ -29,6 +36,8 @@ export default function App() {
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet>(OUTLETS[0]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
   const [customerUser, setCustomerUser] = useState({
     name: 'Karan Sharma',
@@ -125,8 +134,23 @@ export default function App() {
     setTrackingOrder((prev) => (prev && prev.id === orderId ? { ...prev, status: nextStatus } : prev));
   };
 
-  const totalCartCount = cartItems.reduce((acc, c) => acc + c.quantity, 0);
-  const totalCartPrice = cartItems.reduce((acc, c) => acc + c.totalPrice, 0);
+  const handleLoginSuccess = (
+    user: { name: string; phone: string; address: string },
+    chosenOutlet: Outlet
+  ) => {
+    setCustomerUser(user);
+    setSelectedOutlet(chosenOutlet);
+    setIsLoggedIn(true);
+    navigate('/order');
+  };
+
+  const handleStartOrder = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+    } else {
+      navigate('/order');
+    }
+  };
 
   // Dedicated Route Views
   if (route === '/kds') {
@@ -150,7 +174,7 @@ export default function App() {
     );
   }
 
-  // Dedicated Swiggy-Level Food Ordering App
+  // Dedicated Swiggy-Level Food Ordering App (Visible after login / order click)
   if (route === '/order') {
     return (
       <>
@@ -187,53 +211,36 @@ export default function App() {
     );
   }
 
-  // Customer Brand Storefront & Login Landing Page
+  // Customer Brand Shop & Landing Page
   return (
     <div className="min-h-screen bg-cream">
       <Navbar
-        selectedOutlet={selectedOutlet}
-        onSelectOutlet={handleSelectOutlet}
-        cartCount={totalCartCount}
-        cartTotal={totalCartPrice}
-        onOpenCart={() => setIsCartOpen(true)}
-        onGoToOrder={() => navigate('/order')}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onGoToOrder={handleStartOrder}
+        isLoggedIn={isLoggedIn}
+        userName={customerUser.name}
       />
 
       <main>
-        <Hero
-          selectedOutlet={selectedOutlet}
-          onStartOrder={(chosenOutlet) => {
-            if (chosenOutlet) setSelectedOutlet(chosenOutlet);
-            navigate('/order');
-          }}
-        />
+        <Hero onStartOrder={handleStartOrder} />
         <Marquee />
-        <Menu
-          items={getMenuItemsForOutlet(selectedOutlet.id)}
-          onAddToCart={handleAddToCart}
-        />
+        <ShopHeritageSection />
         <Divider />
+        <SignatureSpecialtiesSection onOrderClick={handleStartOrder} />
+        <DirectOrderingBenefitsSection onOrderClick={handleStartOrder} />
+        <Divider flip />
+        <BulkPartyCateringSection />
         <PopularStrip />
-        <FindUs
-          selectedOutlet={selectedOutlet}
-          onSelectOutlet={(outlet) => {
-            handleSelectOutlet(outlet);
-            navigate('/order');
-          }}
-        />
       </main>
 
       <Footer />
 
-      {/* Cart & Checkout Drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cartItems={cartItems}
-        onUpdateQty={handleUpdateQty}
-        onRemoveItem={handleRemoveItem}
-        selectedOutlet={selectedOutlet}
-        onNavigateToCheckout={() => navigate('/checkout')}
+      {/* Customer Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        initialOutlet={selectedOutlet}
       />
 
       {/* Live Order Tracking Modal */}
