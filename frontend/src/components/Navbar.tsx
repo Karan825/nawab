@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, ChefHat, ShieldCheck } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const LINKS = [
   { label: 'Menu', href: '#menu' },
@@ -11,15 +11,15 @@ const LINKS = [
 
 function Logo() {
   return (
-    <a href="#top" className="flex items-center gap-2.5 group">
-      <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-12">
-        <span className="text-2xl leading-none">🍗</span>
+    <a href="#top" className="flex items-center gap-3 group">
+      <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-12">
+        <span className="text-3xl leading-none">🍗</span>
       </span>
       <span className="flex flex-col leading-none">
-        <span className="font-display text-xl text-cherry outline-text [text-stroke-width:0.5px] sm:text-2xl">
+        <span className="font-display text-2xl text-cherry outline-text [text-stroke-width:0.5px] sm:text-3xl">
           Nawaab's
         </span>
-        <span className="text-[9px] font-extrabold tracking-[0.35em] text-cocoa-fade uppercase">
+        <span className="text-[10px] font-extrabold tracking-[0.35em] text-cocoa-fade uppercase mt-0.5">
           BIRYANI CO.
         </span>
       </span>
@@ -46,7 +46,7 @@ export default function Navbar() {
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Logo />
-          <div className="hidden items-center gap-1 lg:flex">
+          <div className="hidden items-center gap-1.5 lg:flex">
             {LINKS.map((link) => (
               <a
                 key={link.href}
@@ -57,23 +57,7 @@ export default function Navbar() {
               </a>
             ))}
 
-            <a
-              href="/kds"
-              className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa bg-lemon border-2 border-cocoa shadow-pop-sm hover:bg-lemon-deep ml-2 flex items-center gap-1"
-            >
-              <ChefHat size={14} />
-              KDS
-            </a>
-
-            <a
-              href="/admin"
-              className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa bg-aqua border-2 border-cocoa shadow-pop-sm hover:bg-aqua-deep ml-1 flex items-center gap-1"
-            >
-              <ShieldCheck size={14} />
-              CMS
-            </a>
-
-            <a href="#builder" className="pill-btn ml-3 bg-cherry text-white text-sm !px-5 !py-2.5">
+            <a href="#builder" className="pill-btn ml-3 bg-cherry text-white text-base !px-6 !py-2.5">
               Order Up
             </a>
           </div>
@@ -100,29 +84,10 @@ export default function Navbar() {
               </a>
             ))}
 
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <a
-                href="/kds"
-                onClick={() => setOpen(false)}
-                className="pill-btn bg-lemon text-cocoa text-xs !py-2 text-center flex items-center justify-center gap-1"
-              >
-                <ChefHat size={14} />
-                Kitchen KDS
-              </a>
-              <a
-                href="/admin"
-                onClick={() => setOpen(false)}
-                className="pill-btn bg-aqua text-cocoa text-xs !py-2 text-center flex items-center justify-center gap-1"
-              >
-                <ShieldCheck size={14} />
-                Admin CMS
-              </a>
-            </div>
-
             <a
               href="#builder"
               onClick={() => setOpen(false)}
-              className="pill-btn mt-2 w-full bg-cherry text-white"
+              className="pill-btn mt-3 w-full bg-cherry text-white text-base"
             >
               Order Up
             </a>
