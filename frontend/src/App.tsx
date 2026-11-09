@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
@@ -6,10 +7,9 @@ import Menu from './components/Menu';
 import Builder from './components/Builder';
 import { Snacks, Merch, FindUs, InstagramWall, Footer, PopularStrip, Divider } from './components/Sections';
 import CartDrawer from './components/CartDrawer';
-import KDSModal from './components/KDSModal';
-import AdminModal from './components/AdminModal';
 import OrderTrackModal from './components/OrderTrackModal';
-import OutletPicker from './components/OutletPicker';
+import KDSPage from './pages/KDSPage';
+import AdminPage from './pages/AdminPage';
 import {
   OUTLETS,
   MENU_ITEMS,
@@ -18,25 +18,19 @@ import {
   type MenuItem,
   type CartItem,
   type Order,
-  type OrderStatus,
   type Snack,
   type MerchItem,
 } from './data';
 
-function App() {
+function CustomerStorefront() {
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet>(OUTLETS[0]);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(MENU_ITEMS);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
 
   // Modals & Drawers
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isKDSOpen, setIsKDSOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
-  const [isOutletPickerOpen, setIsOutletPickerOpen] = useState(true);
 
-  // Cart Management
   const handleSelectOutlet = (newOutlet: Outlet) => {
     if (cartItems.length > 0 && newOutlet.id !== selectedOutlet.id) {
       const confirmSwitch = window.confirm(
@@ -46,7 +40,6 @@ function App() {
       setCartItems([]);
     }
     setSelectedOutlet(newOutlet);
-    setIsOutletPickerOpen(false);
   };
 
   const handleAddToCart = (item: MenuItem) => {
@@ -140,21 +133,6 @@ function App() {
     setTrackingOrder(newOrder);
   };
 
-  const handleUpdateOrderStatus = (orderId: string, newStatus: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
-    if (trackingOrder && trackingOrder.id === orderId) {
-      setTrackingOrder((prev) => (prev ? { ...prev, status: newStatus } : null));
-    }
-  };
-
-  const handleUpdateMenuItem = (id: string, patch: Partial<MenuItem>) => {
-    setMenuItems((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, ...patch } : it))
-    );
-  };
-
   const totalCartCount = cartItems.reduce((acc, c) => acc + c.quantity, 0);
 
   return (
@@ -164,12 +142,10 @@ function App() {
         onSelectOutlet={handleSelectOutlet}
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
-        onOpenKDS={() => setIsKDSOpen(true)}
-        onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
       <main>
-        <Hero selectedOutlet={selectedOutlet} />
+        <Hero />
         <Marquee />
         <Menu onAddToCart={handleAddToCart} />
         <Divider />
@@ -184,13 +160,6 @@ function App() {
 
       <Footer />
 
-      <OutletPicker
-        isOpen={isOutletPickerOpen}
-        outlets={OUTLETS}
-        selectedOutlet={selectedOutlet}
-        onSelect={handleSelectOutlet}
-      />
-
       {/* Cart Drawer */}
       <CartDrawer
         isOpen={isCartOpen}
@@ -202,24 +171,6 @@ function App() {
         onCheckoutSuccess={handleCheckoutSuccess}
       />
 
-      {/* Kitchen Display System (KDS) Modal */}
-      <KDSModal
-        isOpen={isKDSOpen}
-        onClose={() => setIsKDSOpen(false)}
-        orders={orders}
-        onUpdateStatus={handleUpdateOrderStatus}
-        selectedOutlet={selectedOutlet}
-      />
-
-      {/* Admin Menu CMS Modal */}
-      <AdminModal
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-        menuItems={menuItems}
-        onUpdateItem={handleUpdateMenuItem}
-        selectedOutlet={selectedOutlet}
-      />
-
       {/* Customer Live Order Tracking Modal */}
       <OrderTrackModal
         order={trackingOrder}
@@ -229,4 +180,14 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<CustomerStorefront />} />
+        <Route path="/kds" element={<KDSPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
