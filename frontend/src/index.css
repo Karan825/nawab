@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 84px;
+  }
+  body {
+    @apply bg-cream text-cocoa font-body leading-relaxed antialiased;
+  }
+  ::selection {
+    @apply bg-lemon text-cocoa;
+  }
+}
+
+@layer components {
+  .pill-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-extrabold tracking-wide transition-all duration-150 border-[3px] border-cocoa shadow-pop cursor-pointer select-none;
+  }
+  .pill-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 0 #3a2318;
+  }
+  .pill-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 0 #3a2318;
+  }
+  .card-pop {
+    @apply rounded-3xl border-[3px] border-cocoa shadow-pop bg-white overflow-hidden transition-transform duration-200;
+  }
+  .outline-text {
+    -webkit-text-stroke: 2px #3a2318;
+    paint-order: stroke fill;
+  }
+}
+
+@layer utilities {
+  .checkerboard {
+    background-image: repeating-conic-gradient(#3a2318 0% 25%, #fff4e2 0% 50%);
+    background-size: 28px 28px;
+  }
+  .checkerboard-pink {
+    background-image: repeating-conic-gradient(#ff4fa3 0% 25%, #fff4e2 0% 50%);
+    background-size: 24px 24px;
+  }
+  .waves {
+    background-image: radial-gradient(circle at 10px -6px, transparent 14px, #3a2318 14px, #3a2318 17px, transparent 18px);
+    background-size: 40px 24px;
+    background-repeat: repeat-x;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
