@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, ShieldAlert, Check, X, Search, ChefHat } from 'lucide-react';
+import { ArrowLeft, ShieldAlert, Check, X, Search, ChefHat, AlertTriangle } from 'lucide-react';
 import { Drink, OUTLETS, DRINKS } from '../data';
 
 export default function AdminPage() {
@@ -191,8 +191,9 @@ export default function AdminPage() {
 
           <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 flex items-center justify-between text-xs">
             <div>
-              <p className="font-black text-rose-900 text-sm">
-                ⚠️ ORDER WEB-778146 DELAY ALERT &bull; Kukatpally Express Kitchen
+              <p className="font-black text-rose-900 text-sm flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>ORDER WEB-778146 DELAY ALERT &bull; Kukatpally Express Kitchen</span>
               </p>
               <p className="text-xs text-rose-700 font-semibold mt-1">
                 Promised at 21:16 (Elapsed +4 mins). AI predicted 40m prep duration based on kitchen load.

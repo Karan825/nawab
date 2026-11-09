@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2, Plus, Minus, MapPin, ArrowRight, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { X, Trash2, Plus, Minus, MapPin, ArrowRight, ShoppingBag, ShieldCheck, UtensilsCrossed } from 'lucide-react';
 import { CartItem, Outlet } from '../data';
 
 interface CartDrawerProps {
@@ -44,8 +44,8 @@ export default function CartDrawer({
           {/* Drawer Header */}
           <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="h-10 w-10 rounded-full bg-white border-2 border-cocoa flex items-center justify-center font-display text-xl shadow-pop-sm">
-                🍲
+              <span className="h-10 w-10 rounded-full bg-white border-2 border-cocoa flex items-center justify-center text-cherry shadow-pop-sm">
+                <ShoppingBag size={18} />
               </span>
               <div>
                 <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
@@ -85,7 +85,9 @@ export default function CartDrawer({
           <div className="flex-1 overflow-y-auto p-5 space-y-3">
             {cartItems.length === 0 ? (
               <div className="text-center py-20 space-y-4">
-                <span className="text-5xl block animate-bounce">🥘</span>
+                <span className="h-16 w-16 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center text-cocoa mx-auto shadow-pop-sm">
+                  <UtensilsCrossed size={28} />
+                </span>
                 <h3 className="font-display text-xl text-cocoa">Your cart is empty!</h3>
                 <p className="text-xs font-semibold text-cocoa-soft max-w-xs mx-auto leading-relaxed">
                   Add some sizzling Hyderabadi Dum Biryani, Shahi Mutton Haleem, or Chicken 65 to get started.

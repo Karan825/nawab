@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ArrowDown, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowRight, Sparkles, Star } from 'lucide-react';
 import { HERO_PHOTO } from '../data';
 
 const BUBBLES = [
@@ -41,7 +41,7 @@ export default function Hero({ onStartOrder }: HeroProps) {
   const bubbles = useMemo(() => BUBBLES, []);
 
   return (
-    <section id="top" className="relative overflow-hidden bg-cream pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16">
+    <section id="top" className="relative overflow-hidden bg-cream pt-28 sm:pt-32 lg:pt-36 pb-14 sm:pb-20">
       
       {/* Sunburst background rays */}
       <div
@@ -76,12 +76,12 @@ export default function Hero({ onStartOrder }: HeroProps) {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
           
-          {/* Left Column: Story & CTAs (7 cols) */}
+          {/* Left Column: Story & Login CTA (7 cols) */}
           <div className="relative z-10 text-center lg:text-left lg:col-span-7 space-y-6">
             
             {/* Tagline Badge */}
             <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-aqua px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] shadow-pop-sm">
-              <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · Hyderabad Dum Biryani
+              <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 &bull; Hyderabad Dum Biryani
             </span>
 
             {/* Headline */}
@@ -94,46 +94,39 @@ export default function Hero({ onStartOrder }: HeroProps) {
               Slow-cooked handis sealed with dough, aged long-grain basmati infused with pure Kashmiri saffron, and secret Nizami spices. Hyderabad's royal feast cooked on slow coal fires.
             </p>
 
-            {/* Main Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            {/* Main Action Buttons: ONLY Login and Heritage */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-1">
               <button
                 type="button"
                 onClick={onStartOrder}
-                className="pill-btn bg-cherry text-white text-base sm:text-lg !py-4 !px-8 flex items-center justify-center gap-2.5 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+                className="pill-btn bg-cherry text-white text-base sm:text-lg !py-4 !px-9 flex items-center justify-center gap-2.5 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
               >
-                <span>Order Online Now</span>
+                <span>Login to Order</span>
                 <ArrowRight size={20} strokeWidth={2.5} />
               </button>
 
               <a
                 href="#heritage"
-                className="pill-btn bg-lemon text-cocoa text-base sm:text-lg !py-4 !px-7 flex items-center justify-center gap-2 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+                className="pill-btn bg-lemon text-cocoa text-base sm:text-lg !py-4 !px-8 flex items-center justify-center gap-2 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
               >
                 <span>Our Heritage</span>
                 <ArrowDown size={18} strokeWidth={2.5} />
               </a>
             </div>
 
-            {/* Trust Badges */}
-            <div className="pt-4 border-t-2 border-dashed border-cocoa/20 flex flex-wrap items-center justify-center lg:justify-start gap-6">
-              <div className="flex items-center gap-3">
-                <Starburst className="h-14 w-14 animate-twinkle shrink-0" petals="pink" />
-                <div className="text-left">
-                  <p className="font-display text-2xl text-aqua outline-text [text-stroke-width:0.5px]">4.9 stars</p>
-                  <p className="text-xs font-bold text-cocoa-fade">18,400+ biryani lovers</p>
+            {/* Professional Rating Block (Clean, Elegant, No Emojis, No Lines) */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+              <div className="flex items-center gap-1 bg-white border-2 border-cocoa px-3.5 py-1.5 rounded-full shadow-pop-sm">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={15} className="fill-amber-400 text-amber-500" />
+                  ))}
                 </div>
+                <span className="font-display text-sm text-cocoa ml-1">4.9 / 5.0</span>
               </div>
-
-              <div className="h-8 w-0.5 bg-cocoa/20 hidden sm:block" />
-
-              <div className="flex items-center gap-2 text-xs font-black text-cocoa">
-                <span className="flex items-center gap-1 bg-white border border-cocoa px-3 py-1 rounded-full shadow-sm">
-                  🧈 100% Desi Ghee
-                </span>
-                <span className="flex items-center gap-1 bg-white border border-cocoa px-3 py-1 rounded-full shadow-sm">
-                  📜 All Prices 5% GST Included
-                </span>
-              </div>
+              <span className="text-xs font-bold text-cocoa-fade">
+                From 18,400+ Verified Hyderabad Connoisseurs
+              </span>
             </div>
 
           </div>

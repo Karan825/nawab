@@ -224,7 +224,7 @@ export const MENU_ITEMS: MenuItem[] = [
       'out-manikonda-ck': { isAvailable: false, statusLabel: 'Dine-In Stone Pit Only' },
       'out-miyapur-ck': { isAvailable: false, statusLabel: 'Dine-In Stone Pit Only' },
       'out-kukatpally': { isAvailable: false, statusLabel: 'Unavailable at Express' },
-      'out-charminar': { isAvailable: true, statusLabel: '🔥 Hot River Granite Seared' },
+      'out-charminar': { isAvailable: true, statusLabel: 'Special River Granite Seared' },
     },
     portions: [{ id: 'p-std', name: 'Standard Plate (6 strips)', priceModifier: 0, serves: '1–2 persons' }],
     addons: [{ id: 'a-chilli', name: 'Charred Green Chilies', price: 20 }],

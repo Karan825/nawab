@@ -16,7 +16,8 @@ import {
   Phone,
   User as UserIcon,
   Home,
-  Check
+  Check,
+  ShoppingBag
 } from 'lucide-react';
 import { CartItem, Outlet, Order, PortionOption, AddonOption } from '../data';
 
@@ -158,8 +159,8 @@ export default function CheckoutPage({
     return (
       <div className="min-h-screen bg-cream py-12 px-4 sm:px-6">
         <div className="max-w-2xl mx-auto card-pop bg-white p-8 sm:p-10 rounded-3xl border-[3px] border-cocoa text-center space-y-6">
-          <div className="h-20 w-20 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center text-4xl mx-auto shadow-pop-sm animate-bounce">
-            🎉
+          <div className="h-20 w-20 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center mx-auto shadow-pop-sm">
+            <CheckCircle2 size={40} className="text-emerald-800" />
           </div>
 
           <div>
@@ -247,7 +248,7 @@ export default function CheckoutPage({
     return (
       <div className="min-h-screen bg-cream py-16 px-4 flex items-center justify-center">
         <div className="card-pop bg-white p-8 max-w-md w-full rounded-3xl border-[3px] border-cocoa text-center space-y-4">
-          <span className="text-6xl block">🍲</span>
+          <ShoppingBag className="w-16 h-16 text-cocoa/40 mx-auto" />
           <h2 className="font-display text-2xl text-cherry">Your Cart is Empty!</h2>
           <p className="text-xs font-semibold text-cocoa-soft">
             Explore our slow-dum Hyderabadi Biryani, kebabs, and authentic double ka meetha before heading to checkout.
@@ -302,7 +303,7 @@ export default function CheckoutPage({
         <div className="mb-6 card-pop bg-aqua/20 border-2 border-cocoa rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-aqua border border-cocoa flex items-center justify-center font-display text-sm shrink-0">
-              📍
+              <MapPin size={16} className="text-cocoa" />
             </div>
             <div>
               <p className="text-xs font-bold text-cocoa">
@@ -314,8 +315,9 @@ export default function CheckoutPage({
             </div>
           </div>
 
-          <span className="text-[11px] font-black bg-white border border-cocoa px-3 py-1 rounded-full text-emerald-800 shadow-pop-sm">
-            ⚡ Kitchen Ready in ~{Math.max(38, selectedOutlet.minPrepTimeMinutes)} mins
+          <span className="text-[11px] font-black bg-white border border-cocoa px-3 py-1 rounded-full text-emerald-800 shadow-pop-sm flex items-center gap-1">
+            <Clock size={12} className="text-emerald-700" />
+            <span>Kitchen Ready in ~{Math.max(38, selectedOutlet.minPrepTimeMinutes)} mins</span>
           </span>
         </div>
 
@@ -778,8 +780,9 @@ export default function CheckoutPage({
                 )}
               </button>
 
-              <p className="text-[10px] text-center font-bold text-cocoa-fade">
-                🔒 Safe &amp; verified direct transaction &bull; Zero app commissions
+              <p className="text-[10px] text-center font-bold text-cocoa-fade flex items-center justify-center gap-1">
+                <ShieldCheck size={12} className="text-emerald-600" />
+                <span>Safe &amp; verified direct transaction &bull; Zero app commissions</span>
               </p>
             </div>
 

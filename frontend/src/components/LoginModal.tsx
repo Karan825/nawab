@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Phone, MapPin, ArrowRight, ShieldCheck, Sparkles, User } from 'lucide-react';
+import { X, Phone, MapPin, ArrowRight, ShieldCheck, User, UtensilsCrossed } from 'lucide-react';
 import { OUTLETS, type Outlet } from '../data';
 
 interface LoginModalProps {
@@ -56,8 +56,8 @@ export default function LoginModal({
         {/* Modal Header */}
         <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="h-10 w-10 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-2xl shadow-pop-sm">
-              🍗
+            <span className="h-10 w-10 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm">
+              <UtensilsCrossed size={18} strokeWidth={2.5} />
             </span>
             <div>
               <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
@@ -82,7 +82,7 @@ export default function LoginModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-cocoa">
           <div>
             <span className="inline-block rounded-full border border-cocoa bg-aqua/30 px-3 py-1 text-[11px] font-bold text-cocoa mb-3">
-              ⚡ Select your location to view authentic menu &amp; live prices
+              Select your location to view authentic menu &amp; live prices
             </span>
           </div>
 
@@ -148,7 +148,7 @@ export default function LoginModal({
               onClick={handleQuickDemoLogin}
               className="w-full text-center text-[11px] font-bold text-cherry hover:underline py-1"
             >
-              ⚡ Quick 1-Click Test Login as Karan Sharma (Kondapur)
+              Quick 1-Click Test Login as Karan Sharma (Kondapur)
             </button>
           </div>
 
@@ -164,3 +164,4 @@ export default function LoginModal({
     </div>
   );
 }
+

@@ -1,5 +1,21 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, Instagram, Facebook, Twitter, ShieldCheck, Sparkles, Flame, Check, Phone, ArrowRight, Heart } from 'lucide-react';
+import {
+  Clock,
+  Instagram,
+  Facebook,
+  Twitter,
+  ShieldCheck,
+  Sparkles,
+  Flame,
+  Phone,
+  ArrowRight,
+  UtensilsCrossed,
+  Award,
+  CheckCircle2,
+  FileText,
+  Truck,
+  CookingPot
+} from 'lucide-react';
 import { HOURS } from '../data';
 
 function SectionHeading({
@@ -35,25 +51,25 @@ export function ShopHeritageSection() {
       step: '01',
       title: 'Overnight Nizami Marination',
       desc: 'Prime farm-fresh chicken and tender baby goat marinated for 12 hours with stone-ground spices, ginger-garlic paste, and aged curd.',
-      emoji: '🍗',
+      icon: UtensilsCrossed,
     },
     {
       step: '02',
       title: 'Aged Basmati & Saffron',
       desc: '2-year aged long-grain basmati parboiled with royal whole spices (shahi jeera, cardamom, mace) and steeped in pure Kashmiri saffron milk.',
-      emoji: '🌾',
+      icon: Sparkles,
     },
     {
       step: '03',
       title: 'Wheat Dough Handi Seal',
       desc: 'Heavy brass and clay handis layered with ghee, fried onions, and marinated meat, tightly sealed with kneaded dough (purdah) to trap internal steam.',
-      emoji: '🏺',
+      icon: CookingPot,
     },
     {
       step: '04',
       title: '4-Hour Coal Ember Dum',
       desc: 'Handis are placed over slow coal embers with hot coals on the lid. The meat cooks in its own juices until it falls off the bone.',
-      emoji: '🔥',
+      icon: Flame,
     },
   ];
 
@@ -69,32 +85,37 @@ export function ShopHeritageSection() {
         />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((st) => (
-            <div
-              key={st.step}
-              className="card-pop bg-white p-6 rounded-3xl border-[3px] border-cocoa flex flex-col justify-between hover:-translate-y-1 transition-transform"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-display text-2xl text-lemon bg-cocoa h-10 w-10 rounded-2xl flex items-center justify-center border-2 border-cocoa shadow-pop-sm">
-                    {st.step}
-                  </span>
-                  <span className="text-3xl">{st.emoji}</span>
+          {steps.map((st) => {
+            const Icon = st.icon;
+            return (
+              <div
+                key={st.step}
+                className="card-pop bg-white p-6 rounded-3xl border-[3px] border-cocoa flex flex-col justify-between hover:-translate-y-1 transition-transform"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-display text-2xl text-lemon bg-cocoa h-10 w-10 rounded-2xl flex items-center justify-center border-2 border-cocoa shadow-pop-sm">
+                      {st.step}
+                    </span>
+                    <span className="h-10 w-10 rounded-2xl bg-lemon/50 border border-cocoa flex items-center justify-center text-cocoa">
+                      <Icon size={20} />
+                    </span>
+                  </div>
+                  <h3 className="font-display text-xl text-cocoa leading-snug">{st.title}</h3>
+                  <p className="mt-2 text-xs font-semibold text-cocoa-soft leading-relaxed">
+                    {st.desc}
+                  </p>
                 </div>
-                <h3 className="font-display text-xl text-cocoa leading-snug">{st.title}</h3>
-                <p className="mt-2 text-xs font-semibold text-cocoa-soft leading-relaxed">
-                  {st.desc}
-                </p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-// 2. Signature Dishes Showcase (Shop window, not the active cart menu)
+// 2. Signature Dishes Showcase
 export function SignatureSpecialtiesSection({ onOrderClick }: { onOrderClick: () => void }) {
   const specials = [
     {
@@ -195,7 +216,7 @@ export function SignatureSpecialtiesSection({ onOrderClick }: { onOrderClick: ()
   );
 }
 
-// 3. Why Order Direct (Economic & freshness benefits)
+// 3. Why Order Direct
 export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: () => void }) {
   return (
     <section id="why-direct" className="bg-lemon py-16 sm:py-24 border-t-[3px] border-cocoa">
@@ -203,14 +224,16 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
         <SectionHeading
           kicker="No Middlemen"
           title="Why Order Directly From Nawaab's?"
-          sub="Delivery apps take 25% to 30% commission on every order. When you order directly with us, you get fresher food and pass the savings back to your wallet."
+          sub="Delivery apps charge 25% to 30% commission on every order. When you order directly with us, you get fresher food and pass the savings back to your wallet."
           kickerColor="bg-cherry text-white"
           titleColor="text-cocoa"
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           <div className="card-pop bg-white p-6 rounded-3xl border-[3px] border-cocoa space-y-3">
-            <span className="text-4xl block">💰</span>
+            <span className="h-12 w-12 rounded-2xl bg-lemon border-2 border-cocoa flex items-center justify-center text-cherry shadow-pop-sm">
+              <Award size={24} />
+            </span>
             <h3 className="font-display text-xl text-cherry">Save 15% on Every Meal</h3>
             <p className="text-xs font-semibold text-cocoa-soft leading-relaxed">
               No inflated food app menu prices or hidden service fees. You pay the authentic restaurant rate with all prices inclusive of 5% GST.
@@ -218,7 +241,9 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
           </div>
 
           <div className="card-pop bg-white p-6 rounded-3xl border-[3px] border-cocoa space-y-3">
-            <span className="text-4xl block">⚡</span>
+            <span className="h-12 w-12 rounded-2xl bg-aqua border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm">
+              <Truck size={24} />
+            </span>
             <h3 className="font-display text-xl text-cherry">Direct Station Dispatch</h3>
             <p className="text-xs font-semibold text-cocoa-soft leading-relaxed">
               Orders go directly to the kitchen display screen of the outlet closest to your house across our 17 Hyderabad locations. Less transit time, steaming hot handis.
@@ -226,7 +251,9 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
           </div>
 
           <div className="card-pop bg-white p-6 rounded-3xl border-[3px] border-cocoa space-y-3">
-            <span className="text-4xl block">⏱️</span>
+            <span className="h-12 w-12 rounded-2xl bg-cream border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm">
+              <Clock size={24} />
+            </span>
             <h3 className="font-display text-xl text-cherry">Honest Promised Times</h3>
             <p className="text-xs font-semibold text-cocoa-soft leading-relaxed">
               AI kitchen-load estimation calculates your real preparation and dispatch schedule so you never have to guess when your biryani will arrive.
@@ -248,7 +275,7 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
   );
 }
 
-// 4. Bulk & Party Catering (per project requirements)
+// 4. Bulk & Party Catering
 export function BulkPartyCateringSection() {
   const [pax, setPax] = useState('25');
   const [date, setDate] = useState('');
@@ -275,8 +302,10 @@ export function BulkPartyCateringSection() {
         <div className="mt-12 card-pop bg-white p-6 sm:p-8 rounded-3xl border-[3px] border-cocoa">
           {submitted ? (
             <div className="text-center py-8 space-y-3">
-              <span className="text-5xl block animate-bounce">🎉</span>
-              <h3 className="font-display text-2xl text-cherry">Inquiry Received!</h3>
+              <span className="h-14 w-14 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center text-cherry mx-auto shadow-pop-sm">
+                <CheckCircle2 size={32} />
+              </span>
+              <h3 className="font-display text-2xl text-cherry">Inquiry Received</h3>
               <p className="text-xs font-semibold text-cocoa-soft max-w-md mx-auto">
                 Our central catering manager will call you at <strong className="text-cocoa">{contactPhone}</strong> within 30 minutes with our dawat deg quote and custom dessert packages.
               </p>
@@ -370,29 +399,21 @@ export function PopularStrip() {
   return (
     <div className="border-y-[3px] border-cocoa bg-tangerine py-4 shadow-[0_4px_0_0_#3A2318]">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-around gap-4 px-4 text-center">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🔥</span>
-          <span className="font-display text-sm uppercase tracking-wider text-cocoa sm:text-base">
-            Slow Dum Coal Cooking
-          </span>
+        <div className="flex items-center gap-2 text-cocoa font-display text-sm sm:text-base uppercase tracking-wider">
+          <Flame size={18} className="text-cherry" />
+          <span>Slow Dum Coal Cooking</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">🧈</span>
-          <span className="font-display text-sm uppercase tracking-wider text-cocoa sm:text-base">
-            100% Pure Desi Ghee
-          </span>
+        <div className="flex items-center gap-2 text-cocoa font-display text-sm sm:text-base uppercase tracking-wider">
+          <Award size={18} className="text-cherry" />
+          <span>100% Pure Desi Ghee</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">📜</span>
-          <span className="font-display text-sm uppercase tracking-wider text-cocoa sm:text-base">
-            All Prices Include 5% GST
-          </span>
+        <div className="flex items-center gap-2 text-cocoa font-display text-sm sm:text-base uppercase tracking-wider">
+          <FileText size={18} className="text-cherry" />
+          <span>All Prices Include 5% GST</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">⚡</span>
-          <span className="font-display text-sm uppercase tracking-wider text-cocoa sm:text-base">
-            Direct Kitchen Dispatch
-          </span>
+        <div className="flex items-center gap-2 text-cocoa font-display text-sm sm:text-base uppercase tracking-wider">
+          <Truck size={18} className="text-cherry" />
+          <span>Direct Kitchen Dispatch</span>
         </div>
       </div>
     </div>
@@ -423,8 +444,8 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-14 w-14 items-center justify-center rounded-full border-[3px] border-lemon bg-lemon text-2xl shadow-[3px_3px_0_0_#FF4FA3]">
-              🍗
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border-[3px] border-lemon bg-lemon text-cocoa shadow-pop-sm">
+              <UtensilsCrossed size={22} strokeWidth={2.5} />
             </span>
             <div className="leading-none">
               <p className="font-display text-2xl text-lemon">Nawaab's</p>
@@ -470,22 +491,22 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm font-semibold">
             <li>
               <a href="#signatures" className="text-cream/85 transition-colors hover:text-lemon">
-                🍲 Signature Specials
+                Signature Specials
               </a>
             </li>
             <li>
               <a href="#heritage" className="text-cream/85 transition-colors hover:text-lemon">
-                🔥 Ancient Dum Technique
+                Ancient Dum Technique
               </a>
             </li>
             <li>
               <a href="#catering" className="text-cream/85 transition-colors hover:text-lemon">
-                🎉 Bulk &amp; Party Catering: +91 40 2300 1978
+                Bulk &amp; Party Catering: +91 40 2300 1978
               </a>
             </li>
             <li>
               <span className="text-cream/65 text-xs">
-                🔒 DPDP Act 2023 Compliant &bull; 5% GST Included
+                DPDP Act 2023 Compliant &bull; 5% GST Included
               </span>
             </li>
           </ul>
@@ -494,7 +515,7 @@ export function Footer() {
 
       <div className="border-t border-cream/15 py-5 text-center text-sm font-bold text-cream/60">
         <p className="font-display text-base text-cream/85">Dum happens. Since 1978.</p>
-        <p className="mt-1">© 2026 Nawaab's Biryani Co. All rights reserved. Menu prices are inclusive of 5% GST.</p>
+        <p className="mt-1">&copy; 2026 Nawaab's Biryani Co. All rights reserved. Menu prices are inclusive of 5% GST.</p>
       </div>
     </footer>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingBag, Flame, X, Plus, Check, Search } from 'lucide-react';
+import { ShoppingBag, Flame, X, Plus, Check, Search, UtensilsCrossed } from 'lucide-react';
 import {
   type MenuItem,
   type Category,
@@ -368,7 +368,7 @@ export default function Menu({ items, onAddToCart }: MenuProps) {
         <div className="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.length === 0 ? (
             <div className="col-span-full text-center py-16 bg-white border-2 border-dashed border-cocoa/30 rounded-3xl p-8 space-y-3">
-              <span className="text-5xl block">🍲</span>
+              <UtensilsCrossed className="w-12 h-12 text-cocoa/40 mx-auto" />
               <h3 className="font-display text-2xl text-cocoa">No dishes match "{searchQuery}"</h3>
               <p className="text-xs font-bold text-cocoa-fade max-w-sm mx-auto">
                 Try searching for another dish like "Chicken Biryani", "Haleem", or choose the "All" category.

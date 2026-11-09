@@ -5,18 +5,16 @@ import {
   MapPin,
   Clock,
   Star,
-  Flame,
   Plus,
   Minus,
   ShoppingBag,
   ArrowRight,
-  ShieldCheck,
   ChevronDown,
   Sparkles,
-  Award,
-  Filter,
   Check,
-  Home
+  User,
+  UtensilsCrossed,
+  Info
 } from 'lucide-react';
 import {
   Outlet,
@@ -211,7 +209,7 @@ export default function OrderDashboardPage({
   // Customizer state
   const [customizingItem, setCustomizingItem] = useState<MenuItem | null>(null);
 
-  // Get outlet-specific menu items dynamically!
+  // Get outlet-specific menu items dynamically
   const outletMenuItems = useMemo(() => {
     return getMenuItemsForOutlet(selectedOutlet.id);
   }, [selectedOutlet.id]);
@@ -219,13 +217,9 @@ export default function OrderDashboardPage({
   // Filter items
   const filteredItems = useMemo(() => {
     return outletMenuItems.filter((item) => {
-      // Category filter
       if (activeCategory !== 'All' && item.category !== activeCategory) return false;
-      // Veg only filter
       if (vegOnly && item.dietary !== 'VEG') return false;
-      // Bestseller only filter
       if (bestsellerOnly && !item.bestseller) return false;
-      // Search query
       if (searchQuery.trim()) {
         const clean = searchQuery.toLowerCase().trim();
         const matches =
@@ -242,7 +236,6 @@ export default function OrderDashboardPage({
   const totalCartCount = cartItems.reduce((acc, c) => acc + c.quantity, 0);
   const totalCartPrice = cartItems.reduce((acc, c) => acc + c.totalPrice, 0);
 
-  // Helper to find quantity in cart for an item
   const getItemCartQty = (itemId: string) => {
     return cartItems
       .filter((c) => c.item.id === itemId)
@@ -260,20 +253,20 @@ export default function OrderDashboardPage({
   return (
     <div className="min-h-screen bg-cream text-cocoa pb-28 font-body">
       
-      {/* Top Professional Sticky Header */}
+      {/* Top Header */}
       <header className="border-b-[3px] border-cocoa bg-lemon sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
           
-          {/* Logo & Home Link */}
+          {/* Logo & Home Link (No emojis) */}
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onBackToHome}
-              className="flex items-center gap-2 group text-left"
+              className="flex items-center gap-2.5 group text-left"
               title="Return to Nawaab's Home"
             >
-              <span className="h-11 w-11 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-2xl shadow-pop-sm group-hover:-rotate-6 transition-transform">
-                🍗
+              <span className="h-11 w-11 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm group-hover:-rotate-6 transition-transform">
+                <UtensilsCrossed size={20} strokeWidth={2.5} />
               </span>
               <div>
                 <span className="font-display text-xl sm:text-2xl text-cherry outline-text [text-stroke-width:0.5px] block leading-none">
@@ -286,21 +279,29 @@ export default function OrderDashboardPage({
             </button>
           </div>
 
-          {/* Station Quick Switcher Chip */}
+          {/* Location Selector Bar (Clean, Professional, Well-proportioned) */}
           <button
             type="button"
             onClick={() => setIsOutletModalOpen(true)}
-            className="flex items-center gap-2 bg-white border-2 border-cocoa px-3.5 py-1.5 rounded-full text-xs font-black shadow-pop-sm hover:bg-cream transition-colors max-w-xs sm:max-w-sm truncate"
+            className="flex items-center gap-2 bg-white border-2 border-cocoa px-3.5 py-1.5 rounded-2xl shadow-pop-sm hover:bg-cream transition-colors max-w-xs sm:max-w-sm truncate"
+            title="Click to switch delivery outlet"
           >
-            <MapPin size={14} className="text-cherry shrink-0" />
-            <span className="truncate">{selectedOutlet.name}</span>
-            <ChevronDown size={14} className="text-cocoa-fade shrink-0" />
+            <MapPin size={15} className="text-cherry shrink-0" />
+            <div className="text-left min-w-0 pr-1">
+              <span className="block text-[8px] uppercase font-black tracking-wider text-cocoa-fade leading-none">
+                Station Kitchen
+              </span>
+              <span className="font-display text-xs sm:text-sm text-cocoa truncate block leading-tight mt-0.5">
+                {selectedOutlet.name}
+              </span>
+            </div>
+            <ChevronDown size={14} className="text-cocoa-fade shrink-0 ml-auto" />
           </button>
 
           {/* User Profile & Cart Button */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="hidden md:flex items-center gap-1.5 text-xs font-bold bg-white/70 border border-cocoa/30 px-3 py-1.5 rounded-xl">
-              <span>👤</span>
+            <div className="hidden md:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">
+              <User size={13} className="text-cocoa" />
               <span className="font-display text-cocoa">{customerUser.name}</span>
             </div>
 
@@ -322,10 +323,10 @@ export default function OrderDashboardPage({
         </div>
       </header>
 
-      {/* Main Container */}
+      {/* Main Content Container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
         
-        {/* Swiggy-Level Restaurant / Station Banner */}
+        {/* Restaurant / Station Header Card */}
         <div className="card-pop bg-white border-[3px] border-cocoa rounded-3xl p-5 sm:p-7 shadow-pop-md">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
@@ -336,8 +337,9 @@ export default function OrderDashboardPage({
                 <span className="text-[10px] font-black uppercase tracking-wider bg-lemon border border-cocoa px-2.5 py-0.5 rounded-full">
                   {selectedOutlet.type === 'CLOUD_KITCHEN' ? 'Cloud Kitchen' : 'Flagship Dine-In'}
                 </span>
-                <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full">
-                  ● Kitchen Active
+                <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  Kitchen Active
                 </span>
               </div>
 
@@ -348,11 +350,11 @@ export default function OrderDashboardPage({
 
               <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-bold text-cocoa">
                 <span className="flex items-center gap-1 text-emerald-700 font-black">
-                  <Star size={14} className="fill-emerald-600 text-emerald-600" /> 4.9 (18k+ ratings)
+                  <Star size={13} className="fill-emerald-600 text-emerald-600" /> 4.9 (18k+ ratings)
                 </span>
                 <span>&bull;</span>
                 <span className="flex items-center gap-1">
-                  <Clock size={14} className="text-cocoa-fade" /> ~{selectedOutlet.minPrepTimeMinutes + 15} mins delivery
+                  <Clock size={13} className="text-cocoa-fade" /> ~{selectedOutlet.minPrepTimeMinutes + 15} mins delivery
                 </span>
                 <span>&bull;</span>
                 <span className="text-cherry font-black">
@@ -365,7 +367,7 @@ export default function OrderDashboardPage({
               </div>
             </div>
 
-            {/* Direct Order Commission Benefit Badge */}
+            {/* Direct Order Benefit Badge */}
             <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-3.5 text-center sm:text-right shrink-0">
               <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
                 Direct Kitchen Order
@@ -380,22 +382,23 @@ export default function OrderDashboardPage({
           </div>
         </div>
 
-        {/* Elongated Professional Search Bar */}
+        {/* Elongated Professional Search Bar (Properly Aligned Icon & Text) */}
         <div className="space-y-3">
-          <div className="relative">
-            <Search size={20} className="absolute left-5 top-4 text-cocoa-fade" />
+          <div className="relative flex items-center">
+            <Search size={18} className="absolute left-4.5 pointer-events-none text-cocoa-fade" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for authentic dum biryani, kebabs, haleem, double ka meetha, or chai..."
-              className="w-full pl-13 pr-12 py-3.5 sm:py-4 text-sm sm:text-base font-bold rounded-full border-[3px] border-cocoa bg-white shadow-pop-sm outline-none focus:ring-4 focus:ring-lemon placeholder:text-cocoa-fade/75"
+              className="w-full pl-12 pr-12 py-3.5 sm:py-4 text-sm sm:text-base font-bold rounded-full border-[3px] border-cocoa bg-white shadow-pop-sm outline-none focus:ring-4 focus:ring-lemon placeholder:text-cocoa-fade/75"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-3.5 text-cocoa-fade hover:text-cocoa p-1"
+                className="absolute right-4 text-cocoa-fade hover:text-cocoa p-1"
+                title="Clear search"
               >
                 <X size={18} />
               </button>
@@ -424,7 +427,7 @@ export default function OrderDashboardPage({
           </div>
         </div>
 
-        {/* Swiggy Filter Bar: Veg Only toggle, Bestsellers, Categories */}
+        {/* Filter Bar: Veg Only toggle, Bestsellers, Categories */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-y-2 border-dashed border-cocoa/25 py-3">
           
           {/* Category Tabs */}
@@ -482,26 +485,29 @@ export default function OrderDashboardPage({
                   : 'bg-white text-cocoa hover:bg-cream'
               }`}
             >
-              <span>★ Bestsellers</span>
+              <Sparkles size={12} />
+              <span>Bestsellers</span>
             </button>
           </div>
 
         </div>
 
-        {/* Outlet Change Notification if Items Differ */}
+        {/* Station Condition Notices */}
         {selectedOutlet.id === 'out-kukatpally' && (
-          <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-3 text-xs font-bold text-cocoa flex items-center justify-between">
-            <span>ℹ️ Kukatpally Express Station: Double Ka Meetha and Stone seared items sell out rapidly during evening rushes.</span>
+          <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-3 text-xs font-bold text-cocoa flex items-center gap-2">
+            <Info size={15} className="text-cocoa shrink-0" />
+            <span>Kukatpally Express Station: Double Ka Meetha and Stone seared items sell out rapidly during evening rushes.</span>
           </div>
         )}
 
         {selectedOutlet.type === 'CLOUD_KITCHEN' && (
-          <div className="bg-aqua/20 border-2 border-cocoa rounded-2xl p-3 text-xs font-bold text-cocoa flex items-center justify-between">
-            <span>✨ Cloud Kitchen Exclusive: <strong>Express Biryani Box + Thums Up</strong> combo is available only at this location!</span>
+          <div className="bg-aqua/20 border-2 border-cocoa rounded-2xl p-3 text-xs font-bold text-cocoa flex items-center gap-2">
+            <Sparkles size={15} className="text-cherry shrink-0" />
+            <span>Cloud Kitchen Exclusive: <strong>Express Biryani Box + Thums Up</strong> combo is available only at this location.</span>
           </div>
         )}
 
-        {/* Swiggy-Level Menu Items List */}
+        {/* Menu Items List */}
         <div className="space-y-4">
           <h2 className="font-display text-2xl text-cocoa border-b-2 border-cocoa pb-2 flex items-center justify-between">
             <span>
@@ -526,7 +532,7 @@ export default function OrderDashboardPage({
                   {/* Left Column: Details */}
                   <div className="flex-1 space-y-1.5 min-w-0 pr-4">
                     
-                    {/* Veg/Non-Veg & Bestseller Badges */}
+                    {/* Badges */}
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded border-2 border-cocoa bg-white flex items-center justify-center p-0.5 shrink-0">
                         <span
@@ -548,7 +554,6 @@ export default function OrderDashboardPage({
                         </span>
                       )}
 
-                      {/* Outlet specific status label */}
                       {item.outletStatusLabel && (
                         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
                           isAvailable
@@ -584,7 +589,7 @@ export default function OrderDashboardPage({
                       </p>
                     )}
 
-                    {/* Tagline & Description */}
+                    {/* Description */}
                     <p className="text-xs font-semibold text-cocoa-soft max-w-xl leading-relaxed pt-1">
                       {item.description}
                     </p>
@@ -597,7 +602,7 @@ export default function OrderDashboardPage({
                     </p>
                   </div>
 
-                  {/* Right Column: High-Res Photo & Iconic Swiggy-Style ADD Button */}
+                  {/* Right Column: High-Res Photo & ADD Button */}
                   <div className="relative shrink-0 mx-auto sm:mx-0 w-36 sm:w-40 flex flex-col items-center">
                     <div className="h-32 w-32 sm:h-36 sm:w-36 rounded-3xl border-[3px] border-cocoa overflow-hidden shadow-pop-sm bg-cream">
                       <img
@@ -609,7 +614,7 @@ export default function OrderDashboardPage({
                       />
                     </div>
 
-                    {/* ADD Button overlapping at bottom */}
+                    {/* ADD Button */}
                     <div className="relative -mt-5 z-10">
                       {!isAvailable ? (
                         <span className="inline-block bg-white border-2 border-cocoa px-3 py-1.5 rounded-xl text-[10px] font-black uppercase text-red-600 shadow-pop-sm">
@@ -664,20 +669,25 @@ export default function OrderDashboardPage({
 
       </div>
 
-      {/* Floating Sticky Bottom Cart Bar (Swiggy Pattern) */}
+      {/* Floating Bottom Cart Bar (No emojis) */}
       {totalCartCount > 0 && (
         <div className="fixed bottom-4 inset-x-0 z-40 px-4">
           <div className="max-w-2xl mx-auto card-pop bg-cherry text-white border-[3px] border-cocoa p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in slide-in-from-bottom duration-200">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-lemon block">
-                {totalCartCount} {totalCartCount === 1 ? 'Dish' : 'Dishes'} in Feast
+            <div className="flex items-center gap-3">
+              <span className="h-10 w-10 rounded-xl bg-lemon text-cocoa border border-cocoa flex items-center justify-center shrink-0">
+                <ShoppingBag size={18} />
               </span>
-              <p className="font-display text-xl sm:text-2xl text-white leading-tight">
-                Total: ₹{totalCartPrice}
-              </p>
-              <p className="text-[10px] text-cream/75">
-                Dispatching from {selectedOutlet.name} &bull; 5% GST Included
-              </p>
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-lemon block">
+                  {totalCartCount} {totalCartCount === 1 ? 'Dish' : 'Dishes'} in Feast
+                </span>
+                <p className="font-display text-xl sm:text-2xl text-white leading-tight">
+                  Total: ₹{totalCartPrice}
+                </p>
+                <p className="text-[10px] text-cream/75">
+                  Dispatching from {selectedOutlet.name} &bull; 5% GST Included
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -735,7 +745,7 @@ export default function OrderDashboardPage({
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto space-y-2.5 flex-1 max-h-[50vh]">
+            <div className="p-4 overflow-y-auto space-y-2.5 flex-1 overscroll-contain">
               {OUTLETS.map((outlet) => {
                 const isSelected = selectedOutlet.id === outlet.id;
                 return (
@@ -791,4 +801,3 @@ export default function OrderDashboardPage({
     </div>
   );
 }
-

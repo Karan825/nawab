@@ -46,8 +46,8 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
             <ArrowLeft size={20} />
           </a>
 
-          <div className="h-12 w-12 rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center font-display text-2xl shadow-pop-sm shrink-0">
-            👨‍🍳
+          <div className="h-12 w-12 rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm shrink-0">
+            <ChefHat size={26} className="text-cocoa" />
           </div>
 
           <div>
@@ -84,7 +84,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
       <main className="flex-1 p-4 sm:p-6 max-w-7xl mx-auto w-full">
         {outletOrders.length === 0 ? (
           <div className="text-center py-32 bg-cocoa-soft/40 rounded-3xl border-2 border-dashed border-cream/20">
-            <span className="text-6xl">✨</span>
+            <CheckCircle2 className="w-16 h-16 text-lemon/80 mx-auto" />
             <h3 className="font-display text-2xl text-lemon mt-4">All Handis Cleared!</h3>
             <p className="text-xs font-bold text-cream/60 mt-1">
               No pending orders for {currentOutlet.name}. Waiting for incoming orders...
@@ -214,8 +214,9 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
                     )}
 
                     {order.status === 'HANDED_TO_RIDER' && (
-                      <div className="text-center py-3 bg-emerald-950/60 border border-emerald-500/50 rounded-2xl text-xs font-black text-emerald-300">
-                        ✓ Handed to Rider (Dispatched)
+                      <div className="text-center py-3 bg-emerald-950/60 border border-emerald-500/50 rounded-2xl text-xs font-black text-emerald-300 flex items-center justify-center gap-1.5">
+                        <CheckCircle2 size={14} className="text-emerald-400" />
+                        <span>Handed to Rider (Dispatched)</span>
                       </div>
                     )}
                   </div>
