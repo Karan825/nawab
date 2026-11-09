@@ -1,6 +1,12 @@
 import { useState } from 'react';
-import { Star } from 'lucide-react';
-import { DRINKS, CATEGORIES, type Category, type Drink } from '../data';
+import { ShoppingBag, Flame, X, Plus, Check } from 'lucide-react';
+import {
+  type MenuItem,
+  type Category,
+  CATEGORIES,
+  type PortionOption,
+  type AddonOption,
+} from '../data';
 
 function PriceBadge({ price }: { price: number }) {
   return (
@@ -22,82 +28,284 @@ function PriceBadge({ price }: { price: number }) {
   );
 }
 
-function DrinkCard({ drink }: { drink: Drink }) {
+interface ItemCustomizerModalProps {
+  item: MenuItem;
+  onClose: () => void;
+  onAdd: (item: MenuItem, portion: PortionOption, addons: AddonOption[]) => void;
+}
+
+function ItemCustomizerModal({ item, onClose, onAdd }: ItemCustomizerModalProps) {
+  const [selectedPortion, setSelectedPortion] = useState<PortionOption>(item.portions[0]);
+  const [selectedAddons, setSelectedAddons] = useState<AddonOption[]>([]);
+
+  const toggleAddon = (addon: AddonOption) => {
+    setSelectedAddons((prev) =>
+      prev.some((a) => a.id === addon.id) ? prev.filter((a) => a.id !== addon.id) : [...prev, addon]
+    );
+  };
+
+  const calculatedUnitPrice =
+    item.price +
+    selectedPortion.priceModifier +
+    selectedAddons.reduce((acc, a) => acc + a.price, 0);
+
+  const handleConfirm = () => {
+    onAdd(item, selectedPortion, selectedAddons);
+    onClose();
+  };
+
   return (
-    <article className="card-pop relative flex flex-col hover:-translate-y-1.5 hover:shadow-pop-lg">
-      <PriceBadge price={drink.price} />
-      <div className="relative">
-        <img
-          src={drink.photo}
-          alt={drink.name}
-          loading="lazy"
-          className="h-56 w-full border-b-[3px] border-cocoa object-cover"
-        />
-        {drink.badge && (
-          <span className="absolute left-3 top-3 -rotate-3 rounded-full border-2 border-cocoa bg-hot-pink px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-white shadow-pop-sm">
-            {drink.badge}
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="font-display text-xl text-cocoa">{drink.name}</h3>
-        <p className="mt-0.5 text-sm font-bold italic text-cocoa-fade">{drink.tagline}</p>
-        <ul className="mt-3 flex flex-wrap gap-1.5">
-          {drink.ingredients.map((ing) => (
-            <li
-              key={ing}
-              className="rounded-full border-2 border-cocoa/70 bg-cream px-2.5 py-0.5 text-[11px] font-bold text-cocoa-soft"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-cocoa/75 backdrop-blur-sm">
+      <div className="card-pop relative w-full max-w-lg bg-cream border-[4px] border-cocoa shadow-pop-lg max-h-[90vh] flex flex-col overflow-hidden rounded-3xl animate-in fade-in zoom-in-95 duration-150">
+        
+        {/* Header */}
+        <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span
+              className={`h-4 w-4 rounded-sm border-2 border-cocoa flex items-center justify-center bg-white ${
+                item.dietary === 'VEG' ? 'text-emerald-600' : 'text-cherry'
+              }`}
             >
-              {ing}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 flex items-center justify-between border-t-2 border-dashed border-cocoa/20 pt-3">
-          <div className="flex gap-0.5" aria-label="5 out of 5 stars">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} size={15} className="fill-lemon text-cocoa" strokeWidth={2} />
-            ))}
+              <span className={`h-2 w-2 rounded-full ${item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'}`} />
+            </span>
+            <div>
+              <h3 className="font-display text-xl text-cocoa leading-tight">{item.name}</h3>
+              <p className="text-xs font-bold text-cocoa-fade italic">Includes 5% GST</p>
+            </div>
           </div>
-          <a
-            href="#builder"
-            className="text-sm font-extrabold uppercase tracking-wider text-cherry underline decoration-[3px] decoration-lemon underline-offset-4 transition-colors hover:text-hot-pink"
+          <button
+            type="button"
+            onClick={onClose}
+            className="h-9 w-9 rounded-full bg-white border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream"
           >
-            Customize
-          </a>
+            <X size={18} />
+          </button>
         </div>
+
+        {/* Modal Scrollable Body */}
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-cocoa">
+          {/* Portion Options */}
+          <div>
+            <h4 className="font-display text-base text-cherry mb-2">1. Choose Portion Size</h4>
+            <div className="space-y-2">
+              {item.portions.map((portion) => (
+                <button
+                  key={portion.id}
+                  type="button"
+                  onClick={() => setSelectedPortion(portion)}
+                  className={`w-full p-3 rounded-2xl border-2 border-cocoa flex items-center justify-between text-xs transition-all ${
+                    selectedPortion.id === portion.id
+                      ? 'bg-lemon font-black shadow-pop-sm -translate-y-0.5'
+                      : 'bg-white hover:bg-cream font-bold'
+                  }`}
+                >
+                  <div className="text-left">
+                    <span className="block text-sm">{portion.name}</span>
+                    <span className="text-[11px] text-cocoa-fade">{portion.serves}</span>
+                  </div>
+                  <span className="font-display text-sm text-cherry">
+                    {portion.priceModifier > 0 ? `+₹${portion.priceModifier}` : 'Standard'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Add-on Options */}
+          {item.addons.length > 0 && (
+            <div>
+              <h4 className="font-display text-base text-cherry mb-2">2. Extra Add-ons & Sides</h4>
+              <div className="space-y-2">
+                {item.addons.map((addon) => {
+                  const isSelected = selectedAddons.some((a) => a.id === addon.id);
+                  return (
+                    <button
+                      key={addon.id}
+                      type="button"
+                      onClick={() => toggleAddon(addon)}
+                      className={`w-full p-3 rounded-2xl border-2 border-cocoa flex items-center justify-between text-xs transition-all ${
+                        isSelected
+                          ? 'bg-aqua font-black shadow-pop-sm -translate-y-0.5'
+                          : 'bg-white hover:bg-cream font-bold'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`h-4 w-4 rounded border border-cocoa flex items-center justify-center ${
+                            isSelected ? 'bg-cocoa text-lemon' : 'bg-white'
+                          }`}
+                        >
+                          {isSelected && <Check size={12} strokeWidth={3} />}
+                        </span>
+                        <span className="text-xs">{addon.name}</span>
+                      </div>
+                      <span className="font-bold text-cocoa">+₹{addon.price}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer Button */}
+        <div className="p-5 border-t-[3px] border-cocoa bg-white flex items-center justify-between gap-4">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">Item Total</span>
+            <span className="font-display text-2xl text-cherry">₹{calculatedUnitPrice}</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleConfirm}
+            className="pill-btn bg-cherry text-white text-sm !px-6 !py-3 flex items-center gap-2 shadow-pop-sm hover:scale-105"
+          >
+            <ShoppingBag size={18} />
+            <span>Add to Feast</span>
+          </button>
+        </div>
+
       </div>
-    </article>
+    </div>
   );
 }
 
-export default function Menu() {
-  const [active, setActive] = useState<Category>('All');
-  const filtered = active === 'All' ? DRINKS : DRINKS.filter((d) => d.category === active);
+interface MenuItemCardProps {
+  item: MenuItem;
+  onAddToCart: (item: MenuItem, portion: PortionOption, addons: AddonOption[]) => void;
+}
+
+function MenuItemCard({ item, onAddToCart }: MenuItemCardProps) {
+  const [isCustomizing, setIsCustomizing] = useState(false);
+
+  const handleCardAdd = () => {
+    // If multiple portions or addons exist, open customizer modal
+    if (item.portions.length > 1 || item.addons.length > 0) {
+      setIsCustomizing(true);
+    } else {
+      // Single portion, add directly
+      onAddToCart(item, item.portions[0], []);
+    }
+  };
 
   return (
-    <section id="menu" className="relative bg-cream py-16 sm:py-24">
+    <>
+      <article className="card-pop relative flex flex-col hover:-translate-y-1.5 hover:shadow-pop-lg transition-transform bg-white overflow-hidden rounded-3xl">
+        <PriceBadge price={item.price} />
+        
+        <div className="relative overflow-hidden">
+          <img
+            src={item.photo}
+            alt={item.name}
+            loading="lazy"
+            className="h-56 w-full border-b-[3px] border-cocoa object-cover"
+          />
+
+          {item.badge && (
+            <span className="absolute left-3 top-3 -rotate-3 rounded-full border-2 border-cocoa bg-lemon px-3 py-1 text-[11px] font-black uppercase tracking-wider text-cocoa shadow-pop-sm">
+              {item.badge}
+            </span>
+          )}
+
+          {/* FSSAI Veg / Non-Veg Indicator */}
+          <div className="absolute right-3 bottom-3 rounded-md bg-white border-2 border-cocoa p-1 shadow-pop-sm flex items-center justify-center">
+            <span
+              className={`h-3 w-3 rounded-full ${
+                item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'
+              }`}
+              title={item.dietary === 'VEG' ? 'Pure Veg' : 'Non-Veg'}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-1 flex-col p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade bg-cream border border-cocoa/30 px-2 py-0.5 rounded-full">
+              {item.category}
+            </span>
+            <span className="text-[10px] font-extrabold text-cherry flex items-center gap-0.5">
+              <Flame size={12} /> {item.spiceLevel}
+            </span>
+          </div>
+
+          <h3 className="font-display text-xl text-cocoa leading-tight">{item.name}</h3>
+          <p className="mt-1 text-xs font-bold text-cocoa-fade italic leading-snug">{item.tagline}</p>
+          <p className="mt-2 text-xs font-semibold text-cocoa-soft line-clamp-2 leading-relaxed">
+            {item.description}
+          </p>
+
+          <div className="mt-4 pt-3 border-t-2 border-dashed border-cocoa/20 flex items-center justify-between">
+            <span className="text-[11px] font-bold text-cocoa-fade">
+              {item.portions.length > 1 ? `${item.portions.length} sizes available` : 'Single portion'}
+            </span>
+
+            <button
+              type="button"
+              onClick={handleCardAdd}
+              className="pill-btn bg-lemon text-cocoa text-xs !px-4 !py-2 flex items-center gap-1.5 shadow-pop-sm hover:bg-lemon-deep active:scale-95"
+            >
+              <Plus size={14} strokeWidth={3} />
+              <span>Add to Cart</span>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      {isCustomizing && (
+        <ItemCustomizerModal
+          item={item}
+          onClose={() => setIsCustomizing(false)}
+          onAdd={onAddToCart}
+        />
+      )}
+    </>
+  );
+}
+
+interface MenuProps {
+  items: MenuItem[];
+  onAddToCart: (item: MenuItem, portion: PortionOption, addons: AddonOption[]) => void;
+  searchTerm: string;
+}
+
+export default function Menu({ items, onAddToCart, searchTerm }: MenuProps) {
+  const [activeCategory, setActiveCategory] = useState<Category>('All');
+
+  const filtered = items.filter((item) => {
+    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+    const matchesSearch =
+      !searchTerm ||
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.ingredients.some((ing) => ing.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      item.category.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <section id="menu" className="relative bg-cream py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="text-center">
           <span className="inline-block -rotate-1 rounded-full border-[3px] border-cocoa bg-tangerine px-4 py-1 text-xs font-extrabold uppercase tracking-[0.25em] shadow-pop-sm">
-            The lineup
+            Fresh Dum Lineup
           </span>
-          <h2 className="mt-4 font-display text-4xl text-cherry outline-text sm:text-5xl">
-            Royal Dum Menu
+          <h2 className="mt-3 font-display text-4xl text-cherry outline-text sm:text-5xl">
+            Royal Hyderabadi Menu
           </h2>
-          <p className="mx-auto mt-3 max-w-lg font-semibold text-cocoa-soft">
-            Slow-cooked Hyderabadi Dum Biryanis, kebabs, desserts & Irani chai. Prices include 5% GST.
+          <p className="mx-auto mt-2 max-w-lg font-bold text-cocoa-soft text-sm sm:text-base">
+            All prices are inclusive of 5% GST. Sealed dum handis cooked with pure ghee & saffron.
           </p>
         </div>
 
+        {/* Category Pills */}
         <div className="no-scrollbar mt-8 flex gap-2.5 overflow-x-auto pb-2 sm:justify-center">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               type="button"
-              onClick={() => setActive(cat)}
-              aria-pressed={active === cat}
-              className={`shrink-0 rounded-full border-[3px] border-cocoa px-5 py-2 text-sm font-extrabold uppercase tracking-wider transition-all ${
-                active === cat
+              onClick={() => setActiveCategory(cat)}
+              aria-pressed={activeCategory === cat}
+              className={`shrink-0 rounded-full border-[3px] border-cocoa px-5 py-2 text-xs sm:text-sm font-black uppercase tracking-wider transition-all ${
+                activeCategory === cat
                   ? 'bg-cocoa text-lemon shadow-pop-sm'
                   : 'bg-white text-cocoa hover:bg-lemon'
               }`}
@@ -107,10 +315,28 @@ export default function Menu() {
           ))}
         </div>
 
-        <div className="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((drink) => (
-            <DrinkCard key={drink.id} drink={drink} />
-          ))}
+        {/* Search Results Summary */}
+        {searchTerm && (
+          <p className="text-center mt-4 text-xs font-bold text-cocoa-fade">
+            Showing results matching <span className="text-cherry">"{searchTerm}"</span> ({filtered.length} found)
+          </p>
+        )}
+
+        {/* Cards Grid */}
+        <div className="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.length === 0 ? (
+            <div className="col-span-full text-center py-16 bg-white border-2 border-dashed border-cocoa/30 rounded-3xl p-8">
+              <span className="text-4xl">🍲</span>
+              <h3 className="font-display text-xl text-cocoa mt-3">No dishes found</h3>
+              <p className="text-xs font-bold text-cocoa-fade mt-1">
+                Try searching for "biryani", "haleem", "chicken", or pick another category.
+              </p>
+            </div>
+          ) : (
+            filtered.map((item) => (
+              <MenuItemCard key={item.id} item={item} onAddToCart={onAddToCart} />
+            ))
+          )}
         </div>
       </div>
     </section>

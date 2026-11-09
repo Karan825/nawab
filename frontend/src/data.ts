@@ -1,291 +1,274 @@
-export interface Drink {
+export interface PortionOption {
+  id: string;
+  name: string;
+  priceModifier: number;
+  serves: string;
+}
+
+export interface AddonOption {
+  id: string;
+  name: string;
+  price: number;
+}
+
+export interface MenuItem {
   id: string;
   name: string;
   tagline: string;
+  description: string;
   ingredients: string[];
-  price: number;
+  price: number; // inclusive of 5% GST
   category: 'Biryani' | 'Starters' | 'Desserts' | 'Chai';
   photo: string;
   colors: { top: string; bottom: string; foam: string };
   badge?: string;
-  isAvailable?: boolean;
+  dietary: 'VEG' | 'NON_VEG';
+  spiceLevel: 'MILD' | 'MEDIUM' | 'SPICY' | 'EXTRA_SPICY';
+  allergens: string[];
+  portions: PortionOption[];
+  addons: AddonOption[];
+  isAvailable: boolean;
 }
 
-export const DRINKS: Drink[] = [
+export type Drink = MenuItem;
+
+export interface CartItem {
+  id: string;
+  item: MenuItem;
+  portion: PortionOption;
+  addons: AddonOption[];
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'chk-dum-biryani',
     name: 'Royal Chicken Dum Biryani',
     tagline: 'The one that started it all in 1978',
-    ingredients: ['Aged Basmati', 'Farm Chicken', 'Pure Desi Ghee', 'Kashmiri Saffron'],
+    description:
+      'Authentic Kachhi Dum style biryani with succulent chicken marinated overnight in freshly ground Nizami spices, layered with aged basmati rice and pure desi ghee.',
+    ingredients: ['Aged Basmati Rice', 'Farm Fresh Chicken', 'Pure Desi Ghee', 'Kashmiri Saffron', 'Fried Onions'],
     price: 380,
     category: 'Biryani',
     photo:
       'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#FFC96B', bottom: '#D96E14', foam: '#FFF4E2' },
     badge: 'Fan fave',
+    dietary: 'NON_VEG',
+    spiceLevel: 'MEDIUM',
+    allergens: ['Dairy (Ghee, Curd)'],
     isAvailable: true,
+    portions: [
+      { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
+      { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 420, serves: '3–4 persons' },
+      { id: 'p-jum', name: 'Jumbo Royal Handi (Serves 6–8)', priceModifier: 850, serves: '6–8 persons' },
+    ],
+    addons: [
+      { id: 'a-salan', name: 'Extra Mirchi Ka Salan (250ml)', price: 60 },
+      { id: 'a-raita', name: 'Double Garlic Dahi Raita', price: 40 },
+      { id: 'a-egg', name: 'Fried Boiled Eggs (2 pcs)', price: 40 },
+      { id: 'a-ghee', name: 'Pure Desi Ghee Tadka', price: 40 },
+    ],
   },
   {
     id: 'mutton-dum-biryani',
     name: 'Nizami Mutton Dum Biryani',
     tagline: 'Tender baby goat slow-dummed for 4 hours',
-    ingredients: ['Prime Mutton', 'Shahi Garam Masala', 'Brown Onions', 'Saffron Milk'],
+    description:
+      'The crown jewel of Hyderabad cuisine. Tender baby goat cuts slow-dummed on coal fire with aged basmati, caramelized onions, and rich saffron milk.',
+    ingredients: ['Prime Baby Goat Mutton', 'Aged Basmati Rice', 'Shahi Garam Masala', 'Pure Ghee', 'Saffron Milk'],
     price: 490,
     category: 'Biryani',
     photo:
       'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#E8636A', bottom: '#A61B22', foam: '#FFE9E6' },
     badge: 'Most lovable',
+    dietary: 'NON_VEG',
+    spiceLevel: 'MEDIUM',
+    allergens: ['Dairy (Ghee)'],
     isAvailable: true,
+    portions: [
+      { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
+      { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 510, serves: '3–4 persons' },
+      { id: 'p-jum', name: 'Jumbo Royal Handi (Serves 6–8)', priceModifier: 990, serves: '6–8 persons' },
+    ],
+    addons: [
+      { id: 'a-salan', name: 'Extra Mirchi Ka Salan (250ml)', price: 60 },
+      { id: 'a-raita', name: 'Double Garlic Dahi Raita', price: 40 },
+      { id: 'a-boti', name: 'Extra Mutton Boti Gravy', price: 90 },
+    ],
   },
   {
     id: 'veg-dum-biryani',
     name: 'Nawabi Subz Dum Biryani',
     tagline: 'Farm-fresh veggies & malai paneer',
-    ingredients: ['Malai Paneer', 'Carrots & Beans', 'Fried Onions', 'Kaju Paste'],
+    description:
+      'Garden fresh vegetables, french beans, carrots, and succulent malai paneer cubes marinated in authentic spices and slow-dummed with saffron basmati.',
+    ingredients: ['Malai Paneer', 'French Beans', 'Carrots & Peas', 'Brown Onions', 'Aged Basmati', 'Kaju Paste'],
     price: 290,
     category: 'Biryani',
     photo:
       'https://images.unsplash.com/photo-1642821373181-696a54913e9a?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#A8E6A3', bottom: '#3BA55D', foam: '#F0FFF0' },
+    dietary: 'VEG',
+    spiceLevel: 'MILD',
+    allergens: ['Dairy (Paneer, Ghee)', 'Tree Nuts (Cashew)'],
     isAvailable: true,
+    portions: [
+      { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
+      { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 350, serves: '3–4 persons' },
+    ],
+    addons: [
+      { id: 'a-salan', name: 'Extra Mirchi Ka Salan', price: 60 },
+      { id: 'a-paneer', name: 'Extra Tandoori Paneer (4 pcs)', price: 70 },
+      { id: 'a-raita', name: 'Double Garlic Dahi Raita', price: 40 },
+    ],
   },
   {
     id: 'chicken-65',
-    name: 'Authentic Chicken 65',
-    tagline: 'Crispy, fiery, tossed in fresh curry leaves',
-    ingredients: ['Boneless Chicken', 'Curry Leaves', 'Guntur Chilies', 'Garlic Dip'],
+    name: 'Authentic Hyderabad Chicken 65',
+    tagline: 'Crispy, fiery, tossed in crackling curry leaves',
+    description:
+      'The legendary 1965 recipe: boneless chicken chunks coated in spiced batter, fried till crackling, and tossed in yogurt, garlic, and fresh curry leaves.',
+    ingredients: ['Boneless Chicken', 'Fresh Curry Leaves', 'Guntur Red Chilies', 'Curd & Garlic'],
     price: 310,
     category: 'Starters',
     photo:
       'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#E8333A', bottom: '#8A151A', foam: '#FFE9E6' },
-    badge: 'New!',
+    badge: 'Chef fave',
+    dietary: 'NON_VEG',
+    spiceLevel: 'EXTRA_SPICY',
+    allergens: ['Dairy (Curd)'],
     isAvailable: true,
+    portions: [
+      { id: 'p-reg', name: 'Standard Plate (8 pcs)', priceModifier: 0, serves: '1–2 persons' },
+      { id: 'p-plat', name: 'Party Platter (16 pcs)', priceModifier: 280, serves: '3–4 persons' },
+    ],
+    addons: [
+      { id: 'a-dip', name: 'Spicy Garlic Mayo Dip', price: 30 },
+      { id: 'a-lemon', name: 'Extra Onion & Lemon Rings', price: 15 },
+    ],
   },
   {
     id: 'mutton-haleem',
     name: 'Shahi Mutton Haleem',
-    tagline: '12-hour slow cooked royal festival stew',
-    ingredients: ['Shredded Mutton', 'Broken Wheat', 'Desi Ghee', 'Fried Cashews'],
+    tagline: '12-hour slow simmered royal festival stew',
+    description:
+      'Nizami delicacy of shredded goat meat, pounded wheat, and lentils slow-cooked overnight with pure ghee and dry spices, garnished with fried cashews.',
+    ingredients: ['Shredded Goat Mutton', 'Broken Wheat', 'Desi Ghee', 'Lentils', 'Fried Cashews & Birista'],
     price: 350,
     category: 'Starters',
     photo:
       'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#C9A47E', bottom: '#6B4226', foam: '#FFF7EC' },
+    badge: 'Royal Stew',
+    dietary: 'NON_VEG',
+    spiceLevel: 'MEDIUM',
+    allergens: ['Gluten (Wheat)', 'Dairy (Ghee)', 'Nuts (Cashews)'],
     isAvailable: true,
+    portions: [
+      { id: 'p-bowl', name: 'Regular Bowl (350ml)', priceModifier: 0, serves: '1 person' },
+      { id: 'p-pot', name: 'Family Pot (750ml)', priceModifier: 320, serves: '2–3 persons' },
+    ],
+    addons: [
+      { id: 'a-kaju', name: 'Extra Roasted Cashews & Lemon', price: 40 },
+      { id: 'a-ghee', name: 'Extra Hot Desi Ghee Drizzle', price: 30 },
+    ],
   },
   {
     id: 'pathar-ka-gosht',
     name: 'Barkas Pathar Ka Gosht',
     tagline: 'Seared on natural heated river stone slabs',
-    ingredients: ['Mutton Fillets', 'Raw Papaya', 'Allspice', 'Black Pepper'],
+    description:
+      'Thinly beaten lamb fillets marinated with raw papaya and secret potli spices, seared live over heated granite stone slabs.',
+    ingredients: ['Mutton Fillets', 'Raw Papaya Marinade', 'Allspice Blend', 'Black Pepper', 'Mint'],
     price: 420,
     category: 'Starters',
     photo:
       'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#8A5D4A', bottom: '#4A2A1A', foam: '#FFF4E2' },
+    dietary: 'NON_VEG',
+    spiceLevel: 'SPICY',
+    allergens: [],
     isAvailable: true,
+    portions: [{ id: 'p-std', name: 'Standard Plate (6 strips)', priceModifier: 0, serves: '1–2 persons' }],
+    addons: [{ id: 'a-chilli', name: 'Charred Green Chilies', price: 20 }],
   },
   {
     id: 'paneer-tikka',
     name: 'Banjara Malai Paneer Tikka',
     tagline: 'Clay tandoor charred with hung curd & saffron',
-    ingredients: ['Malai Paneer', 'Hung Curd', 'Bell Peppers', 'Carom Seeds'],
+    description:
+      'Creamy malai paneer cubes marinated with saffron, crushed pepper, hung curd, and carom seeds, skewered and roasted in clay tandoor.',
+    ingredients: ['Malai Paneer', 'Hung Curd', 'Bell Peppers', 'Carom Seeds', 'Saffron'],
     price: 280,
     category: 'Starters',
     photo:
       'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#FFC96B', bottom: '#D97E14', foam: '#FFF4E2' },
+    dietary: 'VEG',
+    spiceLevel: 'MILD',
+    allergens: ['Dairy (Paneer, Curd)'],
     isAvailable: true,
+    portions: [{ id: 'p-std', name: 'Standard Skewer (6 pcs)', priceModifier: 0, serves: '1–2 persons' }],
+    addons: [{ id: 'a-dip', name: 'Mint Chutney & Garlic Dip', price: 25 }],
   },
   {
     id: 'double-ka-meetha',
     name: 'Shahi Double Ka Meetha',
     tagline: 'Crispy fried bread in cardamom rabri & pistachios',
-    ingredients: ['Fried Bread', 'Saffron Milk', 'Khoya Rabri', 'Silver Vark'],
+    description:
+      'Hyderabad’s royal dessert: deep fried bread slices soaked in saffron milk and rich reduced khoya rabri, finished with silver vark and toasted pistachios.',
+    ingredients: ['Fried Bread Slices', 'Saffron Milk', 'Reduced Khoya Rabri', 'Pistachios', 'Silver Vark'],
     price: 160,
     category: 'Desserts',
     photo:
       'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#FFB98A', bottom: '#E26D2B', foam: '#FFF4E2' },
     badge: 'Limited',
+    dietary: 'VEG',
+    spiceLevel: 'MILD',
+    allergens: ['Gluten (Bread)', 'Dairy (Milk, Khoya)', 'Nuts (Pistachio)'],
     isAvailable: true,
+    portions: [{ id: 'p-std', name: 'Single Bowl (2 slices)', priceModifier: 0, serves: '1 person' }],
+    addons: [{ id: 'a-rabri', name: 'Extra Khoya Rabri Scoop', price: 40 }],
   },
   {
     id: 'irani-chai',
     name: 'Dum Ki Irani Chai Flask',
     tagline: 'Reduced buffalo milk tea with Osmania biscuits',
-    ingredients: ['Assam Tea', 'Condensed Milk', 'Green Cardamom', 'Osmania Biscuits'],
+    description:
+      'Slow-simmered rich black tea decoction combined with creamy reduced milk, served with 4 fresh handmade Osmania sweet & salt biscuits.',
+    ingredients: ['Assam Black Tea', 'Reduced Buffalo Milk', 'Green Cardamom', '4 Osmania Biscuits'],
     price: 120,
     category: 'Chai',
     photo:
       'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=900&q=80',
     colors: { top: '#D9A066', bottom: '#7D471D', foam: '#FFF6E9' },
+    dietary: 'VEG',
+    spiceLevel: 'MILD',
+    allergens: ['Dairy (Milk)', 'Gluten (Biscuits)'],
     isAvailable: true,
+    portions: [{ id: 'p-flask', name: 'Thermal Flask (Serves 2–3)', priceModifier: 0, serves: '2–3 cups' }],
+    addons: [{ id: 'a-bisc', name: 'Extra Osmania Biscuits (Pack of 6)', price: 40 }],
   },
 ];
+
+export const DRINKS: MenuItem[] = MENU_ITEMS;
 
 export const CATEGORIES = ['All', 'Biryani', 'Starters', 'Desserts', 'Chai'] as const;
 export type Category = (typeof CATEGORIES)[number];
-
-export interface Snack {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  photo: string;
-  emoji: string;
-}
-
-export const SNACKS: Snack[] = [
-  {
-    id: 'shahi-luqmi',
-    name: 'Hyderabadi Mutton Luqmi',
-    description: 'Crisp square pastry parcels stuffed with spiced minced mutton, mint & coriander.',
-    price: 180,
-    photo:
-      'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=80',
-    emoji: '🥟',
-  },
-  {
-    id: 'cut-mirchi',
-    name: 'Hyderabad Cut Mirchi Bajji',
-    description: 'Bhavnagri green chilies stuffed with tangy ajwain-tamarind, double fried crispy.',
-    price: 120,
-    photo:
-      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=900&q=80',
-    emoji: '🌶️',
-  },
-  {
-    id: 'osmania-tin',
-    name: 'Osmania Biscuits Tin',
-    description: 'Legendary sweet and salted biscuits baked fresh daily in traditional ovens.',
-    price: 140,
-    photo:
-      'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=80',
-    emoji: '🍪',
-  },
-];
-
-export interface MerchItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  photo: string;
-}
-
-export const MERCH: MerchItem[] = [
-  {
-    id: 'desi-ghee-jar',
-    name: 'Pure Buffalo Desi Ghee (500g)',
-    description: 'Aromatic, golden clarified butter churned from high-fat buffalo milk.',
-    price: 450,
-    photo:
-      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 'clay-handi-pot',
-    name: 'Glazed Clay Cooking Handi',
-    description: 'Seasoned earthen pot for authentic slow dum cooking at home.',
-    price: 350,
-    photo:
-      'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 'brass-chai-set',
-    name: 'Charminar Brass Chai Tumblers',
-    description: 'Heavy brass double-walled tea glasses for that authentic Irani cafe feel.',
-    price: 520,
-    photo:
-      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=900&q=80',
-  },
-];
-
-export interface InstagramPost {
-  id: string;
-  photo: string;
-  caption: string;
-  likes: number;
-}
-
-export const INSTAGRAM_POSTS: InstagramPost[] = [
-  {
-    id: 'ig1',
-    photo:
-      'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80',
-    caption: 'Sealed with dough, slow cooked with patience 🔥 #DumHappens',
-    likes: 3412,
-  },
-  {
-    id: 'ig2',
-    photo:
-      'https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=900&q=80',
-    caption: '12-hour slow simmered Shahi Mutton Haleem with pure ghee ✨',
-    likes: 4210,
-  },
-  {
-    id: 'ig3',
-    photo:
-      'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=900&q=80',
-    caption: 'Crispy, tangy, fiery Chicken 65 straight from the kadai 🍗',
-    likes: 2890,
-  },
-  {
-    id: 'ig4',
-    photo:
-      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=900&q=80',
-    caption: 'Double Ka Meetha soaked in rich saffron rabri 🍯',
-    likes: 5120,
-  },
-  {
-    id: 'ig5',
-    photo:
-      'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=900&q=80',
-    caption: 'Aged basmati layered with tender Nizami mutton 👑',
-    likes: 3950,
-  },
-  {
-    id: 'ig6',
-    photo:
-      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=900&q=80',
-    caption: 'Evening Irani chai with Osmania biscuits in Hyderabad ☕',
-    likes: 6710,
-  },
-];
-
-export const HERO_PHOTO =
-  'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80';
-export const STORE_PHOTO =
-  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80';
-
-export const MARQUEE_FLAVORS = [
-  'Royal Chicken Dum Biryani',
-  'Shahi Mutton Haleem',
-  'Double Ka Meetha',
-  'Mirchi Ka Salan',
-  'Authentic Chicken 65',
-  'Barkas Pathar Ka Gosht',
-  'Pure Desi Ghee',
-  'Dum Ki Irani Chai',
-];
-
-export const HOURS = [
-  { days: 'Monday – Thursday', time: '11:00 AM – 11:30 PM' },
-  { days: 'Friday – Saturday', time: '11:00 AM – 01:00 AM' },
-  { days: 'Sunday', time: '11:00 AM – 11:30 PM' },
-];
-
-/* Types and Seed data for KDS & Admin */
-export type MenuItem = Drink;
-export const MENU_ITEMS = DRINKS;
 
 export interface Outlet {
   id: string;
   name: string;
   type: 'PHYSICAL_DINEIN' | 'CLOUD_KITCHEN';
   address: string;
+  area: string;
+  city: string;
   deliveryRadiusKm: number;
   minPrepTimeMinutes: number;
   fssaiLicense: string;
@@ -298,6 +281,8 @@ export const OUTLETS: Outlet[] = [
     name: 'Kondapur Flagship Dine-In',
     type: 'PHYSICAL_DINEIN',
     address: 'Plot 42, Main Road, Near Botanical Gardens, Kondapur',
+    area: 'Kondapur',
+    city: 'Hyderabad',
     deliveryRadiusKm: 6.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374901',
@@ -308,6 +293,8 @@ export const OUTLETS: Outlet[] = [
     name: 'Gachibowli Cloud Kitchen',
     type: 'CLOUD_KITCHEN',
     address: 'DLF Cyber City Lane, Gachibowli',
+    area: 'Gachibowli',
+    city: 'Hyderabad',
     deliveryRadiusKm: 7.0,
     minPrepTimeMinutes: 15,
     fssaiLicense: '23619028374902',
@@ -318,6 +305,8 @@ export const OUTLETS: Outlet[] = [
     name: 'Kukatpally Express Kitchen',
     type: 'PHYSICAL_DINEIN',
     address: 'KPHB Phase 3, Near Remedy Hospital, Kukatpally',
+    area: 'Kukatpally',
+    city: 'Hyderabad',
     deliveryRadiusKm: 5.5,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374903',
@@ -352,7 +341,7 @@ export interface Order {
   deliveryAddress: string;
   items: OrderItemSnapshot[];
   itemTotal: number;
-  gstAmount: number;
+  gstAmount: number; // authoritative: itemTotal * 5 / 105
   deliveryFee: number;
   totalAmount: number;
   paymentMethod: 'UPI' | 'CARD';
@@ -478,4 +467,24 @@ export const INITIAL_ORDERS: Order[] = [
     isLate: true,
     lateMinutes: 4,
   },
+];
+
+export const HERO_PHOTO =
+  'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80';
+
+export const MARQUEE_FLAVORS = [
+  'Royal Chicken Dum Biryani',
+  'Shahi Mutton Haleem',
+  'Double Ka Meetha',
+  'Mirchi Ka Salan',
+  'Authentic Chicken 65',
+  'Barkas Pathar Ka Gosht',
+  'Pure Desi Ghee',
+  'Dum Ki Irani Chai',
+];
+
+export const HOURS = [
+  { days: 'Monday – Thursday', time: '11:00 AM – 11:30 PM' },
+  { days: 'Friday – Saturday', time: '11:00 AM – 01:00 AM' },
+  { days: 'Sunday', time: '11:00 AM – 11:30 PM' },
 ];

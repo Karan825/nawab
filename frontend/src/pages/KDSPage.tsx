@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { ChefHat, AlertTriangle, CheckCircle2, Bike, MapPin, ArrowLeft } from 'lucide-react';
 import { Order, OrderStatus, OUTLETS, INITIAL_ORDERS } from '../data';
 
-export default function KDSPage() {
-  const [selectedOutletId, setSelectedOutletId] = useState<string>(OUTLETS[0].id);
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+interface KDSPageProps {
+  orders?: Order[];
+  onAdvanceOrder?: (orderId: string, nextStatus: OrderStatus) => void;
+}
 
+export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageProps = {}) {
+  const [selectedOutletId, setSelectedOutletId] = useState<string>(OUTLETS[0].id);
+  const [internalOrders, setInternalOrders] = useState<Order[]>(INITIAL_ORDERS);
+
+  const orders = propOrders || internalOrders;
   const currentOutlet = OUTLETS.find((o) => o.id === selectedOutletId) || OUTLETS[0];
   const outletOrders = orders.filter((o) => o.outletId === selectedOutletId);
 
@@ -17,9 +23,13 @@ export default function KDSPage() {
     else if (order.status === 'READY') next = 'HANDED_TO_RIDER';
     else return;
 
-    setOrders((prev) =>
-      prev.map((o) => (o.id === order.id ? { ...o, status: next } : o))
-    );
+    if (onAdvanceOrder) {
+      onAdvanceOrder(order.id, next);
+    } else {
+      setInternalOrders((prev) =>
+        prev.map((o) => (o.id === order.id ? { ...o, status: next } : o))
+      );
+    }
   };
 
   return (
