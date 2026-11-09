@@ -1,6 +1,9 @@
 # Deployment & Local Run Guide
 ## Nawaab's Biryani Co. Direct Ordering Platform & Kitchen Display System (KDS)
 
+**GitHub Repository URL:** [https://github.com/Karan825/nawab](https://github.com/Karan825/nawab)  
+**Live App Deployment URL:** [https://nawab-ordering.vercel.app](https://github.com/Karan825/nawab)  
+
 ---
 
 ## 1. Quick Local Start (Step by Step)
@@ -15,8 +18,8 @@
 
 ### Step 1: Clone Repository
 ```bash
-git clone https://github.com/company-a/hyderabad-biryani-kds.git
-cd hyderabad-biryani-kds
+git clone https://github.com/Karan825/nawab.git
+cd nawab
 ```
 
 ---
@@ -35,7 +38,7 @@ docker run -d --name biryani_kds_postgres -e POSTGRES_USER=biryani_admin -e POST
    cd backend
    ```
 2. Create and activate a Python virtual environment:
-   - **Windows:**
+   - **Windows (PowerShell):**
      ```powershell
      python -m venv .venv
      .\.venv\Scripts\Activate.ps1
@@ -84,6 +87,7 @@ docker run -d --name biryani_kds_postgres -e POSTGRES_USER=biryani_admin -e POST
    ```
 4. Open your browser and navigate to:
    - **Customer Storefront & Ordering App:** [http://localhost:5173](http://localhost:5173)
+   - **Dedicated Food Ordering App:** [http://localhost:5173/order](http://localhost:5173/order)
    - **Kitchen Display System (KDS):** [http://localhost:5173/kds](http://localhost:5173/kds)
    - **Central Menu CMS & Operations Console:** [http://localhost:5173/admin](http://localhost:5173/admin)
 
@@ -99,13 +103,13 @@ Use these pre-configured accounts for reviewing the three core user roles:
 | **Kitchen Staff** | `chef.kondapur@nawaabs.com` | `kitchen123` | `Kondapur Flagship Dine-In` (Station 1) | KDS order queue, dumpling timers, rider dispatch |
 | **Operations Admin** | `admin@nawaabs.com` | `admin123` | Global (All 17 Outlets) | Central menu CMS, pricing overrides, delay alert monitor |
 
-*Tip: On the storefront, clicking **"Login to Order"** also features a 1-click test login as Karan Sharma for quick evaluation.*
+*Tip: In the Customer Storefront, clicking **"Login to Order"** allows login with email/phone and password, or switching between tabs for instant signup.*
 
 ---
 
 ## 3. Environment Variables (Names Only)
 
-The application requires the following environment variables (stored in `.env`):
+The application requires the following environment variables (defined in `.env`):
 
 | Variable Name | Description |
 |---------------|-------------|
@@ -121,7 +125,31 @@ The application requires the following environment variables (stored in `.env`):
 
 ---
 
-## 4. Verification & Testing
+## 4. Production Deployment Guide
+
+### Option A: Docker Compose Deployment (Single Command)
+Build and run the entire stack (PostgreSQL, FastAPI backend, and Nginx frontend) via Docker Compose:
+```bash
+docker compose up -d --build
+```
+
+### Option B: Cloud Deployment (Vercel + Railway / Render)
+1. **Frontend (Vercel):**
+   - Connect repository `https://github.com/Karan825/nawab`.
+   - Root directory: `frontend`.
+   - Build command: `npm run build`.
+   - Output directory: `dist`.
+   - Configure rewrite proxy to backend domain.
+2. **Backend (Render / Railway):**
+   - Connect repository `https://github.com/Karan825/nawab`.
+   - Root directory: `backend`.
+   - Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+   - Attach a managed PostgreSQL database instance.
+   - Run `alembic upgrade head` and `python scripts/seed.py` on initial deploy.
+
+---
+
+## 5. Verification & Testing
 
 To execute automated tests against all non-negotiable invariants:
 

@@ -307,20 +307,20 @@ export default function Menu({ items, onAddToCart }: MenuProps) {
 
         {/* Search Bar Right in the Menu Section */}
         <div className="mt-8 max-w-md mx-auto px-2">
-          <div className="relative">
-            <Search size={18} className="absolute left-4 top-3.5 text-cocoa-fade" />
+          <div className="relative flex items-center">
+            <Search size={18} className="absolute left-4 text-cocoa-fade pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search biryani, kebabs, haleem, double ka meetha..."
-              className="w-full pl-11 pr-10 py-3 text-sm font-bold rounded-full border-[3px] border-cocoa bg-white shadow-pop-sm outline-none focus:ring-4 focus:ring-lemon placeholder:text-cocoa-fade/80"
+              className="w-full pl-12 pr-10 py-3 text-sm font-bold rounded-full border-[3px] border-cocoa bg-white shadow-pop-sm outline-none focus:ring-4 focus:ring-lemon placeholder:text-cocoa-fade/80"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3.5 top-3.5 text-cocoa-fade hover:text-cocoa p-0.5"
+                className="absolute right-3.5 text-cocoa-fade hover:text-cocoa p-1"
                 title="Clear search"
               >
                 <X size={16} />

@@ -15,8 +15,10 @@ import {
   User,
   UtensilsCrossed,
   Info,
-  RotateCcw
+  RotateCcw,
+  Receipt
 } from 'lucide-react';
+import OrderTrackingModal from '../components/OrderTrackingModal';
 import {
   Outlet,
   MenuItem,
@@ -206,6 +208,7 @@ export default function OrderDashboardPage({
   const [vegOnly, setVegOnly] = useState(false);
   const [bestsellerOnly, setBestsellerOnly] = useState(false);
   const [isOutletModalOpen, setIsOutletModalOpen] = useState(false);
+  const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
   // Customizer state
   const [customizingItem, setCustomizingItem] = useState<MenuItem | null>(null);
@@ -299,9 +302,21 @@ export default function OrderDashboardPage({
             <ChevronDown size={14} className="text-cocoa-fade shrink-0 ml-auto" />
           </button>
 
-          {/* User Profile & Cart Button */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="hidden md:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">
+          {/* User Profile, Live Tracking & Cart Button */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Live Order Tracking Button */}
+            <button
+              type="button"
+              onClick={() => setIsTrackingOpen(true)}
+              className="pill-btn bg-white text-cocoa text-xs sm:text-sm !py-2 !px-3 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:bg-lemon transition-all"
+              title="Track live station kitchen orders"
+            >
+              <Receipt size={14} className="text-cherry shrink-0" />
+              <span>Track Orders</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            </button>
+
+            <div className="hidden lg:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">
               <User size={13} className="text-cocoa" />
               <span className="font-display text-cocoa">{customerUser.name}</span>
             </div>
@@ -386,7 +401,7 @@ export default function OrderDashboardPage({
         {/* Elongated Professional Search Bar (Properly Aligned Icon & Text) */}
         <div className="space-y-3">
           <div className="relative flex items-center">
-            <Search size={18} className="absolute left-4.5 pointer-events-none text-cocoa-fade" />
+            <Search size={18} className="absolute left-4 pointer-events-none text-cocoa-fade" />
             <input
               type="text"
               value={searchQuery}
@@ -887,6 +902,12 @@ export default function OrderDashboardPage({
           </div>
         </div>
       )}
+
+      {/* Live Order Tracking Modal */}
+      <OrderTrackingModal
+        isOpen={isTrackingOpen}
+        onClose={() => setIsTrackingOpen(false)}
+      />
 
     </div>
   );

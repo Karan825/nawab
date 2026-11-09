@@ -18,6 +18,8 @@ dist/
 *.db
 *.sqlite3
 
-# OS junk
+# OS & Office junk
 Thumbs.db
 .DS_Store
+~$*
+

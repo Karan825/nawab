@@ -85,14 +85,14 @@ export default function AdminPage() {
         
         {/* Search & Overview Stats */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="relative w-full max-w-md">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cocoa-fade" />
+          <div className="relative flex items-center w-full max-w-md">
+            <Search size={16} className="absolute left-3.5 text-cocoa-fade pointer-events-none" />
             <input
               type="text"
               placeholder="Search dishes, categories, ingredients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon shadow-pop-sm"
+              className="w-full pl-11 pr-4 py-2.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon shadow-pop-sm"
             />
           </div>
 

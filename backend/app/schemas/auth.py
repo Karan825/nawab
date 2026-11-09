@@ -8,6 +8,14 @@ class LoginRequest(BaseModel):
     password: Optional[str] = "password123"
 
 
+class SignupRequest(BaseModel):
+    name: str
+    email: str
+    phone: str
+    password: str
+    outlet_id: Optional[int] = None
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

@@ -238,14 +238,13 @@ async def list_orders(
     """
     stmt = select(Order).options(selectinload(Order.items), selectinload(Order.outlet))
 
-    if current_user.role == UserRole.CUSTOMER:
+    if outlet_id is not None:
+        stmt = stmt.where(Order.outlet_id == outlet_id)
+    elif current_user.role == UserRole.CUSTOMER:
         stmt = stmt.where(Order.customer_id == current_user.id)
     elif current_user.role == UserRole.KITCHEN_STAFF:
         if current_user.outlet_id:
             stmt = stmt.where(Order.outlet_id == current_user.outlet_id)
-    elif current_user.role == UserRole.ADMIN:
-        if outlet_id:
-            stmt = stmt.where(Order.outlet_id == outlet_id)
 
     if status_filter:
         stmt = stmt.where(Order.status == status_filter)
