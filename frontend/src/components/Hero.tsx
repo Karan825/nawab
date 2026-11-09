@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { ArrowDown, Sparkles, ShieldCheck, MapPin, Clock } from 'lucide-react';
-import { HERO_PHOTO, Outlet } from '../data';
+import { ArrowDown, Sparkles } from 'lucide-react';
+import { HERO_PHOTO } from '../data';
 
 const BUBBLES = [
   { left: '8%', size: 14, delay: '0s', duration: '5s' },
@@ -33,16 +33,12 @@ function Starburst({ className = '', petals = 'lemon' }: { className?: string; p
   );
 }
 
-interface HeroProps {
-  selectedOutlet: Outlet;
-}
-
-export default function Hero({ selectedOutlet }: HeroProps) {
+export default function Hero() {
   const bubbles = useMemo(() => BUBBLES, []);
 
   return (
-    <section id="top" className="relative overflow-hidden bg-cream pt-28 pb-10 sm:pt-32">
-      {/* Sunburst Rays */}
+    <section id="top" className="relative overflow-hidden bg-cream pt-28 pb-0 sm:pt-32">
+      {/* sunburst rays */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-24 h-[560px] w-[560px] -translate-x-1/2 sm:h-[720px] sm:w-[720px] lg:left-[62%] lg:top-16"
@@ -55,7 +51,7 @@ export default function Hero({ selectedOutlet }: HeroProps) {
         </svg>
       </div>
 
-      {/* Rising Saffron & Spice Garnish Bubbles */}
+      {/* rising bubbles */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {bubbles.map((b, i) => (
           <span
@@ -71,95 +67,70 @@ export default function Hero({ selectedOutlet }: HeroProps) {
         ))}
       </div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:pt-6">
-        {/* Left Copy */}
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-4 lg:pt-10">
+        {/* copy */}
         <div className="relative z-10 text-center lg:text-left">
-          
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
-            <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-lemon px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.2em] shadow-pop-sm">
-              <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · 17 Hyderabad Outlets
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full border-2 border-cocoa bg-white px-3 py-1 text-[11px] font-bold text-cocoa">
-              <ShieldCheck size={13} className="text-emerald-700" />
-              FSSAI: {selectedOutlet.fssaiLicense} (Demo)
-            </span>
-          </div>
-
-          <h1 className="mt-5 font-display text-6xl leading-[1.05] text-cherry outline-text sm:text-7xl lg:text-8xl">
+          <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-aqua px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.2em] shadow-pop-sm">
+            <Sparkles size={14} strokeWidth={2.5} /> Hyderabad · 17 kitchens & outlets
+          </span>
+          <h1 className="mt-5 font-display text-6xl leading-[1.05] text-hot-pink outline-text sm:text-7xl lg:text-8xl">
             Dum
-            <span className="ml-3 inline-block -rotate-6 text-lemon">happens.</span>
+            <span className="ml-3 inline-block -rotate-6 text-lemon">delivered.</span>
           </h1>
-
-          <p className="mx-auto mt-5 max-w-md text-base sm:text-lg font-bold text-cocoa-soft lg:mx-0">
-            Slow-cooked in sealed handis with saffron, aged basmati, and pure desi ghee. Order directly from our kitchens to save 25–30% delivery commission!
+          <p className="mx-auto mt-5 max-w-md text-lg font-semibold text-cocoa-soft lg:mx-0 lg:text-xl">
+            Handi-sealed biryani, straight from the nearest kitchen. Order direct, earn rewards, and know exactly when it’s ready.
           </p>
-
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-            <a href="#menu" className="pill-btn bg-cherry text-white text-base sm:text-lg">
-              See the menu <ArrowDown size={18} strokeWidth={3} />
+            <a href="#menu" className="pill-btn bg-cherry text-white text-lg">
+              Order biryani <ArrowDown size={18} strokeWidth={3} />
             </a>
-            <a href="#builder" className="pill-btn bg-lemon text-cocoa text-base sm:text-lg">
-              Craft your Handi
+            <a href="#builder" className="pill-btn bg-lemon text-cocoa text-lg">
+              Build a handi
             </a>
           </div>
 
-          {/* 5% GST Clear Statement */}
-          <div className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs font-extrabold text-cocoa-soft">
-            <span className="bg-white border-2 border-cocoa px-3 py-1 rounded-full shadow-pop-sm">
-              📋 All prices include 5% GST
-            </span>
-            <span className="bg-white border-2 border-cocoa px-3 py-1 rounded-full shadow-pop-sm flex items-center gap-1 text-cherry">
-              <Clock size={13} /> Avg Prep: ~{selectedOutlet.minPrepTimeMinutes} mins
-            </span>
-          </div>
-
-          <div className="mt-8 flex items-center justify-center gap-5 lg:justify-start">
-            <Starburst className="h-14 w-14 animate-twinkle" petals="pink" />
+          <div className="mt-10 flex items-center justify-center gap-6 lg:justify-start">
+            <Starburst className="h-16 w-16 animate-twinkle" petals="pink" />
             <div className="text-left">
-              <p className="font-display text-2xl text-cherry outline-text">4.9 stars</p>
-              <p className="text-xs font-bold text-cocoa-fade">from 48,000+ biryani lovers</p>
+              <p className="font-display text-2xl text-aqua outline-text">45 min promise</p>
+              <p className="text-sm font-bold text-cocoa-fade">live from kitchen to doorstep</p>
             </div>
-            <Starburst className="h-14 w-14 animate-twinkle [animation-delay:0.8s]" petals="aqua" />
+            <Starburst className="h-16 w-16 animate-twinkle [animation-delay:0.8s]" petals="red" />
           </div>
         </div>
 
-        {/* Right Photo Frame */}
-        <div className="relative mx-auto flex w-full max-w-md items-center justify-center lg:max-w-none">
-          <div className="card-pop relative w-full overflow-hidden bg-white">
-            
-            {/* Pop-out stickers */}
-            <span className="absolute -left-3 -top-3 z-20 -rotate-12 rounded-2xl border-[3px] border-cocoa bg-lemon px-4 py-1.5 font-display text-sm text-cherry shadow-pop">
-              Sealed with Dough!
-            </span>
-            <span className="absolute -bottom-3 -right-3 z-20 rotate-6 rounded-2xl border-[3px] border-cocoa bg-cherry px-4 py-1.5 font-display text-xs text-white shadow-pop">
-              100% Asli Ghee
-            </span>
-
-            <img
-              src={HERO_PHOTO}
-              alt="Authentic Hyderabadi Biryani Handi"
-              className="h-80 w-full object-cover sm:h-96 border-b-[3px] border-cocoa"
-            />
-
-            <div className="p-4 bg-cream flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-black uppercase text-cocoa-fade">Dispatch Station:</p>
-                <h4 className="font-display text-lg text-cocoa flex items-center gap-1">
-                  <MapPin size={16} className="text-cherry" />
-                  {selectedOutlet.name}
-                </h4>
-                <p className="text-[11px] font-bold text-cocoa-soft">
-                  {selectedOutlet.area} &bull; Radius: {selectedOutlet.deliveryRadiusKm}km
-                </p>
+        {/* hero dish */}
+        <div className="relative z-10 mx-auto w-full max-w-sm pb-12 lg:max-w-md lg:pb-16">
+          <div className="relative animate-bob">
+            <Starburst className="absolute -left-8 -top-8 h-24 w-24" petals="pink" />
+            <div className="relative overflow-hidden rounded-[2.5rem] border-4 border-cocoa bg-white shadow-pop-lg">
+              <img
+                src={HERO_PHOTO}
+                alt="A fragrant Hyderabad chicken dum biryani in a traditional handi"
+                className="h-[420px] w-full object-cover sm:h-[480px]"
+                loading="eager"
+              />
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-cocoa/85 px-5 py-3 backdrop-blur-sm">
+                <div>
+                  <p className="font-display text-lg text-lemon">Chicken Dum Biryani</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-cream/80">Today’s special · ₹380 incl. GST</p>
+                </div>
+                <span className="rounded-full border-2 border-lemon px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-lemon">
+                  Dum fresh
+                </span>
               </div>
-
-              <span className="pill-btn bg-emerald-500 text-white text-[11px] !py-1.5 !px-3 shadow-pop-sm">
-                ● Live Kitchen
-              </span>
             </div>
+            <Starburst className="absolute -bottom-6 -right-6 h-20 w-20 animate-spin-slow" petals="aqua" />
           </div>
         </div>
+      </div>
 
+      {/* wavy divider */}
+      <div aria-hidden="true" className="relative">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" className="block h-[52px] w-full fill-lemon">
+          <path d="M0,35 C120,65 240,5 360,35 C480,65 600,5 720,35 C840,65 960,5 1080,35 C1200,65 1320,5 1440,35 L1440,70 L0,70 Z" />
+        </svg>
+        <div className="h-4 w-full border-y-[3px] border-cocoa checkerboard" />
       </div>
     </section>
   );
