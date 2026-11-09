@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ShoppingBag, MapPin, Search, ChevronDown, X } from 'lucide-react';
+import { ShoppingBag, MapPin, ChevronDown, X, Search, Check, UtensilsCrossed } from 'lucide-react';
 import { OUTLETS, type Outlet } from '../data';
 
 interface NavbarProps {
@@ -8,8 +8,6 @@ interface NavbarProps {
   cartCount: number;
   cartTotal: number;
   onOpenCart: () => void;
-  searchTerm: string;
-  onSearchChange: (query: string) => void;
 }
 
 export default function Navbar({
@@ -18,173 +16,285 @@ export default function Navbar({
   cartCount,
   cartTotal,
   onOpenCart,
-  searchTerm,
-  onSearchChange,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [isOutletDropdownOpen, setIsOutletDropdownOpen] = useState(false);
+  const [isOutletModalOpen, setIsOutletModalOpen] = useState(false);
+  const [outletSearch, setOutletSearch] = useState('');
+  const [outletFilter, setOutletFilter] = useState<'ALL' | 'PHYSICAL_DINEIN' | 'CLOUD_KITCHEN'>('ALL');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 15);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  const filteredOutlets = OUTLETS.filter((outlet) => {
+    const matchesFilter = outletFilter === 'ALL' || outlet.type === outletFilter;
+    const cleanSearch = outletSearch.toLowerCase().trim();
+    const matchesSearch =
+      !cleanSearch ||
+      outlet.name.toLowerCase().includes(cleanSearch) ||
+      outlet.area.toLowerCase().includes(cleanSearch) ||
+      outlet.address.toLowerCase().includes(cleanSearch);
+    return matchesFilter && matchesSearch;
+  });
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div
-        className={`transition-all duration-300 ${
-          scrolled ? 'bg-cream/95 shadow-[0_3px_0_0_#3A2318] backdrop-blur-md' : 'bg-cream/90 backdrop-blur-sm'
-        }`}
-      >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          {/* Logo */}
-          <a href="#top" className="flex items-center gap-2.5 group shrink-0">
-            <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-12">
-              <span className="text-2xl leading-none">🍗</span>
-            </span>
-            <span className="flex flex-col leading-none">
-              <span className="font-display text-xl text-cherry outline-text [text-stroke-width:0.5px] sm:text-2xl">
-                Nawaab's
+    <>
+      <header className="fixed inset-x-0 top-0 z-40">
+        <div
+          className={`transition-all duration-300 ${
+            scrolled
+              ? 'bg-cream/95 shadow-[0_4px_0_0_#3A2318] backdrop-blur-md py-3'
+              : 'bg-cream/90 backdrop-blur-sm py-4'
+          }`}
+        >
+          <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            
+            {/* Left: Brand Logo & Tagline */}
+            <a href="#top" className="flex items-center gap-3 group shrink-0">
+              <span className="relative inline-flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-6">
+                <span className="text-2xl sm:text-3xl leading-none">🍗</span>
               </span>
-              <span className="text-[9px] font-extrabold tracking-[0.3em] text-cocoa-fade uppercase">
-                BIRYANI CO.
-              </span>
-            </span>
-          </a>
-
-          {/* Delivery Location Selector Pill */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setIsOutletDropdownOpen((prev) => !prev)}
-              className="flex items-center gap-1.5 rounded-full border-2 border-cocoa bg-white px-3.5 py-1.5 text-xs font-black text-cocoa shadow-pop-sm hover:bg-lemon transition-colors"
-            >
-              <MapPin size={14} className="text-cherry shrink-0" />
-              <div className="text-left hidden sm:block">
-                <span className="block text-[9px] uppercase tracking-wider text-cocoa-fade font-extrabold leading-none">
-                  Outlet
+              <span className="flex flex-col leading-none">
+                <span className="font-display text-2xl sm:text-3xl text-cherry outline-text [text-stroke-width:0.5px]">
+                  Nawaab's
                 </span>
-                <span className="truncate max-w-[150px] block leading-tight">{selectedOutlet.name}</span>
-              </div>
-              <span className="sm:hidden font-bold">{selectedOutlet.area}</span>
-              <ChevronDown size={14} className="text-cocoa-fade ml-0.5" />
-            </button>
+                <span className="text-[10px] sm:text-[11px] font-black tracking-[0.35em] text-cocoa-fade uppercase mt-0.5">
+                  BIRYANI CO.
+                </span>
+              </span>
+            </a>
 
-            {/* Dropdown Menu */}
-            {isOutletDropdownOpen && (
-              <div className="absolute left-0 mt-2 w-72 rounded-2xl border-[3px] border-cocoa bg-white p-2 shadow-pop-lg z-50">
-                <div className="p-2 border-b-2 border-dashed border-cocoa/20 mb-1">
-                  <p className="text-[11px] font-black uppercase tracking-wider text-cocoa">
-                    Select Nearest Kitchen
-                  </p>
-                  <p className="text-[10px] text-cocoa-soft font-semibold">
-                    Orders route directly to the station screen
-                  </p>
+            {/* Middle: Prominent Outlet Location Selector Pill */}
+            <div className="flex-1 max-w-sm sm:max-w-md mx-2">
+              <button
+                type="button"
+                onClick={() => setIsOutletModalOpen(true)}
+                className="w-full card-pop flex items-center justify-between gap-2 rounded-2xl border-2 sm:border-[3px] border-cocoa bg-white px-3 sm:px-4 py-2 text-left hover:bg-lemon transition-colors"
+                title="Click to change your delivery kitchen"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="h-8 w-8 rounded-xl bg-lemon-light border border-cocoa flex items-center justify-center text-cherry shrink-0">
+                    <MapPin size={16} />
+                  </span>
+                  <div className="min-w-0 leading-tight">
+                    <span className="block text-[9px] uppercase font-black tracking-wider text-cocoa-fade">
+                      Delivering From Kitchen
+                    </span>
+                    <span className="font-display text-xs sm:text-sm text-cocoa truncate block">
+                      {selectedOutlet.name}
+                    </span>
+                  </div>
                 </div>
-                {OUTLETS.map((outlet) => (
-                  <button
-                    key={outlet.id}
-                    type="button"
-                    onClick={() => {
-                      onSelectOutlet(outlet);
-                      setIsOutletDropdownOpen(false);
-                    }}
-                    className={`w-full text-left p-2.5 rounded-xl transition-colors flex items-center justify-between text-xs ${
-                      selectedOutlet.id === outlet.id
-                        ? 'bg-lemon font-black text-cocoa border-2 border-cocoa'
-                        : 'hover:bg-cream text-cocoa font-bold'
-                    }`}
-                  >
-                    <div>
-                      <p className="leading-tight">{outlet.name}</p>
-                      <p className="text-[10px] text-cocoa-fade font-normal mt-0.5">
-                        Radius: {outlet.deliveryRadiusKm} km &bull; Min Prep: {outlet.minPrepTimeMinutes}m
-                      </p>
-                    </div>
-                    {selectedOutlet.id === outlet.id && <span className="text-xs">✓</span>}
-                  </button>
-                ))}
+
+                <div className="flex items-center gap-1.5 shrink-0 pl-1">
+                  <span className="hidden md:inline-block text-[10px] font-black uppercase tracking-wider bg-cream border border-cocoa px-2 py-0.5 rounded-full text-cocoa">
+                    Change
+                  </span>
+                  <ChevronDown size={16} className="text-cocoa-fade" />
+                </div>
+              </button>
+            </div>
+
+            {/* Right: Nav Links & Cart Trigger */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden lg:flex items-center gap-1 text-xs font-black uppercase tracking-wider text-cocoa">
+                <a
+                  href="#menu"
+                  className="px-3.5 py-2 rounded-xl hover:bg-lemon transition-colors border border-transparent hover:border-cocoa"
+                >
+                  Menu
+                </a>
+                <a
+                  href="#outlets"
+                  className="px-3.5 py-2 rounded-xl hover:bg-lemon transition-colors border border-transparent hover:border-cocoa"
+                >
+                  17 Outlets
+                </a>
               </div>
-            )}
-          </div>
 
-          {/* Quick Search Bar */}
-          <div className="relative hidden md:flex items-center flex-1 max-w-xs">
-            <Search size={15} className="absolute left-3.5 text-cocoa-fade" />
-            <input
-              type="text"
-              placeholder="Search biryani, starters, chai..."
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-9 pr-7 py-1.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon placeholder:text-cocoa-fade shadow-pop-sm"
-            />
-            {searchTerm && (
+              {/* Cart Button */}
               <button
                 type="button"
-                onClick={() => onSearchChange('')}
-                className="absolute right-2.5 text-cocoa-fade hover:text-cocoa"
+                onClick={onOpenCart}
+                className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2.5 !px-4 sm:!px-5 flex items-center gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
+                title="View your cart"
               >
-                <X size={13} />
-              </button>
-            )}
-          </div>
-
-          {/* Navigation Links & Cart Indicator */}
-          <div className="flex items-center gap-2">
-            <a
-              href="#menu"
-              className="hidden lg:inline-block rounded-full px-3.5 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa hover:bg-lemon transition-colors"
-            >
-              Menu
-            </a>
-            <a
-              href="#outlets"
-              className="hidden lg:inline-block rounded-full px-3.5 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa hover:bg-lemon transition-colors"
-            >
-              Outlets
-            </a>
-
-            {/* Cart Button */}
-            <button
-              type="button"
-              onClick={onOpenCart}
-              className="pill-btn bg-cherry text-white text-xs sm:text-sm !px-4 sm:!px-5 !py-2 sm:!py-2.5 flex items-center gap-2 shadow-pop-sm hover:scale-105 transition-transform"
-            >
-              <ShoppingBag size={16} />
-              <span className="hidden sm:inline font-black">Cart</span>
-              {cartCount > 0 && (
-                <span className="flex h-5 items-center justify-center rounded-full bg-lemon text-cocoa px-2 text-xs font-black">
-                  {cartCount} &bull; ₹{cartTotal}
+                <div className="relative">
+                  <ShoppingBag size={18} strokeWidth={2.5} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-2 -right-2.5 h-4 w-4 rounded-full bg-lemon border-2 border-cocoa text-cocoa text-[9px] font-black flex items-center justify-center shadow-sm">
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+                <span className="hidden sm:inline font-black">
+                  {cartCount === 0 ? 'Cart' : `₹${cartTotal}`}
                 </span>
-              )}
-            </button>
-          </div>
-        </nav>
+              </button>
+            </div>
 
-        {/* Mobile Search Input */}
-        <div className="px-4 pb-2.5 md:hidden">
-          <div className="relative flex items-center">
-            <Search size={14} className="absolute left-3 text-cocoa-fade" />
-            <input
-              type="text"
-              placeholder="Search biryani, starters, chai..."
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-7 py-1.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none shadow-pop-sm"
-            />
-            {searchTerm && (
+          </nav>
+        </div>
+      </header>
+
+      {/* Outlet Selection Modal (Never overflows, 100% scrollable & responsive) */}
+      {isOutletModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-cocoa/75 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="card-pop relative w-full max-w-xl bg-cream border-[4px] border-cocoa rounded-3xl shadow-pop-lg max-h-[88vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+            
+            {/* Modal Header */}
+            <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="h-10 w-10 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-xl shadow-pop-sm">
+                  📍
+                </span>
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
+                    17 Locations Across Hyderabad
+                  </span>
+                  <h3 className="font-display text-xl text-cherry outline-text [text-stroke-width:0.5px]">
+                    Select Delivery Kitchen
+                  </h3>
+                </div>
+              </div>
+
               <button
                 type="button"
-                onClick={() => onSearchChange('')}
-                className="absolute right-2.5 text-cocoa-fade hover:text-cocoa"
+                onClick={() => setIsOutletModalOpen(false)}
+                className="h-9 w-9 rounded-full bg-white border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream"
               >
-                <X size={12} />
+                <X size={18} />
               </button>
-            )}
+            </div>
+
+            {/* Filter & Search Bar Inside Modal */}
+            <div className="p-4 bg-white border-b-2 border-cocoa/20 space-y-3">
+              <div className="relative">
+                <Search size={16} className="absolute left-3.5 top-3 text-cocoa-fade" />
+                <input
+                  type="text"
+                  value={outletSearch}
+                  onChange={(e) => setOutletSearch(e.target.value)}
+                  placeholder="Search by area (e.g. Kondapur, Banjara Hills, Miyapur)..."
+                  className="w-full pl-9 pr-8 py-2 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white focus:ring-2 focus:ring-lemon"
+                />
+                {outletSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setOutletSearch('')}
+                    className="absolute right-2.5 top-2.5 text-cocoa-fade hover:text-cocoa"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              {/* Category Filter Pills */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setOutletFilter('ALL')}
+                  className={`text-[11px] font-black px-3 py-1.5 rounded-full border-2 border-cocoa transition-all ${
+                    outletFilter === 'ALL'
+                      ? 'bg-cocoa text-lemon shadow-pop-sm'
+                      : 'bg-white text-cocoa hover:bg-cream'
+                  }`}
+                >
+                  All 17 Outlets
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOutletFilter('PHYSICAL_DINEIN')}
+                  className={`text-[11px] font-black px-3 py-1.5 rounded-full border-2 border-cocoa transition-all ${
+                    outletFilter === 'PHYSICAL_DINEIN'
+                      ? 'bg-cocoa text-lemon shadow-pop-sm'
+                      : 'bg-white text-cocoa hover:bg-cream'
+                  }`}
+                >
+                  14 Flagship Dine-In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOutletFilter('CLOUD_KITCHEN')}
+                  className={`text-[11px] font-black px-3 py-1.5 rounded-full border-2 border-cocoa transition-all ${
+                    outletFilter === 'CLOUD_KITCHEN'
+                      ? 'bg-cocoa text-lemon shadow-pop-sm'
+                      : 'bg-white text-cocoa hover:bg-cream'
+                  }`}
+                >
+                  3 Cloud Kitchens
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable List of Outlets */}
+            <div className="p-4 overflow-y-auto space-y-2.5 flex-1 max-h-[50vh]">
+              {filteredOutlets.length === 0 ? (
+                <div className="text-center py-10 space-y-2">
+                  <p className="font-display text-base text-cocoa">No kitchens found in "{outletSearch}"</p>
+                  <p className="text-xs text-cocoa-fade">Try searching another Hyderabad area or clear filter.</p>
+                </div>
+              ) : (
+                filteredOutlets.map((outlet) => {
+                  const isSelected = selectedOutlet.id === outlet.id;
+                  return (
+                    <button
+                      key={outlet.id}
+                      type="button"
+                      onClick={() => {
+                        onSelectOutlet(outlet);
+                        setIsOutletModalOpen(false);
+                      }}
+                      className={`w-full p-3.5 rounded-2xl border-2 border-cocoa text-left flex items-start justify-between gap-3 transition-all ${
+                        isSelected
+                          ? 'bg-lemon shadow-pop-sm border-cocoa'
+                          : 'bg-white hover:bg-cream'
+                      }`}
+                    >
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-display text-sm text-cocoa">{outlet.name}</span>
+                          <span className="text-[9px] uppercase font-black bg-white border border-cocoa px-2 py-0.5 rounded-full text-cocoa">
+                            {outlet.type === 'CLOUD_KITCHEN' ? 'Cloud Kitchen' : 'Dine-In'}
+                          </span>
+                        </div>
+                        <p className="text-xs font-semibold text-cocoa-soft truncate max-w-sm">
+                          {outlet.address}
+                        </p>
+                        <p className="text-[10px] font-bold text-cherry flex items-center gap-2">
+                          <span>Radius: {outlet.deliveryRadiusKm} km</span> &bull;
+                          <span>Min Prep: {outlet.minPrepTimeMinutes}m</span> &bull;
+                          <span className="font-mono text-cocoa-fade">FSSAI: {outlet.fssaiLicense}</span>
+                        </p>
+                      </div>
+
+                      <div className="shrink-0 pt-1">
+                        {isSelected ? (
+                          <span className="h-6 w-6 rounded-full bg-cherry text-white flex items-center justify-center text-xs font-black shadow-pop-sm">
+                            <Check size={14} strokeWidth={3} />
+                          </span>
+                        ) : (
+                          <span className="text-xs font-black text-cocoa-fade hover:text-cherry">
+                            Select
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer Note */}
+            <div className="p-3 bg-white border-t-2 border-cocoa/20 text-center text-[11px] font-bold text-cocoa-fade">
+              🚚 Orders are routed directly to the selected kitchen for live cooking.
+            </div>
+
           </div>
         </div>
-      </div>
-    </header>
+      )}
+    </>
   );
 }

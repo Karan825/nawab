@@ -29,7 +29,6 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Handle client-side history navigation
   useEffect(() => {
@@ -154,14 +153,12 @@ export default function App() {
         cartCount={totalCartCount}
         cartTotal={totalCartPrice}
         onOpenCart={() => setIsCartOpen(true)}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
       />
 
       <main>
         <Hero />
         <Marquee />
-        <Menu items={MENU_ITEMS} onAddToCart={handleAddToCart} searchTerm={searchTerm} />
+        <Menu items={MENU_ITEMS} onAddToCart={handleAddToCart} />
         <Divider />
         <PopularStrip />
         <FindUs selectedOutlet={selectedOutlet} onSelectOutlet={handleSelectOutlet} />
@@ -177,7 +174,6 @@ export default function App() {
         onUpdateQty={handleUpdateQty}
         onRemoveItem={handleRemoveItem}
         selectedOutlet={selectedOutlet}
-        onCheckoutSuccess={handleCheckoutSuccess}
         onNavigateToCheckout={() => navigate('/checkout')}
       />
 

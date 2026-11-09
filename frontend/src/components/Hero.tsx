@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { ArrowDown, Sparkles } from 'lucide-react';
+import { ArrowDown, Sparkles, MapPin, Award, CheckCircle } from 'lucide-react';
 import { HERO_PHOTO } from '../data';
 
 const BUBBLES = [
-  { left: '8%', size: 14, delay: '0s', duration: '5s' },
-  { left: '18%', size: 9, delay: '1.2s', duration: '4.2s' },
-  { left: '32%', size: 18, delay: '0.6s', duration: '5.6s' },
-  { left: '47%', size: 11, delay: '2s', duration: '4.8s' },
-  { left: '58%', size: 8, delay: '0.9s', duration: '4.4s' },
-  { left: '70%', size: 15, delay: '1.6s', duration: '5.2s' },
-  { left: '82%', size: 10, delay: '0.3s', duration: '4.6s' },
+  { left: '6%', size: 14, delay: '0s', duration: '5s' },
+  { left: '16%', size: 9, delay: '1.2s', duration: '4.2s' },
+  { left: '28%', size: 16, delay: '0.6s', duration: '5.6s' },
+  { left: '44%', size: 11, delay: '2s', duration: '4.8s' },
+  { left: '56%', size: 8, delay: '0.9s', duration: '4.4s' },
+  { left: '68%', size: 15, delay: '1.6s', duration: '5.2s' },
+  { left: '80%', size: 10, delay: '0.3s', duration: '4.6s' },
   { left: '92%', size: 13, delay: '2.4s', duration: '5.4s' },
 ];
 
@@ -37,26 +37,27 @@ export default function Hero() {
   const bubbles = useMemo(() => BUBBLES, []);
 
   return (
-    <section id="top" className="relative overflow-hidden bg-cream pt-28 pb-0 sm:pt-32">
-      {/* sunburst rays */}
+    <section id="top" className="relative overflow-hidden bg-cream pt-24 sm:pt-28 lg:pt-32 pb-6">
+      
+      {/* Sunburst background rays */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-24 h-[560px] w-[560px] -translate-x-1/2 sm:h-[720px] sm:w-[720px] lg:left-[62%] lg:top-16"
+        className="pointer-events-none absolute left-1/2 top-16 h-[640px] w-[640px] -translate-x-1/2 sm:h-[800px] sm:w-[800px] lg:left-[58%] lg:top-10 opacity-35"
       >
-        <svg viewBox="0 0 200 200" className="h-full w-full animate-spin-slow opacity-40">
+        <svg viewBox="0 0 200 200" className="h-full w-full animate-spin-slow">
           {Array.from({ length: 24 }).map((_, i) => (
             <polygon key={i} points="100,100 94,0 106,0" fill="#FFD93D" transform={`rotate(${i * 15} 100 100)`} />
           ))}
-          <circle cx="100" cy="100" r="70" fill="#FFE9A8" opacity="0.7" />
+          <circle cx="100" cy="100" r="70" fill="#FFE9A8" opacity="0.6" />
         </svg>
       </div>
 
-      {/* rising bubbles */}
+      {/* Floating rising bubbles */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {bubbles.map((b, i) => (
           <span
             key={i}
-            className="absolute bottom-10 rounded-full border-2 border-cocoa/15 bg-white/40"
+            className="absolute bottom-6 rounded-full border-2 border-cocoa/15 bg-white/40"
             style={{
               left: b.left,
               width: b.size,
@@ -67,71 +68,113 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-6 lg:pt-8">
-        {/* copy */}
-        <div className="relative z-10 text-center lg:text-left">
-          <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-aqua px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.2em] shadow-pop-sm">
-            <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · Hyderabad Dum Biryani
-          </span>
-          <h1 className="mt-5 font-display text-6xl leading-[1.05] text-hot-pink outline-text sm:text-7xl lg:text-8xl">
-            Dum
-            <span className="ml-3 inline-block -rotate-6 text-lemon">happens.</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-md text-lg font-semibold text-cocoa-soft lg:mx-0 lg:text-xl">
-            Slow-cooked handis sealed with dough, aged basmati infused with pure saffron, and Nizami spice blends. Authentic since the first dum.
-          </p>
-          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
-            <a href="#menu" className="pill-btn bg-cherry text-white text-lg">
-              See the menu <ArrowDown size={18} strokeWidth={3} />
-            </a>
-            <a href="#builder" className="pill-btn bg-lemon text-cocoa text-lg">
-              Build your own
-            </a>
-          </div>
+      {/* Hero Content Container */}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
+          
+          {/* Left Column: Bold Copy & CTAs (7 cols on desktop) */}
+          <div className="relative z-10 text-center lg:text-left lg:col-span-7">
+            
+            {/* Tagline Badge */}
+            <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-aqua px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] shadow-pop-sm">
+              <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · Hyderabad Dum Biryani
+            </span>
 
-          <div className="mt-10 flex items-center justify-center gap-6 lg:justify-start">
-            <Starburst className="h-16 w-16 animate-twinkle" petals="pink" />
-            <div className="text-left">
-              <p className="font-display text-2xl text-aqua outline-text">4.9 stars</p>
-              <p className="text-sm font-bold text-cocoa-fade">from 18,400+ biryani lovers</p>
+            {/* Headline */}
+            <h1 className="mt-5 font-display text-5xl leading-[1.04] text-hot-pink outline-text sm:text-7xl lg:text-7xl xl:text-8xl">
+              Dum <span className="inline-block -rotate-3 text-lemon">happens.</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mt-5 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg lg:text-xl font-bold text-cocoa-soft leading-relaxed">
+              Slow-cooked handis sealed with dough, aged long-grain basmati infused with pure saffron, and Nizami spices. Delivered hot &amp; fresh directly from 17 Hyderabad kitchens.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <a
+                href="#menu"
+                className="pill-btn bg-cherry text-white text-base sm:text-lg !py-3.5 !px-8 flex items-center justify-center gap-2 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+              >
+                <span>See the Menu</span>
+                <ArrowDown size={18} strokeWidth={3} />
+              </a>
+
+              <a
+                href="#outlets"
+                className="pill-btn bg-lemon text-cocoa text-base sm:text-lg !py-3.5 !px-7 flex items-center justify-center gap-2 shadow-pop-md hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+              >
+                <MapPin size={18} />
+                <span>17 Hyderabad Outlets</span>
+              </a>
             </div>
-            <Starburst className="h-16 w-16 animate-twinkle [animation-delay:0.8s]" petals="red" />
-          </div>
-        </div>
 
-        {/* floating drink / handi */}
-        <div className="relative z-10 mx-auto w-full max-w-sm pb-12 lg:max-w-md lg:pb-16">
-          <div className="relative animate-bob">
-            <Starburst className="absolute -left-8 -top-8 h-24 w-24 z-20" petals="pink" />
-            <div className="relative overflow-hidden rounded-[2.5rem] border-4 border-cocoa bg-white shadow-pop-lg">
-              <img
-                src={HERO_PHOTO}
-                alt="Hyderabadi Chicken Dum Biryani sealed in handi"
-                className="h-[420px] w-full object-cover sm:h-[480px]"
-                loading="eager"
-              />
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-cocoa/85 px-5 py-3.5 backdrop-blur-sm border-t-[3px] border-cocoa">
-                <div>
-                  <p className="font-display text-lg text-lemon">Royal Chicken Dum Biryani</p>
-                  <p className="text-xs font-bold uppercase tracking-widest text-cream/80 mt-0.5">Today’s special · ₹380</p>
+            {/* Trust Badges & Social Proof */}
+            <div className="mt-10 pt-6 border-t-2 border-dashed border-cocoa/20 flex flex-wrap items-center justify-center lg:justify-start gap-6">
+              <div className="flex items-center gap-3">
+                <Starburst className="h-14 w-14 animate-twinkle shrink-0" petals="pink" />
+                <div className="text-left">
+                  <p className="font-display text-2xl text-aqua outline-text [text-stroke-width:0.5px]">4.9 stars</p>
+                  <p className="text-xs font-bold text-cocoa-fade">18,400+ direct orders</p>
                 </div>
-                <span className="rounded-full border-2 border-lemon px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-lemon bg-cocoa shadow-pop-sm">
-                  Authentic Dum
+              </div>
+
+              <div className="h-8 w-0.5 bg-cocoa/20 hidden sm:block" />
+
+              <div className="flex items-center gap-2 text-xs font-black text-cocoa">
+                <span className="flex items-center gap-1 bg-white border border-cocoa px-2.5 py-1 rounded-full shadow-sm">
+                  🧈 100% Desi Ghee
+                </span>
+                <span className="flex items-center gap-1 bg-white border border-cocoa px-2.5 py-1 rounded-full shadow-sm">
+                  📜 5% GST Included
                 </span>
               </div>
             </div>
-            <Starburst className="absolute -bottom-6 -right-6 h-20 w-20 animate-spin-slow z-20" petals="aqua" />
+
           </div>
+
+          {/* Right Column: Floating Biryani Handi Showcase (5 cols on desktop) */}
+          <div className="relative z-10 lg:col-span-5 mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative animate-bob">
+              <Starburst className="absolute -left-6 -top-6 h-20 w-20 sm:h-24 sm:w-24 z-20" petals="pink" />
+              
+              <div className="relative overflow-hidden rounded-[2.5rem] border-[4px] border-cocoa bg-white shadow-pop-lg">
+                <img
+                  src={HERO_PHOTO}
+                  alt="Authentic Royal Hyderabadi Chicken Dum Biryani sealed in handi"
+                  className="h-[360px] sm:h-[440px] lg:h-[460px] w-full object-cover"
+                  loading="eager"
+                />
+                
+                {/* Handi Photo Caption */}
+                <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-cocoa/90 px-5 py-4 backdrop-blur-sm border-t-[3px] border-cocoa text-cream">
+                  <div>
+                    <p className="font-display text-lg text-lemon leading-tight">Royal Chicken Dum Biryani</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-cream/75 mt-0.5">
+                      Today's Special &bull; ₹380 (5% GST Incl.)
+                    </p>
+                  </div>
+                  <span className="rounded-full border-2 border-lemon px-3 py-1 text-[11px] font-black uppercase tracking-wider text-lemon bg-cocoa shadow-pop-sm shrink-0">
+                    Authentic Dum
+                  </span>
+                </div>
+              </div>
+
+              <Starburst className="absolute -bottom-6 -right-6 h-20 w-20 animate-spin-slow z-20" petals="aqua" />
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* wavy divider */}
-      <div aria-hidden="true" className="relative mt-4">
-        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" className="block h-[52px] w-full fill-lemon">
+      {/* Wavy Retro Divider */}
+      <div aria-hidden="true" className="relative mt-10">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none" className="block h-[44px] sm:h-[52px] w-full fill-lemon">
           <path d="M0,35 C120,65 240,5 360,35 C480,65 600,5 720,35 C840,65 960,5 1080,35 C1200,65 1320,5 1440,35 L1440,70 L0,70 Z" />
         </svg>
         <div className="h-4 w-full border-y-[3px] border-cocoa checkerboard" />
       </div>
+
     </section>
   );
 }
