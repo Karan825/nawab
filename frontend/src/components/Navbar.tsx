@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Menu, X, ChefHat, ShieldCheck } from 'lucide-react';
 
 const LINKS = [
@@ -47,7 +46,6 @@ export default function Navbar() {
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Logo />
-          
           <div className="hidden items-center gap-1 lg:flex">
             {LINKS.map((link) => (
               <a
@@ -59,27 +57,26 @@ export default function Navbar() {
               </a>
             ))}
 
-            <Link
-              to="/kds"
+            <a
+              href="/kds"
               className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa bg-lemon border-2 border-cocoa shadow-pop-sm hover:bg-lemon-deep ml-2 flex items-center gap-1"
             >
               <ChefHat size={14} />
               KDS
-            </Link>
+            </a>
 
-            <Link
-              to="/admin"
+            <a
+              href="/admin"
               className="rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cocoa bg-aqua border-2 border-cocoa shadow-pop-sm hover:bg-aqua-deep ml-1 flex items-center gap-1"
             >
               <ShieldCheck size={14} />
               CMS
-            </Link>
+            </a>
 
             <a href="#builder" className="pill-btn ml-3 bg-cherry text-white text-sm !px-5 !py-2.5">
               Order Up
             </a>
           </div>
-
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -90,7 +87,6 @@ export default function Navbar() {
             {open ? <X size={22} strokeWidth={2.5} /> : <Menu size={22} strokeWidth={2.5} />}
           </button>
         </nav>
-
         {open && (
           <div className="border-t-[3px] border-cocoa bg-cream px-4 pb-5 pt-2 lg:hidden">
             {LINKS.map((link) => (
@@ -105,26 +101,28 @@ export default function Navbar() {
             ))}
 
             <div className="grid grid-cols-2 gap-2 mt-2">
-              <Link
-                to="/kds"
+              <a
+                href="/kds"
                 onClick={() => setOpen(false)}
-                className="pill-btn bg-lemon text-cocoa text-xs !py-2 text-center"
+                className="pill-btn bg-lemon text-cocoa text-xs !py-2 text-center flex items-center justify-center gap-1"
               >
+                <ChefHat size={14} />
                 Kitchen KDS
-              </Link>
-              <Link
-                to="/admin"
+              </a>
+              <a
+                href="/admin"
                 onClick={() => setOpen(false)}
-                className="pill-btn bg-aqua text-cocoa text-xs !py-2 text-center"
+                className="pill-btn bg-aqua text-cocoa text-xs !py-2 text-center flex items-center justify-center gap-1"
               >
+                <ShieldCheck size={14} />
                 Admin CMS
-              </Link>
+              </a>
             </div>
 
             <a
               href="#builder"
               onClick={() => setOpen(false)}
-              className="pill-btn mt-3 w-full bg-cherry text-white"
+              className="pill-btn mt-2 w-full bg-cherry text-white"
             >
               Order Up
             </a>

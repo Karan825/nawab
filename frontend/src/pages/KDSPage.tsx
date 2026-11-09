@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ChefHat, Clock, AlertTriangle, CheckCircle2, Bike, MapPin, RefreshCw, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { ChefHat, AlertTriangle, CheckCircle2, Bike, MapPin, ArrowLeft } from 'lucide-react';
 import { Order, OrderStatus, OUTLETS, INITIAL_ORDERS } from '../data';
 
 export default function KDSPage() {
@@ -29,13 +28,13 @@ export default function KDSPage() {
       {/* Top Station Bar */}
       <header className="p-4 sm:p-5 border-b-[3px] border-cream/30 bg-cocoa-soft flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
-          <Link
-            to="/"
+          <a
+            href="/"
             className="h-10 w-10 rounded-full bg-cream text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm hover:bg-lemon transition-colors shrink-0"
             title="Return to Storefront"
           >
             <ArrowLeft size={20} />
-          </Link>
+          </a>
 
           <div className="h-12 w-12 rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center font-display text-2xl shadow-pop-sm shrink-0">
             👨‍🍳
@@ -49,7 +48,7 @@ export default function KDSPage() {
               <MapPin size={14} className="text-cherry shrink-0" />
               <span>Station: {currentOutlet.name}</span> &bull;
               <span>Min Prep: {currentOutlet.minPrepTimeMinutes}m</span> &bull;
-              <span className="text-lemon">FSSAI: {currentOutlet.fssaiLicense} (Demo)</span>
+              <span className="text-lemon">FSSAI: {currentOutlet.fssaiLicense}</span>
             </p>
           </div>
         </div>
@@ -221,4 +220,3 @@ export default function KDSPage() {
     </div>
   );
 }
-

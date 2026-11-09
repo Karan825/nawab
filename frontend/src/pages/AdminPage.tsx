@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, ShieldAlert, Check, X, Search, Sparkles, ChefHat } from 'lucide-react';
-import { MenuItem, OUTLETS, MENU_ITEMS } from '../data';
+import { useState } from 'react';
+import { ArrowLeft, ShieldAlert, Check, X, Search, ChefHat } from 'lucide-react';
+import { Drink, OUTLETS, DRINKS } from '../data';
 
 export default function AdminPage() {
-  const [items, setItems] = useState<MenuItem[]>(MENU_ITEMS);
+  const [items, setItems] = useState<Drink[]>(DRINKS);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOutletId, setSelectedOutletId] = useState(OUTLETS[0].id);
 
@@ -32,13 +31,13 @@ export default function AdminPage() {
       {/* Top Header */}
       <header className="p-4 sm:p-6 border-b-[3px] border-cocoa bg-lemon flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
-          <Link
-            to="/"
+          <a
+            href="/"
             className="h-10 w-10 rounded-full bg-white text-cocoa border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-colors shrink-0"
             title="Return to Storefront"
           >
             <ArrowLeft size={20} />
-          </Link>
+          </a>
 
           <div>
             <div className="flex items-center gap-2">
@@ -70,13 +69,13 @@ export default function AdminPage() {
             </select>
           </div>
 
-          <Link
-            to="/kds"
+          <a
+            href="/kds"
             className="pill-btn bg-tangerine text-cocoa text-xs !py-2 !px-4 flex items-center gap-1.5"
           >
             <ChefHat size={15} />
             <span>Open KDS</span>
-          </Link>
+          </a>
         </div>
       </header>
 
@@ -89,7 +88,7 @@ export default function AdminPage() {
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cocoa-fade" />
             <input
               type="text"
-              placeholder="Search dishes, categories, allergens..."
+              placeholder="Search dishes, categories, ingredients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon shadow-pop-sm"
@@ -115,7 +114,7 @@ export default function AdminPage() {
                   <th className="p-4">Dish &amp; Description</th>
                   <th className="p-4">Category</th>
                   <th className="p-4">Price (Incl. 5% GST)</th>
-                  <th className="p-4">Portions</th>
+                  <th className="p-4">Ingredients</th>
                   <th className="p-4">Stock Availability</th>
                 </tr>
               </thead>
@@ -131,7 +130,7 @@ export default function AdminPage() {
                       />
                       <div>
                         <p className="font-black text-sm text-cocoa">{item.name}</p>
-                        <p className="text-[10px] text-cocoa-fade mt-0.5">{item.dietary === 'VEG' ? '🟢 Pure Veg' : '🔴 Non-Veg'}</p>
+                        <p className="text-[10px] text-cocoa-fade mt-0.5">{item.tagline}</p>
                       </div>
                     </td>
 
@@ -155,7 +154,7 @@ export default function AdminPage() {
 
                     <td className="p-4">
                       <span className="text-[11px] font-semibold text-cocoa">
-                        {item.portions.length} sizes configured
+                        {item.ingredients.join(', ')}
                       </span>
                     </td>
 
@@ -210,4 +209,3 @@ export default function AdminPage() {
     </div>
   );
 }
-

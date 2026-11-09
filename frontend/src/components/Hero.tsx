@@ -71,14 +71,14 @@ export default function Hero() {
         {/* copy */}
         <div className="relative z-10 text-center lg:text-left">
           <span className="inline-flex -rotate-2 items-center gap-1.5 rounded-full border-[3px] border-cocoa bg-aqua px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.2em] shadow-pop-sm">
-            <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · 17 Hyderabad Outlets
+            <Sparkles size={14} strokeWidth={2.5} /> Est. 1978 · Hyderabad Dum Biryani
           </span>
-          <h1 className="mt-5 font-display text-6xl leading-[1.05] text-cherry outline-text sm:text-7xl lg:text-8xl">
+          <h1 className="mt-5 font-display text-6xl leading-[1.05] text-hot-pink outline-text sm:text-7xl lg:text-8xl">
             Dum
             <span className="ml-3 inline-block -rotate-6 text-lemon">happens.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-md text-lg font-semibold text-cocoa-soft lg:mx-0 lg:text-xl">
-            Royal Nizami dum biryani slow-cooked in sealed clay handis with saffron, aged basmati, and pure desi ghee.
+            Slow-cooked handis sealed with dough, aged basmati infused with pure saffron, and Nizami spice blends. Authentic since the first dum.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <a href="#menu" className="pill-btn bg-cherry text-white text-lg">
@@ -92,21 +92,21 @@ export default function Hero() {
           <div className="mt-10 flex items-center justify-center gap-6 lg:justify-start">
             <Starburst className="h-16 w-16 animate-twinkle" petals="pink" />
             <div className="text-left">
-              <p className="font-display text-2xl text-cherry outline-text">4.9 stars</p>
-              <p className="text-sm font-bold text-cocoa-fade">from 48,000+ biryani lovers</p>
+              <p className="font-display text-2xl text-aqua outline-text">4.9 stars</p>
+              <p className="text-sm font-bold text-cocoa-fade">from 18,400+ biryani lovers</p>
             </div>
-            <Starburst className="h-16 w-16 animate-twinkle [animation-delay:0.8s]" petals="aqua" />
+            <Starburst className="h-16 w-16 animate-twinkle [animation-delay:0.8s]" petals="red" />
           </div>
         </div>
 
-        {/* floating biryani card */}
+        {/* floating drink / handi */}
         <div className="relative z-10 mx-auto w-full max-w-sm pb-12 lg:max-w-md lg:pb-16">
           <div className="relative animate-bob">
             <Starburst className="absolute -left-8 -top-8 h-24 w-24" petals="pink" />
             <div className="relative overflow-hidden rounded-[2.5rem] border-4 border-cocoa bg-white shadow-pop-lg">
               <img
                 src={HERO_PHOTO}
-                alt="Hyderabadi Chicken Dum Biryani in Clay Handi"
+                alt="Hyderabadi Chicken Dum Biryani sealed in handi"
                 className="h-[420px] w-full object-cover sm:h-[480px]"
                 loading="eager"
               />
@@ -116,7 +116,7 @@ export default function Hero() {
                   <p className="text-xs font-bold uppercase tracking-widest text-cream/80">Today’s special · ₹380</p>
                 </div>
                 <span className="rounded-full border-2 border-lemon px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-lemon">
-                  Kachhi Dum
+                  Authentic Dum
                 </span>
               </div>
             </div>
