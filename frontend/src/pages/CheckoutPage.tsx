@@ -18,7 +18,8 @@ import {
   Home,
   Check,
   ShoppingBag,
-  Award
+  Award,
+  MessageSquare
 } from 'lucide-react';
 import { CartItem, Outlet, Order, PortionOption, AddonOption } from '../data';
 
@@ -211,6 +212,27 @@ export default function CheckoutPage({
               <span className="font-display text-lg text-cherry">
                 ₹{placedOrder.totalAmount} (5% GST Inclusive)
               </span>
+            </div>
+          </div>
+
+          {/* Automated Status Updates via WhatsApp & SMS (Brief Requirement) */}
+          <div className="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4 text-left space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-[11px] font-black uppercase text-emerald-950 flex items-center gap-1.5">
+                <MessageSquare size={14} className="text-emerald-700" />
+                Automated Status Update (WhatsApp &amp; SMS)
+              </span>
+              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
+                Dispatched to {placedOrder.customerPhone}
+              </span>
+            </div>
+            <div className="bg-white p-3 rounded-xl border border-emerald-300 text-xs text-cocoa space-y-1">
+              <p className="font-black text-emerald-900">
+                Nawaab's Biryani Co. &bull; Order {placedOrder.orderNumber}
+              </p>
+              <p className="text-[11px] text-cocoa-soft font-semibold leading-relaxed">
+                "Your order has been routed to <strong>{placedOrder.outletName}</strong>. AI Estimated Prep Time: ~{placedOrder.estimatedPrepMinutes}m (Promised at {new Date(placedOrder.promisedReadyTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}). Follow your hot handi live at nawaabs.com/track/{placedOrder.orderNumber}"
+              </p>
             </div>
           </div>
 

@@ -14,7 +14,8 @@ import {
   Check,
   User,
   UtensilsCrossed,
-  Info
+  Info,
+  RotateCcw
 } from 'lucide-react';
 import {
   Outlet,
@@ -506,6 +507,95 @@ export default function OrderDashboardPage({
             <span>Cloud Kitchen Exclusive: <strong>Express Biryani Box + Thums Up</strong> combo is available only at this location.</span>
           </div>
         )}
+
+        {/* AI Smart Reorders (From Customer History - Brief Requirement) */}
+        <div className="card-pop bg-lemon/20 border-2 border-cocoa rounded-3xl p-5 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-dashed border-cocoa/20 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="h-8 w-8 rounded-xl bg-lemon border border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm">
+                <Sparkles size={16} />
+              </span>
+              <div>
+                <h3 className="font-display text-lg text-cocoa">
+                  AI Smart Reorders (Based on Your History)
+                </h3>
+                <p className="text-[11px] font-semibold text-cocoa-soft">
+                  Predicted from past orders &bull; <strong className="text-cherry">Suggestions never auto-added to cart</strong> (Tap ADD to select)
+                </p>
+              </div>
+            </div>
+
+            <span className="text-[10px] font-black uppercase bg-white border border-cocoa px-3 py-1 rounded-full text-emerald-800 shadow-sm flex items-center gap-1">
+              <RotateCcw size={11} /> 94% Reorder Accuracy
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3 pt-1">
+            {/* Suggestion 1: Royal Chicken Dum Biryani */}
+            {outletMenuItems.find((m) => m.id === 'royal-chicken-biryani') && (
+              <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider bg-cherry text-white px-2 py-0.5 rounded-full">
+                      Top Past Order
+                    </span>
+                    <span className="text-[10px] font-bold text-cocoa-fade">Ordered 2 times</span>
+                  </div>
+                  <h4 className="font-display text-sm text-cocoa truncate">
+                    Royal Chicken Dum Biryani
+                  </h4>
+                  <p className="text-[11px] font-bold text-cherry">
+                    ₹380 <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const item = outletMenuItems.find((m) => m.id === 'royal-chicken-biryani');
+                    if (item) handleAddClick(item);
+                  }}
+                  className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
+                >
+                  <Plus size={13} strokeWidth={3} />
+                  <span>ADD</span>
+                </button>
+              </div>
+            )}
+
+            {/* Suggestion 2: Double Ka Meetha */}
+            {outletMenuItems.find((m) => m.id === 'double-ka-meetha') && (
+              <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider bg-aqua text-cocoa px-2 py-0.5 rounded-full">
+                      Frequent Pairing
+                    </span>
+                    <span className="text-[10px] font-bold text-cocoa-fade">Dessert Favorite</span>
+                  </div>
+                  <h4 className="font-display text-sm text-cocoa truncate">
+                    Asaf Jahi Double Ka Meetha
+                  </h4>
+                  <p className="text-[11px] font-bold text-cherry">
+                    ₹140 <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const item = outletMenuItems.find((m) => m.id === 'double-ka-meetha');
+                    if (item) handleAddClick(item);
+                  }}
+                  className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
+                >
+                  <Plus size={13} strokeWidth={3} />
+                  <span>ADD</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Menu Items List */}
         <div className="space-y-4">

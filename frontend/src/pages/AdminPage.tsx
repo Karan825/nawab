@@ -6,6 +6,7 @@ export default function AdminPage() {
   const [items, setItems] = useState<Drink[]>(DRINKS);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOutletId, setSelectedOutletId] = useState(OUTLETS[0].id);
+  const [overridden, setOverridden] = useState(false);
 
   const toggleAvailability = (id: string) => {
     setItems((prev) =>
@@ -189,19 +190,27 @@ export default function AdminPage() {
             <span className="text-xs font-bold text-cocoa-fade">Rule: Alert when order is &gt;10m past promise</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 flex items-center justify-between text-xs">
+          <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div>
               <p className="font-black text-rose-900 text-sm flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
                 <span>ORDER WEB-778146 DELAY ALERT &bull; Kukatpally Express Kitchen</span>
               </p>
               <p className="text-xs text-rose-700 font-semibold mt-1">
-                Promised at 21:16 (Elapsed +4 mins). AI predicted 40m prep duration based on kitchen load.
+                {overridden
+                  ? 'Overridden: Promised time extended by 10 mins (21:26). Automated WhatsApp alert dispatched to Syed Faheem.'
+                  : 'Promised at 21:16 (Elapsed +4 mins). AI predicted 40m prep duration based on kitchen load.'}
               </p>
             </div>
-            <span className="pill-btn bg-cherry text-white text-[11px] !py-1.5 !px-4 shrink-0">
-              Manager Overriding
-            </span>
+            <button
+              type="button"
+              onClick={() => setOverridden(!overridden)}
+              className={`pill-btn text-white text-[11px] !py-1.5 !px-4 shrink-0 transition-all ${
+                overridden ? 'bg-emerald-600' : 'bg-cherry'
+              }`}
+            >
+              {overridden ? 'Estimate Overridden (Resolved)' : 'Override Estimate (+10m)'}
+            </button>
           </div>
         </div>
 
