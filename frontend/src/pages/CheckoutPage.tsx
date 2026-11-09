@@ -164,7 +164,7 @@ export default function CheckoutPage({
 
           <div>
             <span className="inline-block rounded-full border-2 border-cocoa bg-aqua px-3 py-1 text-xs font-black uppercase tracking-wider text-cocoa shadow-pop-sm">
-              Payment Successful &bull; KDS Dispatched
+              Payment Successful &bull; Order Received
             </span>
             <h1 className="mt-3 font-display text-3xl sm:text-4xl text-cherry">
               Order Confirmed!
@@ -206,24 +206,24 @@ export default function CheckoutPage({
             </div>
           </div>
 
-          {/* KDS Pipeline Preview */}
+          {/* Order Progress Tracker */}
           <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-4">
-            <h4 className="font-display text-sm text-cocoa mb-3">Kitchen Display Pipeline</h4>
+            <h4 className="font-display text-sm text-cocoa mb-3">Live Order Status</h4>
             <div className="grid grid-cols-5 gap-1 text-[10px] font-black">
               <div className="bg-cherry text-white p-2 rounded-xl border border-cocoa text-center">
-                1. PLACED
+                1. Placed
               </div>
               <div className="bg-white text-cocoa p-2 rounded-xl border border-cocoa text-center">
-                2. ACCEPTED
+                2. Confirmed
               </div>
               <div className="bg-white text-cocoa p-2 rounded-xl border border-cocoa text-center">
-                3. PREPARING
+                3. Cooking
               </div>
               <div className="bg-white text-cocoa p-2 rounded-xl border border-cocoa text-center">
-                4. READY
+                4. Ready
               </div>
               <div className="bg-white text-cocoa p-2 rounded-xl border border-cocoa text-center">
-                5. DISPATCHED
+                5. Out for Delivery
               </div>
             </div>
           </div>
@@ -232,17 +232,10 @@ export default function CheckoutPage({
             <button
               type="button"
               onClick={onBackToMenu}
-              className="pill-btn flex-1 bg-white text-cocoa border-2 border-cocoa text-sm !py-3 hover:bg-cream"
+              className="pill-btn flex-1 bg-cherry text-white border-2 border-cocoa text-sm !py-3 hover:opacity-90 shadow-pop-sm"
             >
-              Order More Biryani
+              ← Return to Storefront &amp; Menu
             </button>
-            <a
-              href="/kds"
-              className="pill-btn flex-1 bg-lemon text-cocoa border-2 border-cocoa text-sm !py-3 hover:bg-lemon-deep flex items-center justify-center gap-2"
-            >
-              <span>View On Kitchen KDS Screen</span>
-              <ArrowLeft size={16} className="rotate-180" />
-            </a>
           </div>
         </div>
       </div>
@@ -780,7 +773,7 @@ export default function CheckoutPage({
                 ) : (
                   <>
                     <Sparkles size={18} />
-                    <span>Pay ₹{grandTotal} &bull; Dispatch to KDS</span>
+                    <span>Pay &amp; Place Order &bull; ₹{grandTotal}</span>
                   </>
                 )}
               </button>
@@ -797,3 +790,4 @@ export default function CheckoutPage({
     </div>
   );
 }
+

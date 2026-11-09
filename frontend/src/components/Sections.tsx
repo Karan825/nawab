@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { OUTLETS, type Outlet, HOURS } from '../data';
 import { Clock, MapPin, Instagram, Facebook, Twitter, ShieldCheck } from 'lucide-react';
 
@@ -34,19 +35,57 @@ export function FindUs({
   selectedOutlet: Outlet;
   onSelectOutlet: (o: Outlet) => void;
 }) {
+  const [filterType, setFilterType] = useState<'ALL' | 'PHYSICAL_DINEIN' | 'CLOUD_KITCHEN'>('ALL');
+
+  const filteredOutlets = OUTLETS.filter((o) => {
+    if (filterType === 'ALL') return true;
+    return o.type === filterType;
+  });
+
   return (
     <section id="outlets" className="bg-cream py-16 sm:py-24 border-t-[3px] border-cocoa">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
-          kicker="17 Outlets Chain"
+          kicker="17 Outlets Across Hyderabad"
           title="Direct Delivery Outlets"
-          sub="Orders route directly to the kitchen display screen of the outlet closest to your delivery address."
+          sub="Orders route directly to the outlet kitchen closest to your delivery address for maximum freshness."
           kickerColor="bg-aqua"
           titleColor="text-cherry"
         />
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {OUTLETS.map((outlet) => {
+        {/* Filter Tabs */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => setFilterType('ALL')}
+            className={`pill-btn text-xs !px-4 !py-2 ${
+              filterType === 'ALL' ? 'bg-cherry text-white shadow-pop-sm' : 'bg-white text-cocoa'
+            }`}
+          >
+            All 17 Outlets
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('PHYSICAL_DINEIN')}
+            className={`pill-btn text-xs !px-4 !py-2 ${
+              filterType === 'PHYSICAL_DINEIN' ? 'bg-cherry text-white shadow-pop-sm' : 'bg-white text-cocoa'
+            }`}
+          >
+            14 Dine-In Outlets
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterType('CLOUD_KITCHEN')}
+            className={`pill-btn text-xs !px-4 !py-2 ${
+              filterType === 'CLOUD_KITCHEN' ? 'bg-cherry text-white shadow-pop-sm' : 'bg-white text-cocoa'
+            }`}
+          >
+            3 Cloud Kitchens
+          </button>
+        </div>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {filteredOutlets.map((outlet) => {
             const isSelected = selectedOutlet.id === outlet.id;
 
             return (
@@ -64,7 +103,7 @@ export function FindUs({
                       {outlet.type === 'CLOUD_KITCHEN' ? 'Cloud Kitchen' : 'Flagship Dine-In'}
                     </span>
                     <span className="text-xs font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full">
-                      ● Live KDS
+                      ● Accepting Orders
                     </span>
                   </div>
 
@@ -207,27 +246,27 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="font-display text-lg text-hot-pink">Internal Portals</h3>
+          <h3 className="font-display text-lg text-hot-pink">Customer Care &amp; Orders</h3>
           <ul className="mt-4 space-y-2 text-sm font-semibold">
             <li>
-              <a href="/kds" className="text-lemon font-bold transition-colors hover:underline">
-                🍳 Kitchen Display System (KDS)
+              <a href="#menu" className="text-cream/85 transition-colors hover:text-lemon">
+                🍲 Menu Lineup &amp; Combos
               </a>
             </li>
             <li>
-              <a href="/admin" className="text-aqua font-bold transition-colors hover:underline">
-                ⚙️ Central Menu Admin CMS
+              <a href="#outlets" className="text-cream/85 transition-colors hover:text-lemon">
+                📍 17 Hyderabad Locations
               </a>
             </li>
             <li>
-              <a href="#menu" className="text-cream/75 transition-colors hover:text-lemon">
-                Menu Lineup
-              </a>
+              <span className="text-lemon font-bold">
+                🎉 Bulk &amp; Party Catering: +91 40 2300 1978
+              </span>
             </li>
             <li>
-              <a href="#outlets" className="text-cream/75 transition-colors hover:text-lemon">
-                Hyderabad Outlets
-              </a>
+              <span className="text-cream/65 text-xs">
+                🔒 DPDP Act 2023 Compliant &bull; 5% GST Included
+              </span>
             </li>
           </ul>
         </div>
