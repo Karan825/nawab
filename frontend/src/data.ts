@@ -28,6 +28,10 @@ export interface MenuItem {
   portions: PortionOption[];
   addons: AddonOption[];
   isAvailable: boolean;
+  rating?: number;
+  ratingCount?: number;
+  bestseller?: boolean;
+  outletAvailability?: Record<string, { isAvailable: boolean; statusLabel?: string; priceOverride?: number }>;
 }
 
 export type Drink = MenuItem;
@@ -60,6 +64,9 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MEDIUM',
     allergens: ['Dairy (Ghee, Curd)'],
     isAvailable: true,
+    rating: 4.9,
+    ratingCount: 2340,
+    bestseller: true,
     portions: [
       { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
       { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 420, serves: '3–4 persons' },
@@ -89,6 +96,9 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MEDIUM',
     allergens: ['Dairy (Ghee)'],
     isAvailable: true,
+    rating: 4.9,
+    ratingCount: 1890,
+    bestseller: true,
     portions: [
       { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
       { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 510, serves: '3–4 persons' },
@@ -116,6 +126,9 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MILD',
     allergens: ['Dairy (Paneer, Ghee)', 'Tree Nuts (Cashew)'],
     isAvailable: true,
+    rating: 4.7,
+    ratingCount: 680,
+    bestseller: false,
     portions: [
       { id: 'p-reg', name: 'Regular Handi', priceModifier: 0, serves: '1 person' },
       { id: 'p-fam', name: 'Family Pack (Serves 3–4)', priceModifier: 350, serves: '3–4 persons' },
@@ -143,6 +156,9 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'EXTRA_SPICY',
     allergens: ['Dairy (Curd)'],
     isAvailable: true,
+    rating: 4.8,
+    ratingCount: 1520,
+    bestseller: true,
     portions: [
       { id: 'p-reg', name: 'Standard Plate (8 pcs)', priceModifier: 0, serves: '1–2 persons' },
       { id: 'p-plat', name: 'Party Platter (16 pcs)', priceModifier: 280, serves: '3–4 persons' },
@@ -169,6 +185,12 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MEDIUM',
     allergens: ['Gluten (Wheat)', 'Dairy (Ghee)', 'Nuts (Cashews)'],
     isAvailable: true,
+    rating: 4.9,
+    ratingCount: 2150,
+    bestseller: true,
+    outletAvailability: {
+      'out-charminar': { isAvailable: true, statusLabel: 'Heritage Recipe · Handi Fresh' },
+    },
     portions: [
       { id: 'p-bowl', name: 'Regular Bowl (350ml)', priceModifier: 0, serves: '1 person' },
       { id: 'p-pot', name: 'Family Pot (750ml)', priceModifier: 320, serves: '2–3 persons' },
@@ -194,6 +216,16 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'SPICY',
     allergens: [],
     isAvailable: true,
+    rating: 4.8,
+    ratingCount: 840,
+    bestseller: false,
+    outletAvailability: {
+      'out-gachibowli': { isAvailable: false, statusLabel: 'Dine-In Stone Pit Only' },
+      'out-manikonda-ck': { isAvailable: false, statusLabel: 'Dine-In Stone Pit Only' },
+      'out-miyapur-ck': { isAvailable: false, statusLabel: 'Dine-In Stone Pit Only' },
+      'out-kukatpally': { isAvailable: false, statusLabel: 'Unavailable at Express' },
+      'out-charminar': { isAvailable: true, statusLabel: '🔥 Hot River Granite Seared' },
+    },
     portions: [{ id: 'p-std', name: 'Standard Plate (6 strips)', priceModifier: 0, serves: '1–2 persons' }],
     addons: [{ id: 'a-chilli', name: 'Charred Green Chilies', price: 20 }],
   },
@@ -213,6 +245,9 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MILD',
     allergens: ['Dairy (Paneer, Curd)'],
     isAvailable: true,
+    rating: 4.7,
+    ratingCount: 540,
+    bestseller: false,
     portions: [{ id: 'p-std', name: 'Standard Skewer (6 pcs)', priceModifier: 0, serves: '1–2 persons' }],
     addons: [{ id: 'a-dip', name: 'Mint Chutney & Garlic Dip', price: 25 }],
   },
@@ -233,6 +268,12 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MILD',
     allergens: ['Gluten (Bread)', 'Dairy (Milk, Khoya)', 'Nuts (Pistachio)'],
     isAvailable: true,
+    rating: 4.9,
+    ratingCount: 1120,
+    bestseller: true,
+    outletAvailability: {
+      'out-kukatpally': { isAvailable: false, statusLabel: 'Sold Out for the Day' },
+    },
     portions: [{ id: 'p-std', name: 'Single Bowl (2 slices)', priceModifier: 0, serves: '1 person' }],
     addons: [{ id: 'a-rabri', name: 'Extra Khoya Rabri Scoop', price: 40 }],
   },
@@ -252,10 +293,54 @@ export const MENU_ITEMS: MenuItem[] = [
     spiceLevel: 'MILD',
     allergens: ['Dairy (Milk)', 'Gluten (Biscuits)'],
     isAvailable: true,
+    rating: 4.8,
+    ratingCount: 960,
+    bestseller: false,
     portions: [{ id: 'p-flask', name: 'Thermal Flask (Serves 2–3)', priceModifier: 0, serves: '2–3 cups' }],
     addons: [{ id: 'a-bisc', name: 'Extra Osmania Biscuits (Pack of 6)', price: 40 }],
   },
+  {
+    id: 'cloud-express-box',
+    name: 'Express Biryani Box + Thums Up',
+    tagline: 'Quick lunch combo for tech parks & cloud deliveries',
+    description:
+      'Single handi dum biryani accompanied by 250ml mirchi ka salan, spiced dahi raita, gulab jamun, and a chilled Thums Up can.',
+    ingredients: ['Chicken Dum Biryani', 'Mirchi Ka Salan', 'Dahi Raita', 'Thums Up 250ml', 'Gulab Jamun'],
+    price: 330,
+    category: 'Biryani',
+    photo:
+      'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80',
+    colors: { top: '#FFD93D', bottom: '#D96E14', foam: '#FFF4E2' },
+    badge: 'Cloud Exclusive',
+    dietary: 'NON_VEG',
+    spiceLevel: 'MEDIUM',
+    allergens: ['Dairy (Ghee, Curd)'],
+    isAvailable: true,
+    rating: 4.9,
+    ratingCount: 410,
+    bestseller: true,
+    outletAvailability: {
+      'out-kondapur': { isAvailable: false, statusLabel: 'Cloud Kitchen Only' },
+      'out-banjara-hills': { isAvailable: false, statusLabel: 'Cloud Kitchen Only' },
+      'out-jubilee-hills': { isAvailable: false, statusLabel: 'Cloud Kitchen Only' },
+      'out-charminar': { isAvailable: false, statusLabel: 'Cloud Kitchen Only' },
+    },
+    portions: [{ id: 'p-box', name: 'Complete Combo Box', priceModifier: 0, serves: '1 person' }],
+    addons: [{ id: 'a-egg', name: 'Extra Boiled Egg', price: 20 }],
+  },
 ];
+
+export function getMenuItemsForOutlet(outletId: string): (MenuItem & { effectivePrice: number; effectiveAvailable: boolean; outletStatusLabel?: string })[] {
+  return MENU_ITEMS.map((item) => {
+    const override = item.outletAvailability?.[outletId];
+    return {
+      ...item,
+      effectivePrice: override?.priceOverride ?? item.price,
+      effectiveAvailable: override !== undefined ? override.isAvailable : item.isAvailable,
+      outletStatusLabel: override?.statusLabel,
+    };
+  });
+}
 
 export const DRINKS: MenuItem[] = MENU_ITEMS;
 

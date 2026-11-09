@@ -9,9 +9,9 @@ import OrderTrackModal from './components/OrderTrackModal';
 import KDSPage from './pages/KDSPage';
 import AdminPage from './pages/AdminPage';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderDashboardPage from './pages/OrderDashboardPage';
 import {
   OUTLETS,
-  MENU_ITEMS,
   INITIAL_ORDERS,
   type Outlet,
   type MenuItem,
@@ -20,6 +20,7 @@ import {
   type CartItem,
   type Order,
   type OrderStatus,
+  getMenuItemsForOutlet,
 } from './data';
 
 export default function App() {
@@ -29,6 +30,11 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [trackingOrder, setTrackingOrder] = useState<Order | null>(null);
+  const [customerUser, setCustomerUser] = useState({
+    name: 'Karan Sharma',
+    phone: '+91 98765 43210',
+    address: 'Flat 402, Aditya Sunshine, Kondapur',
+  });
 
   // Handle client-side history navigation
   useEffect(() => {
@@ -139,12 +145,49 @@ export default function App() {
         onUpdateQty={handleUpdateQty}
         onRemoveItem={handleRemoveItem}
         onCheckoutSuccess={handleCheckoutSuccess}
-        onBackToMenu={() => navigate('/')}
+        onBackToMenu={() => navigate('/order')}
       />
     );
   }
 
-  // Customer Storefront
+  // Dedicated Swiggy-Level Food Ordering App
+  if (route === '/order') {
+    return (
+      <>
+        <OrderDashboardPage
+          selectedOutlet={selectedOutlet}
+          onSelectOutlet={handleSelectOutlet}
+          cartItems={cartItems}
+          onAddToCart={handleAddToCart}
+          onUpdateQty={handleUpdateQty}
+          onRemoveItem={handleRemoveItem}
+          onOpenCart={() => setIsCartOpen(true)}
+          onNavigateToCheckout={() => navigate('/checkout')}
+          onBackToHome={() => navigate('/')}
+          customerUser={customerUser}
+        />
+
+        {/* Slide-over Cart Drawer */}
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+          cartItems={cartItems}
+          onUpdateQty={handleUpdateQty}
+          onRemoveItem={handleRemoveItem}
+          selectedOutlet={selectedOutlet}
+          onNavigateToCheckout={() => navigate('/checkout')}
+        />
+
+        {/* Live Order Tracking Modal */}
+        <OrderTrackModal
+          order={trackingOrder}
+          onClose={() => setTrackingOrder(null)}
+        />
+      </>
+    );
+  }
+
+  // Customer Brand Storefront & Login Landing Page
   return (
     <div className="min-h-screen bg-cream">
       <Navbar
@@ -153,15 +196,31 @@ export default function App() {
         cartCount={totalCartCount}
         cartTotal={totalCartPrice}
         onOpenCart={() => setIsCartOpen(true)}
+        onGoToOrder={() => navigate('/order')}
       />
 
       <main>
-        <Hero />
+        <Hero
+          selectedOutlet={selectedOutlet}
+          onStartOrder={(chosenOutlet) => {
+            if (chosenOutlet) setSelectedOutlet(chosenOutlet);
+            navigate('/order');
+          }}
+        />
         <Marquee />
-        <Menu items={MENU_ITEMS} onAddToCart={handleAddToCart} />
+        <Menu
+          items={getMenuItemsForOutlet(selectedOutlet.id)}
+          onAddToCart={handleAddToCart}
+        />
         <Divider />
         <PopularStrip />
-        <FindUs selectedOutlet={selectedOutlet} onSelectOutlet={handleSelectOutlet} />
+        <FindUs
+          selectedOutlet={selectedOutlet}
+          onSelectOutlet={(outlet) => {
+            handleSelectOutlet(outlet);
+            navigate('/order');
+          }}
+        />
       </main>
 
       <Footer />

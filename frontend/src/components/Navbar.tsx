@@ -8,6 +8,7 @@ interface NavbarProps {
   cartCount: number;
   cartTotal: number;
   onOpenCart: () => void;
+  onGoToOrder?: () => void;
 }
 
 export default function Navbar({
@@ -16,6 +17,7 @@ export default function Navbar({
   cartCount,
   cartTotal,
   onOpenCart,
+  onGoToOrder,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isOutletModalOpen, setIsOutletModalOpen] = useState(false);
@@ -98,7 +100,7 @@ export default function Navbar({
             </div>
 
             {/* Right: Nav Links & Cart Trigger */}
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2.5 shrink-0">
               <div className="hidden lg:flex items-center gap-1 text-xs font-black uppercase tracking-wider text-cocoa">
                 <a
                   href="#menu"
@@ -114,15 +116,26 @@ export default function Navbar({
                 </a>
               </div>
 
+              {onGoToOrder && (
+                <button
+                  type="button"
+                  onClick={onGoToOrder}
+                  className="pill-btn bg-lemon text-cocoa text-xs sm:text-sm !py-2.5 !px-3.5 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
+                  title="Open Swiggy-level ordering dashboard"
+                >
+                  <span>Order Direct</span>
+                </button>
+              )}
+
               {/* Cart Button */}
               <button
                 type="button"
                 onClick={onOpenCart}
-                className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2.5 !px-4 sm:!px-5 flex items-center gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
+                className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2.5 !px-3.5 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
                 title="View your cart"
               >
                 <div className="relative">
-                  <ShoppingBag size={18} strokeWidth={2.5} />
+                  <ShoppingBag size={17} strokeWidth={2.5} />
                   {cartCount > 0 && (
                     <span className="absolute -top-2 -right-2.5 h-4 w-4 rounded-full bg-lemon border-2 border-cocoa text-cocoa text-[9px] font-black flex items-center justify-center shadow-sm">
                       {cartCount}
