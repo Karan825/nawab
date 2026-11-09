@@ -115,3 +115,4 @@ class OutletMenuItemOverride(Base):
 
     outlet: Mapped["Outlet"] = relationship("Outlet", back_populates="menu_overrides")
     menu_item: Mapped["MenuItem"] = relationship("MenuItem", back_populates="outlet_overrides")
+

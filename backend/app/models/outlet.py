@@ -43,3 +43,4 @@ class Outlet(Base):
         "OutletMenuItemOverride", back_populates="outlet", cascade="all, delete-orphan"
     )
     orders: Mapped[List["Order"]] = relationship("Order", back_populates="outlet")
+

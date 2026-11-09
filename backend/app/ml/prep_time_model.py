@@ -100,3 +100,4 @@ def estimate_kitchen_prep_time(
 
     # Enforce Invariant 7: promised_prep_time = max(ai_estimated_time, outlet_minimum_prep_time)
     return max(ai_time, outlet_min_prep_time)
+

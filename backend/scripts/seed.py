@@ -36,6 +36,10 @@ async def seed():
 
     async with async_session_factory() as session:
         # 1. Clean existing records if any
+        from sqlalchemy import text
+        await session.execute(text("TRUNCATE TABLE order_status_history, payments, order_items, orders, outlet_menu_overrides, portion_options, addon_options, menu_items, addresses, users, outlets RESTART IDENTITY CASCADE;"))
+        await session.flush()
+
         # 2. Seed Users
         customer_user = User(
             name="Karan Sharma",
@@ -540,97 +544,91 @@ async def seed():
             )
 
         # 5. Seed 3 Initial Assignment Orders from Project Prompt
+        # Order 1: WEB-778120 | Kondapur | Chicken dum biryani family pack x1, Double ka meetha x2 | 1180 | UPI | 20:14 | 20:59 | Preparing
         now = datetime.now(timezone.utc)
 
-        # Order 1: WEB-778120 at Kondapur (Status: ACCEPTED)
         o1 = Order(
             order_number="WEB-778120",
             customer_id=customer_user.id,
             outlet_id=outlet_instances["out-kondapur"].id,
             delivery_address_id=address.id,
             delivery_address_snapshot={
-                "address": address.street_address,
-                "locality": address.locality,
-                "city": address.city,
+                "address": "Flat 402, Aditya Sunshine, Kondapur, Hyderabad",
+                "locality": "Kondapur",
+                "city": "Hyderabad",
                 "phone": customer_user.phone,
             },
-            status=OrderStatus.ACCEPTED,
-            subtotal=760.00,
-            gst_amount=round(760.00 * 5 / 105, 2),  # 36.19
+            status=OrderStatus.PREPARING,
+            subtotal=1180.00,
+            gst_amount=round(1180.00 * 5 / 105, 2),  # 56.19
             delivery_fee=0.00,
             discount_amount=0.00,
-            grand_total=760.00,
+            grand_total=1180.00,
             special_instructions="Deliver extra onions and lemons please.",
-            ai_estimated_prep_minutes=35,
-            promised_delivery_time=now + timedelta(minutes=45),
-            created_at=now - timedelta(minutes=8),
+            ai_estimated_prep_minutes=45,
+            promised_delivery_time=now + timedelta(minutes=25),
+            created_at=now - timedelta(minutes=20),
         )
         session.add(o1)
         await session.flush()
 
-        # Item 1 for o1
         session.add(
             OrderItem(
                 order_id=o1.id,
                 menu_item_id=menu_instances["royal-chicken-dum-biryani"].id,
-                item_name="Royal Chicken Dum Biryani",
-                portion_name="Standard Handi (Serves 1–2)",
-                unit_price=380.00,
-                quantity=2,
-                addon_details=[{"name": "Thick Boondi Dahi Raita", "price": 35.00}],
-                total_price=760.00,
+                item_name="Chicken Dum Biryani",
+                portion_name="Family Pack (x1)",
+                unit_price=800.00,
+                quantity=1,
+                addon_details=[],
+                total_price=800.00,
             )
         )
-        # Payment for o1
+        session.add(
+            OrderItem(
+                order_id=o1.id,
+                menu_item_id=menu_instances["double-ka-meetha"].id,
+                item_name="Double Ka Meetha",
+                portion_name="Single Bowl (x2)",
+                unit_price=190.00,
+                quantity=2,
+                addon_details=[],
+                total_price=380.00,
+            )
+        )
         session.add(
             Payment(
                 order_id=o1.id,
                 idempotency_key="idemp_pay_web_778120_upi",
                 payment_method="UPI_QR",
                 transaction_reference="TXN_UPI_77812099",
-                amount=760.00,
+                amount=1180.00,
                 status=PaymentStatus.SUCCESS,
             )
         )
-        session.add(
-            OrderStatusHistory(
-                order_id=o1.id,
-                from_status=None,
-                to_status=OrderStatus.PLACED.value,
-                note="Simulated UPI payment verified",
-            )
-        )
-        session.add(
-            OrderStatusHistory(
-                order_id=o1.id,
-                from_status=OrderStatus.PLACED.value,
-                to_status=OrderStatus.ACCEPTED.value,
-                note="Kondapur station accepted order",
-            )
-        )
 
-        # Order 2: WEB-778131 at Charminar (Status: PREPARING)
+        # Order 2: WEB-778131 | Gachibowli cloud kitchen | Veg biryani x2, Mirchi ka salan x1 | 640 | Card | 20:21 | 21:01 | Ready for pickup
         o2 = Order(
             order_number="WEB-778131",
             customer_id=customer_user.id,
-            outlet_id=outlet_instances["out-charminar"].id,
+            outlet_id=outlet_instances["out-gachibowli"].id,
             delivery_address_id=address.id,
             delivery_address_snapshot={
-                "address": "Opposite High Court, Ghansi Bazaar",
-                "locality": "Charminar",
+                "address": "Tower 4, My Home Bhooja, Hitec City, Hyderabad",
+                "locality": "Gachibowli",
                 "city": "Hyderabad",
-                "phone": "+91 98765 43210",
+                "phone": "+91 98123 45678",
             },
-            status=OrderStatus.PREPARING,
-            subtotal=870.00,
-            gst_amount=round(870.00 * 5 / 105, 2),  # 41.43
+            status=OrderStatus.READY,
+            subtotal=640.00,
+            gst_amount=round(640.00 * 5 / 105, 2),  # 30.48
             delivery_fee=0.00,
             discount_amount=0.00,
-            grand_total=870.00,
-            special_instructions="Extra saffron aroma on dum.",
-            ai_estimated_prep_minutes=42,
-            promised_delivery_time=now + timedelta(minutes=30),
-            created_at=now - timedelta(minutes=16),
+            grand_total=640.00,
+            special_instructions="Ready for rider pickup.",
+            ai_estimated_prep_minutes=40,
+            promised_delivery_time=now + timedelta(minutes=5),
+            created_at=now - timedelta(minutes=35),
         )
         session.add(o2)
         await session.flush()
@@ -638,25 +636,25 @@ async def seed():
         session.add(
             OrderItem(
                 order_id=o2.id,
-                menu_item_id=menu_instances["nizami-mutton-dum-biryani"].id,
-                item_name="Nizami Mutton Dum Biryani",
-                portion_name="Standard Handi (Serves 1–2)",
-                unit_price=480.00,
-                quantity=1,
-                addon_details=[{"name": "Pure Gir Cow Desi Ghee Pour", "price": 50.00}],
-                total_price=480.00,
+                menu_item_id=menu_instances["tarkari-dum-biryani"].id,
+                item_name="Veg Dum Biryani",
+                portion_name="Regular (x2)",
+                unit_price=290.00,
+                quantity=2,
+                addon_details=[],
+                total_price=580.00,
             )
         )
         session.add(
             OrderItem(
                 order_id=o2.id,
-                menu_item_id=menu_instances["royal-mutton-shahi-haleem"].id,
-                item_name="Royal Shahi Mutton Haleem",
-                portion_name="Single Bowl (350ml)",
-                unit_price=390.00,
+                menu_item_id=menu_instances["royal-chicken-dum-biryani"].id,  # Salan side
+                item_name="Mirchi Ka Salan",
+                portion_name="Standard (x1)",
+                unit_price=60.00,
                 quantity=1,
                 addon_details=[],
-                total_price=390.00,
+                total_price=60.00,
             )
         )
         session.add(
@@ -665,32 +663,32 @@ async def seed():
                 idempotency_key="idemp_pay_web_778131_card",
                 payment_method="CREDIT_CARD",
                 transaction_reference="TXN_CARD_8871231",
-                amount=870.00,
+                amount=640.00,
                 status=PaymentStatus.SUCCESS,
             )
         )
 
-        # Order 3: WEB-778146 at Kukatpally (Status: READY, Delay test order)
+        # Order 3: WEB-778146 | Kukatpally | Mutton haleem x3 | 1050 | UPI | 20:26 | 21:16 | Late by 4 minutes
         o3 = Order(
             order_number="WEB-778146",
             customer_id=customer_user.id,
             outlet_id=outlet_instances["out-kukatpally"].id,
             delivery_address_id=address.id,
             delivery_address_snapshot={
-                "address": "Flat 301, Fortune Butterfly City, KPHB",
+                "address": "House 14/B, KPHB Phase 1, Kukatpally, Hyderabad",
                 "locality": "Kukatpally",
                 "city": "Hyderabad",
-                "phone": "+91 98765 43210",
+                "phone": "+91 99887 76655",
             },
             status=OrderStatus.READY,
-            subtotal=690.00,
-            gst_amount=round(690.00 * 5 / 105, 2),  # 32.86
+            subtotal=1050.00,
+            gst_amount=round(1050.00 * 5 / 105, 2),  # 50.00
             delivery_fee=0.00,
             discount_amount=0.00,
-            grand_total=690.00,
-            special_instructions="Handle gently, delicate clay handi.",
+            grand_total=1050.00,
+            special_instructions="Late alert test order - 4 minutes overdue.",
             ai_estimated_prep_minutes=40,
-            promised_delivery_time=now - timedelta(minutes=4),  # 4 minutes overdue (delay alert)
+            promised_delivery_time=now - timedelta(minutes=4),  # 4 minutes overdue
             created_at=now - timedelta(minutes=44),
         )
         session.add(o3)
@@ -699,25 +697,13 @@ async def seed():
         session.add(
             OrderItem(
                 order_id=o3.id,
-                menu_item_id=menu_instances["royal-chicken-dum-biryani"].id,
-                item_name="Royal Chicken Dum Biryani",
-                portion_name="Standard Handi (Serves 1–2)",
-                unit_price=380.00,
-                quantity=1,
+                menu_item_id=menu_instances["royal-mutton-shahi-haleem"].id,
+                item_name="Mutton Haleem",
+                portion_name="Regular Pot (x3)",
+                unit_price=350.00,
+                quantity=3,
                 addon_details=[],
-                total_price=380.00,
-            )
-        )
-        session.add(
-            OrderItem(
-                order_id=o3.id,
-                menu_item_id=menu_instances["hyderabadi-chicken-65"].id,
-                item_name="Nawaabi Chicken 65",
-                portion_name="Standard (8 Pcs)",
-                unit_price=310.00,
-                quantity=1,
-                addon_details=[],
-                total_price=310.00,
+                total_price=1050.00,
             )
         )
         session.add(
@@ -726,7 +712,7 @@ async def seed():
                 idempotency_key="idemp_pay_web_778146_upi",
                 payment_method="UPI_QR",
                 transaction_reference="TXN_UPI_77814611",
-                amount=690.00,
+                amount=1050.00,
                 status=PaymentStatus.SUCCESS,
             )
         )

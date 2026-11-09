@@ -78,3 +78,4 @@ async def check_serviceability(
         outlet_name=outlet.name,
         min_prep_time_minutes=outlet.min_prep_time_minutes,
     )
+

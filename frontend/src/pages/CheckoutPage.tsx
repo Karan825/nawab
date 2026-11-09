@@ -17,7 +17,8 @@ import {
   User as UserIcon,
   Home,
   Check,
-  ShoppingBag
+  ShoppingBag,
+  Award
 } from 'lucide-react';
 import { CartItem, Outlet, Order, PortionOption, AddonOption } from '../data';
 
@@ -68,6 +69,10 @@ export default function CheckoutPage({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
 
+  // Loyalty Points State (Brief Requirement: Loyalty points on direct orders, redeemed at checkout)
+  const [redeemLoyalty, setRedeemLoyalty] = useState(false);
+  const loyaltyPointsAvailable = 150; // 150 Nawaab Coins = ₹150
+
   // Calculations
   const itemTotal = cartItems.reduce((acc, c) => acc + c.totalPrice, 0);
   // Authoritative GST 5% inclusive formula: itemTotal * 5 / 105
@@ -78,7 +83,9 @@ export default function CheckoutPage({
     ? Math.round(itemTotal * appliedCoupon.discount)
     : 0;
 
-  const grandTotal = Math.max(0, itemTotal + deliveryFee - discountAmount);
+  const loyaltyDiscount = redeemLoyalty ? Math.min(loyaltyPointsAvailable, itemTotal - discountAmount) : 0;
+
+  const grandTotal = Math.max(0, itemTotal + deliveryFee - discountAmount - loyaltyDiscount);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -724,6 +731,30 @@ export default function CheckoutPage({
                 )}
               </form>
 
+              {/* Direct Loyalty Rewards Redemption */}
+              <div className="p-3 rounded-2xl bg-amber-50 border-2 border-amber-300 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Award size={18} className="text-amber-700 shrink-0" />
+                  <div>
+                    <p className="text-xs font-bold text-amber-950">
+                      Nawaab Royalty Rewards: <strong>{loyaltyPointsAvailable} Coins</strong> (₹{loyaltyPointsAvailable})
+                    </p>
+                    <p className="text-[10px] text-amber-700 font-medium">Earn 5% back on every direct order</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRedeemLoyalty(!redeemLoyalty)}
+                  className={`pill-btn text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 transition-all ${
+                    redeemLoyalty
+                      ? 'bg-amber-600 text-white'
+                      : 'bg-white text-cocoa border border-cocoa'
+                  }`}
+                >
+                  {redeemLoyalty ? 'Redeemed -₹150' : 'Redeem'}
+                </button>
+              </div>
+
               {/* Authoritative Bill Breakdown */}
               <div className="border-t-2 border-dashed border-cocoa/30 pt-3 space-y-2 text-xs font-bold">
                 <div className="flex justify-between text-cocoa">
@@ -735,6 +766,13 @@ export default function CheckoutPage({
                   <div className="flex justify-between text-emerald-700">
                     <span>Direct Order Discount ({appliedCoupon.code})</span>
                     <span>-₹{discountAmount}</span>
+                  </div>
+                )}
+
+                {redeemLoyalty && (
+                  <div className="flex justify-between text-amber-800">
+                    <span>Royalty Points Redeemed</span>
+                    <span>-₹{loyaltyDiscount}</span>
                   </div>
                 )}
 

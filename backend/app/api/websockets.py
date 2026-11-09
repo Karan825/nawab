@@ -63,3 +63,4 @@ async def websocket_kds_endpoint(websocket: WebSocket, outlet_id: int):
     except Exception as e:
         print(f"KDS WebSocket exception: {e}")
         kds_manager.disconnect(outlet_id, websocket)
+

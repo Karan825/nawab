@@ -40,3 +40,4 @@ __all__ = [
     "PaymentStatus",
     "VALID_ORDER_TRANSITIONS",
 ]
+

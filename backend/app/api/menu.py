@@ -75,3 +75,4 @@ async def get_outlet_specific_menu(
         response_items.append(MenuItemResponse(**it_dict))
 
     return response_items
+
