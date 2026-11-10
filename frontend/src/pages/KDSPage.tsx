@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChefHat, AlertTriangle, CheckCircle2, Bike, MapPin, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChefHat, AlertTriangle, CheckCircle2, Bike, MapPin, ArrowLeft, RefreshCw, Volume2, Sparkles } from 'lucide-react';
 import { Order, OrderStatus, OUTLETS, INITIAL_ORDERS } from '../data';
 
 interface KDSPageProps {
@@ -10,12 +10,111 @@ interface KDSPageProps {
 export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageProps = {}) {
   const [selectedOutletId, setSelectedOutletId] = useState<string>(OUTLETS[0].id);
   const [internalOrders, setInternalOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [loading, setLoading] = useState(false);
+  const [lastSynced, setLastSynced] = useState<Date>(new Date());
+  const [advancingNumber, setAdvancingNumber] = useState<string | null>(null);
 
-  const orders = propOrders || internalOrders;
   const currentOutlet = OUTLETS.find((o) => o.id === selectedOutletId) || OUTLETS[0];
-  const outletOrders = orders.filter((o) => o.outletId === selectedOutletId);
 
-  const handleAdvance = (order: Order) => {
+  // Map outlet slug to numeric ID for WebSocket (e.g. out-kondapur -> 1)
+  const outletIndex = OUTLETS.findIndex((o) => o.id === selectedOutletId) + 1;
+  const numericOutletId = outletIndex > 0 ? outletIndex : 1;
+
+  // Fetch live orders for this outlet from backend
+  const fetchLiveOrders = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/orders?outlet_id=${selectedOutletId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const mapped: Order[] = data.map((o: any) => ({
+            id: String(o.id),
+            orderNumber: o.order_number,
+            outletId: selectedOutletId,
+            outletName: o.outlet_name || currentOutlet.name,
+            customerName: 'Customer',
+            customerPhone: '+91 98765 43210',
+            deliveryAddress: o.special_instructions || `${currentOutlet.area}, Hyderabad`,
+            items: (o.items || []).map((it: any) => ({
+              id: String(it.id),
+              itemName: it.item_name,
+              portionName: it.portion_name,
+              addonDetails: Array.isArray(it.addon_details) && it.addon_details.length > 0
+                ? it.addon_details.map((a: any) => a.name).join(', ')
+                : 'None',
+              unitPrice: it.unit_price,
+              quantity: it.quantity,
+              totalPrice: it.total_price,
+            })),
+            itemTotal: o.subtotal,
+            gstAmount: o.gst_amount,
+            deliveryFee: o.delivery_fee,
+            totalAmount: o.grand_total,
+            paymentMethod: 'UPI',
+            paymentStatus: 'SUCCESS',
+            status: o.status as OrderStatus,
+            placedAt: o.created_at,
+            promisedReadyTime:
+              o.promised_delivery_time ||
+              new Date(Date.now() + (o.ai_estimated_prep_minutes || 35) * 60000).toISOString(),
+            estimatedPrepMinutes: o.ai_estimated_prep_minutes || 35,
+            isLate: false,
+          }));
+
+          // Merge sample initial orders if empty or combine with real database orders
+          if (mapped.length > 0) {
+            setInternalOrders(mapped);
+          } else {
+            // Keep matching initial orders for demo
+            setInternalOrders(INITIAL_ORDERS.filter((io) => io.outletId === selectedOutletId));
+          }
+          setLastSynced(new Date());
+        }
+      }
+    } catch (err) {
+      console.warn('KDS backend fetch note:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Poll every 3 seconds for continuous live reconciliation
+  useEffect(() => {
+    fetchLiveOrders();
+    const interval = setInterval(fetchLiveOrders, 3000);
+    return () => clearInterval(interval);
+  }, [selectedOutletId]);
+
+  // WebSocket Connection to Realtime KDS
+  useEffect(() => {
+    let ws: WebSocket | null = null;
+    try {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}/ws/kds/${numericOutletId}`;
+      ws = new WebSocket(wsUrl);
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.event === 'ORDER_STATUS_CHANGED' || msg.event === 'NEW_ORDER_DISPATCHED') {
+            fetchLiveOrders();
+          }
+        } catch {
+          // ignore
+        }
+      };
+    } catch {
+      // ignore
+    }
+
+    return () => {
+      if (ws) ws.close();
+    };
+  }, [numericOutletId]);
+
+  // Advance Order Lifecycle (Invariant 6: Strict KDS transitions)
+  const handleAdvance = async (order: Order) => {
     let next: OrderStatus = 'ACCEPTED';
     if (order.status === 'PLACED') next = 'ACCEPTED';
     else if (order.status === 'ACCEPTED') next = 'PREPARING';
@@ -23,18 +122,39 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
     else if (order.status === 'READY') next = 'HANDED_TO_RIDER';
     else return;
 
+    setAdvancingNumber(order.orderNumber);
+
+    // 1. Optimistic update in UI
+    setInternalOrders((prev) =>
+      prev.map((o) => (o.orderNumber === order.orderNumber ? { ...o, status: next } : o))
+    );
+
     if (onAdvanceOrder) {
       onAdvanceOrder(order.id, next);
-    } else {
-      setInternalOrders((prev) =>
-        prev.map((o) => (o.id === order.id ? { ...o, status: next } : o))
-      );
+    }
+
+    // 2. Real API Call to PostgreSQL
+    try {
+      const res = await fetch(`/api/orders/${order.orderNumber}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: next, note: `Station advance to ${next}` }),
+      });
+      if (res.ok) {
+        fetchLiveOrders();
+      }
+    } catch (err) {
+      console.error('KDS status advance error:', err);
+    } finally {
+      setAdvancingNumber(null);
     }
   };
 
+  const orders = internalOrders;
+  const outletOrders = orders.filter((o) => o.outletId === selectedOutletId || !o.outletId);
+
   return (
     <div className="min-h-screen bg-cocoa text-cream flex flex-col font-body">
-      
       {/* Top Station Bar */}
       <header className="p-4 sm:p-5 border-b-[3px] border-cream/30 bg-cocoa-soft flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
@@ -51,9 +171,15 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
           </div>
 
           <div>
-            <h1 className="font-display text-2xl sm:text-3xl text-lemon tracking-wide leading-tight">
-              Kitchen Display System (KDS)
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-display text-2xl sm:text-3xl text-lemon tracking-wide leading-tight">
+                Kitchen Display System (KDS)
+              </h1>
+              <span className="flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live Sync (3s)
+              </span>
+            </div>
             <p className="text-xs font-bold text-cream/70 flex items-center gap-1.5 mt-0.5">
               <MapPin size={14} className="text-cherry shrink-0" />
               <span>Station: {currentOutlet.name}</span> &bull;
@@ -63,20 +189,30 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
           </div>
         </div>
 
-        {/* Station Switcher */}
-        <div className="flex items-center gap-2 bg-cocoa border-2 border-cream/40 rounded-2xl p-2 shadow-pop-sm">
-          <span className="text-xs font-bold text-cream/70">Station:</span>
-          <select
-            value={selectedOutletId}
-            onChange={(e) => setSelectedOutletId(e.target.value)}
-            className="bg-cocoa-soft font-black text-xs text-lemon rounded-xl px-3 py-1.5 border border-cream/30 outline-none cursor-pointer"
+        {/* Station Switcher & Manual Sync */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={fetchLiveOrders}
+            className="h-10 w-10 rounded-2xl bg-cocoa border-2 border-cream/40 flex items-center justify-center text-lemon hover:bg-cocoa-soft shadow-pop-sm transition-colors"
+            title="Sync Orders Now"
           >
-            {OUTLETS.map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.name}
-              </option>
-            ))}
-          </select>
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+          </button>
+
+          <div className="flex items-center gap-2 bg-cocoa border-2 border-cream/40 rounded-2xl p-2 shadow-pop-sm">
+            <span className="text-xs font-bold text-cream/70">Station:</span>
+            <select
+              value={selectedOutletId}
+              onChange={(e) => setSelectedOutletId(e.target.value)}
+              className="bg-cocoa-soft font-black text-xs text-lemon rounded-xl px-3 py-1.5 border border-cream/30 outline-none cursor-pointer"
+            >
+              {OUTLETS.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </header>
 
@@ -89,6 +225,13 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
             <p className="text-xs font-bold text-cream/60 mt-1">
               No pending orders for {currentOutlet.name}. Waiting for incoming orders...
             </p>
+            <button
+              onClick={fetchLiveOrders}
+              className="mt-4 pill-btn bg-lemon text-cocoa text-xs font-black !py-2 !px-4 inline-flex items-center gap-1.5"
+            >
+              <RefreshCw size={14} />
+              <span>Refresh Station Queue</span>
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -97,7 +240,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
 
               return (
                 <div
-                  key={order.id}
+                  key={order.id || order.orderNumber}
                   className={`card-pop rounded-3xl overflow-hidden border-[4px] transition-all flex flex-col justify-between ${
                     isLate
                       ? 'border-cherry bg-cherry/10 ring-4 ring-cherry/40 shadow-[6px_6px_0_0_#E8333A]'
@@ -123,7 +266,10 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
                           Promised Time
                         </span>
                         <span className="font-mono font-black text-sm">
-                          {new Date(order.promisedReadyTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {new Date(order.promisedReadyTime).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </span>
                       </div>
                     </div>
@@ -160,7 +306,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
                             <p className="text-xs font-bold text-cherry mt-0.5">
                               Portion: {it.portionName}
                             </p>
-                            {it.addonDetails !== 'None' && (
+                            {it.addonDetails !== 'None' && it.addonDetails && (
                               <p className="text-[11px] text-cream/70 mt-1 bg-cream/5 px-2 py-0.5 rounded border border-cream/10">
                                 + {it.addonDetails}
                               </p>
@@ -176,40 +322,58 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
                     {order.status === 'PLACED' && (
                       <button
                         onClick={() => handleAdvance(order)}
-                        className="pill-btn w-full bg-lemon text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-lemon-deep"
+                        disabled={advancingNumber === order.orderNumber}
+                        className="pill-btn w-full bg-lemon text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-lemon-deep active:scale-95 transition-transform"
                       >
                         <CheckCircle2 size={18} />
-                        <span>Accept Order</span>
+                        <span>
+                          {advancingNumber === order.orderNumber ? 'Updating...' : 'Accept Order'}
+                        </span>
                       </button>
                     )}
 
                     {order.status === 'ACCEPTED' && (
                       <button
                         onClick={() => handleAdvance(order)}
-                        className="pill-btn w-full bg-tangerine text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-tangerine-deep"
+                        disabled={advancingNumber === order.orderNumber}
+                        className="pill-btn w-full bg-tangerine text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-tangerine-deep active:scale-95 transition-transform"
                       >
                         <ChefHat size={18} />
-                        <span>Put on Dum (Start Cooking)</span>
+                        <span>
+                          {advancingNumber === order.orderNumber
+                            ? 'Updating...'
+                            : 'Put on Dum (Start Cooking)'}
+                        </span>
                       </button>
                     )}
 
                     {order.status === 'PREPARING' && (
                       <button
                         onClick={() => handleAdvance(order)}
-                        className="pill-btn w-full bg-emerald-500 text-white text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-emerald-600"
+                        disabled={advancingNumber === order.orderNumber}
+                        className="pill-btn w-full bg-emerald-500 text-white text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-emerald-600 active:scale-95 transition-transform"
                       >
                         <CheckCircle2 size={18} />
-                        <span>Mark Ready for Pickup</span>
+                        <span>
+                          {advancingNumber === order.orderNumber
+                            ? 'Updating...'
+                            : 'Mark Ready for Pickup'}
+                        </span>
                       </button>
                     )}
 
                     {order.status === 'READY' && (
                       <button
                         onClick={() => handleAdvance(order)}
-                        className="pill-btn w-full bg-aqua text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-aqua-deep"
+                        disabled={advancingNumber === order.orderNumber}
+                        className="pill-btn w-full bg-aqua text-cocoa text-sm !py-3.5 border-cream flex items-center justify-center gap-2 hover:bg-aqua-deep active:scale-95 transition-transform"
                       >
                         <Bike size={18} />
-                        <span>Hand to Delivery Rider</span>
+                        <span>
+                          {advancingNumber === order.orderNumber
+                            ? 'Updating...'
+                            : 'Hand to Delivery Rider'}
+                        </span>
                       </button>
                     )}
 
@@ -220,14 +384,12 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
                       </div>
                     )}
                   </div>
-
                 </div>
               );
             })}
           </div>
         )}
       </main>
-
     </div>
   );
 }

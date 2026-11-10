@@ -213,14 +213,86 @@ export default function OrderDashboardPage({
   // Customizer state
   const [customizingItem, setCustomizingItem] = useState<MenuItem | null>(null);
 
-  // Get outlet-specific menu items dynamically
-  const outletMenuItems = useMemo(() => {
-    return getMenuItemsForOutlet(selectedOutlet.id);
+  // Live menu fetched directly from PostgreSQL database with instant fallback
+  const [liveMenuItems, setLiveMenuItems] = useState<MenuItem[]>(() =>
+    getMenuItemsForOutlet(selectedOutlet.id)
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`/api/menu/outlet/${selectedOutlet.id}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          const mapped: MenuItem[] = data.map((apiItem: any) => {
+            const localItem = MENU_ITEMS.find(
+              (m) => m.id === apiItem.slug || m.id === String(apiItem.id)
+            );
+            return {
+              id: apiItem.slug || String(apiItem.id),
+              name: apiItem.name,
+              tagline: apiItem.tagline || '',
+              description: apiItem.description || '',
+              ingredients: localItem ? localItem.ingredients : ['Pure Nizami Spices', 'Desi Ghee'],
+              price: apiItem.base_price, // Live database price
+              category: apiItem.category as any,
+              photo:
+                apiItem.image_url ||
+                (localItem
+                  ? localItem.photo
+                  : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80'),
+              colors: localItem
+                ? localItem.colors
+                : { top: '#FFDE59', bottom: '#D63031', foam: '#FFFDF7' },
+              badge: apiItem.bestseller ? 'Bestseller' : undefined,
+              dietary: apiItem.dietary,
+              spiceLevel:
+                apiItem.spice_level === 'HOT'
+                  ? 'SPICY'
+                  : apiItem.spice_level === 'EXTRA_HOT'
+                  ? 'EXTRA_SPICY'
+                  : apiItem.spice_level,
+              allergens: localItem ? localItem.allergens : ['Dairy (Desi Ghee)'],
+              portions:
+                apiItem.portions && apiItem.portions.length > 0
+                  ? apiItem.portions.map((p: any) => ({
+                      id: p.portion_key || String(p.id),
+                      name: p.name,
+                      priceModifier: p.price_modifier,
+                      serves: p.serves || '1–2 persons',
+                    }))
+                  : localItem
+                  ? localItem.portions
+                  : [{ id: 'p-std', name: 'Standard Handi', priceModifier: 0, serves: '1–2 persons' }],
+              addons:
+                apiItem.addons && apiItem.addons.length > 0
+                  ? apiItem.addons.map((a: any) => ({
+                      id: a.addon_key || String(a.id),
+                      name: a.name,
+                      price: a.price,
+                    }))
+                  : localItem
+                  ? localItem.addons
+                  : [],
+              isAvailable: apiItem.is_available !== false, // Live stock status from DB
+              rating: apiItem.rating || 4.9,
+              ratingCount: apiItem.rating_count || 1200,
+              bestseller: apiItem.bestseller,
+            };
+          });
+          setLiveMenuItems(mapped);
+        }
+      })
+      .catch((e) => console.warn('Live menu fetch note:', e));
+
+    return () => {
+      isMounted = false;
+    };
   }, [selectedOutlet.id]);
 
   // Filter items
   const filteredItems = useMemo(() => {
-    return outletMenuItems.filter((item) => {
+    return liveMenuItems.filter((item) => {
       if (activeCategory !== 'All' && item.category !== activeCategory) return false;
       if (vegOnly && item.dietary !== 'VEG') return false;
       if (bestsellerOnly && !item.bestseller) return false;
@@ -235,7 +307,7 @@ export default function OrderDashboardPage({
       }
       return true;
     });
-  }, [outletMenuItems, activeCategory, vegOnly, bestsellerOnly, searchQuery]);
+  }, [liveMenuItems, activeCategory, vegOnly, bestsellerOnly, searchQuery]);
 
   const totalCartCount = cartItems.reduce((acc, c) => acc + c.quantity, 0);
   const totalCartPrice = cartItems.reduce((acc, c) => acc + c.totalPrice, 0);

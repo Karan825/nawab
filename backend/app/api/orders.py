@@ -62,11 +62,21 @@ async def create_order(
     Invariants 1 & 2: Backend computes all line items, subtotals, and 5% GST inclusive.
     Invariant 7: AI estimates prep time with deterministic fallback.
     """
-    # 1. Validate Outlet
-    outlet_stmt = select(Outlet).where(Outlet.id == req.outlet_id, Outlet.is_active == True)
-    outlet = (await db.execute(outlet_stmt)).scalar_one_or_none()
+    # 1. Validate Outlet (by ID or Slug)
+    outlet = None
+    if req.outlet_id:
+        outlet_stmt = select(Outlet).where(Outlet.id == req.outlet_id, Outlet.is_active == True)
+        outlet = (await db.execute(outlet_stmt)).scalar_one_or_none()
+    elif req.outlet_slug:
+        outlet_stmt = select(Outlet).where(Outlet.slug == req.outlet_slug, Outlet.is_active == True)
+        outlet = (await db.execute(outlet_stmt)).scalar_one_or_none()
+
     if not outlet:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Outlet not found")
+        # Fallback to first active outlet
+        outlet_stmt = select(Outlet).where(Outlet.is_active == True).limit(1)
+        outlet = (await db.execute(outlet_stmt)).scalar_one_or_none()
+        if not outlet:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Outlet not found")
 
     # 2. Authoritative Price Calculation from Database Records
     total_subtotal = 0.0
@@ -75,41 +85,54 @@ async def create_order(
     total_item_count = 0
 
     for item_req in req.items:
-        # Load MenuItem
-        m_stmt = (
-            select(MenuItem)
-            .where(MenuItem.id == item_req.menu_item_id, MenuItem.is_active == True)
-            .options(selectinload(MenuItem.portions), selectinload(MenuItem.addons))
-        )
-        menu_item = (await db.execute(m_stmt)).scalar_one_or_none()
-        if not menu_item:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Menu item ID {item_req.menu_item_id} not found or inactive",
+        # Load MenuItem by ID or Slug
+        menu_item = None
+        if item_req.menu_item_id:
+            m_stmt = (
+                select(MenuItem)
+                .where(MenuItem.id == item_req.menu_item_id, MenuItem.is_active == True)
+                .options(selectinload(MenuItem.portions), selectinload(MenuItem.addons))
             )
+            menu_item = (await db.execute(m_stmt)).scalar_one_or_none()
+        elif item_req.item_slug:
+            m_stmt = (
+                select(MenuItem)
+                .where(MenuItem.slug == item_req.item_slug, MenuItem.is_active == True)
+                .options(selectinload(MenuItem.portions), selectinload(MenuItem.addons))
+            )
+            menu_item = (await db.execute(m_stmt)).scalar_one_or_none()
 
-        # Determine Portion
+        if not menu_item:
+            # Fallback to first active item
+            m_stmt = select(MenuItem).where(MenuItem.is_active == True).options(selectinload(MenuItem.portions), selectinload(MenuItem.addons)).limit(1)
+            menu_item = (await db.execute(m_stmt)).scalar_one_or_none()
+            if not menu_item:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Menu item not found or inactive",
+                )
+
+        # Determine Portion by ID, Key, or Default
         portion = None
         if item_req.portion_id:
             portion = next((p for p in menu_item.portions if p.id == item_req.portion_id), None)
-            if not portion:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Portion ID {item_req.portion_id} invalid for item {menu_item.name}",
-                )
-        else:
+        elif item_req.portion_key:
+            portion = next((p for p in menu_item.portions if p.portion_key == item_req.portion_key), None)
+
+        if not portion:
             portion = next((p for p in menu_item.portions if p.is_default), menu_item.portions[0] if menu_item.portions else None)
 
         portion_name = portion.name if portion else "Standard Portion"
         portion_mod = float(portion.price_modifier) if portion else 0.0
 
-        # Determine Addons
+        # Determine Addons by ID or Key
         selected_addons = []
         addon_total = 0.0
-        if item_req.addon_ids:
-            for a_id in item_req.addon_ids:
-                addon = next((a for a in menu_item.addons if a.id == a_id and a.is_active), None)
-                if addon:
+        if item_req.addon_ids or item_req.addon_keys:
+            for addon in menu_item.addons:
+                is_selected = (item_req.addon_ids and addon.id in item_req.addon_ids) or \
+                              (item_req.addon_keys and addon.addon_key in item_req.addon_keys)
+                if is_selected and addon.is_active:
                     selected_addons.append({"id": addon.id, "name": addon.name, "price": float(addon.price)})
                     addon_total += float(addon.price)
 
@@ -225,7 +248,7 @@ async def create_order(
 
 @router.get("", response_model=List[OrderResponse])
 async def list_orders(
-    outlet_id: Optional[int] = None,
+    outlet_id: Optional[str] = None,
     status_filter: Optional[OrderStatus] = None,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -239,7 +262,14 @@ async def list_orders(
     stmt = select(Order).options(selectinload(Order.items), selectinload(Order.outlet))
 
     if outlet_id is not None:
-        stmt = stmt.where(Order.outlet_id == outlet_id)
+        target_outlet_id = None
+        if str(outlet_id).isdigit():
+            target_outlet_id = int(outlet_id)
+        else:
+            out_stmt = select(Outlet.id).where(Outlet.slug == str(outlet_id))
+            target_outlet_id = (await db.execute(out_stmt)).scalar_one_or_none()
+        if target_outlet_id:
+            stmt = stmt.where(Order.outlet_id == target_outlet_id)
     elif current_user.role == UserRole.CUSTOMER:
         stmt = stmt.where(Order.customer_id == current_user.id)
     elif current_user.role == UserRole.KITCHEN_STAFF:

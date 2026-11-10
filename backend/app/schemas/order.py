@@ -5,14 +5,18 @@ from app.models.order import OrderStatus
 
 
 class OrderItemCreate(BaseModel):
-    menu_item_id: int
+    menu_item_id: Optional[int] = None
+    item_slug: Optional[str] = None
     portion_id: Optional[int] = None
+    portion_key: Optional[str] = None
     addon_ids: List[int] = []
+    addon_keys: List[str] = []
     quantity: int = Field(gt=0, default=1)
 
 
 class OrderCreateRequest(BaseModel):
-    outlet_id: int
+    outlet_id: Optional[int] = None
+    outlet_slug: Optional[str] = None
     delivery_address_id: Optional[int] = None
     delivery_address_snapshot: Optional[dict] = None
     special_instructions: Optional[str] = None

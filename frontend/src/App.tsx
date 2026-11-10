@@ -13,7 +13,7 @@ import {
 } from './components/Sections';
 import LoginModal from './components/LoginModal';
 import CartDrawer from './components/CartDrawer';
-import OrderTrackModal from './components/OrderTrackModal';
+import OrderTrackingModal from './components/OrderTrackingModal';
 import KDSPage from './pages/KDSPage';
 import AdminPage from './pages/AdminPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -203,8 +203,9 @@ export default function App() {
         />
 
         {/* Live Order Tracking Modal */}
-        <OrderTrackModal
-          order={trackingOrder}
+        <OrderTrackingModal
+          isOpen={trackingOrder !== null}
+          activeOrder={trackingOrder}
           onClose={() => setTrackingOrder(null)}
         />
       </>
@@ -244,8 +245,9 @@ export default function App() {
       />
 
       {/* Live Order Tracking Modal */}
-      <OrderTrackModal
-        order={trackingOrder}
+      <OrderTrackingModal
+        isOpen={trackingOrder !== null}
+        activeOrder={trackingOrder}
         onClose={() => setTrackingOrder(null)}
       />
     </div>
