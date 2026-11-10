@@ -219,9 +219,8 @@ function OptionButton({
       type="button"
       onClick={onToggle}
       aria-pressed={selected}
-      className={`group relative flex items-center gap-2 rounded-full border-[3px] border-cocoa px-4 py-2 text-sm font-extrabold transition-all ${
-        selected ? 'bg-cocoa text-lemon shadow-pop-sm' : 'bg-cream text-cocoa hover:bg-lemon/60'
-      }`}
+      className={`group relative flex items-center gap-2 rounded-full border-[3px] border-cocoa px-4 py-2 text-sm font-extrabold transition-all ${selected ? 'bg-cocoa text-lemon shadow-pop-sm' : 'bg-cream text-cocoa hover:bg-lemon/60'
+        }`}
     >
       {option.color && (
         <span
@@ -260,8 +259,8 @@ export default function Builder() {
     const noun = base.label.includes('Chicken')
       ? 'Chicken Handi'
       : base.label.includes('Mutton')
-      ? 'Mutton Dum'
-      : 'Subz Feast';
+        ? 'Mutton Dum'
+        : 'Subz Feast';
     return `${adj} ${noun}`;
   }, [syrups, base]);
 
@@ -377,9 +376,8 @@ export default function Builder() {
                       setOrdered(false);
                     }}
                     aria-pressed={size.id === s.id}
-                    className={`rounded-2xl border-[3px] border-cocoa px-4 py-3 text-center font-extrabold transition-all ${
-                      size.id === s.id ? 'bg-lemon shadow-pop-sm' : 'bg-white hover:bg-lemon/50'
-                    }`}
+                    className={`rounded-2xl border-[3px] border-cocoa px-4 py-3 text-center font-extrabold transition-all ${size.id === s.id ? 'bg-lemon shadow-pop-sm' : 'bg-white hover:bg-lemon/50'
+                      }`}
                   >
                     <span className="block text-sm">{s.label}</span>
                     <span className="text-xs font-bold text-cocoa-fade">

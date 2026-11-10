@@ -71,14 +71,13 @@ function CustomizerModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-cocoa/75 backdrop-blur-sm animate-in fade-in duration-150">
       <div className="card-pop relative w-full max-w-lg bg-cream border-[4px] border-cocoa shadow-pop-lg max-h-[90vh] flex flex-col overflow-hidden rounded-3xl animate-in zoom-in-95 duration-150">
-        
+
         {/* Header */}
         <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className={`h-3 w-3 rounded-full border border-cocoa ${
-                item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'
-              }`}
+              className={`h-3 w-3 rounded-full border border-cocoa ${item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'
+                }`}
             />
             <div>
               <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
@@ -110,11 +109,10 @@ function CustomizerModal({
                   key={portion.id}
                   type="button"
                   onClick={() => setSelectedPortion(portion)}
-                  className={`p-3 rounded-2xl border-2 border-cocoa flex flex-col justify-between transition-all ${
-                    selectedPortion.id === portion.id
-                      ? 'bg-lemon font-black shadow-pop-sm -translate-y-0.5'
-                      : 'bg-white hover:bg-cream font-bold'
-                  }`}
+                  className={`p-3 rounded-2xl border-2 border-cocoa flex flex-col justify-between transition-all ${selectedPortion.id === portion.id
+                    ? 'bg-lemon font-black shadow-pop-sm -translate-y-0.5'
+                    : 'bg-white hover:bg-cream font-bold'
+                    }`}
                 >
                   <div className="text-left">
                     <span className="block text-sm">{portion.name}</span>
@@ -140,17 +138,15 @@ function CustomizerModal({
                       key={addon.id}
                       type="button"
                       onClick={() => toggleAddon(addon)}
-                      className={`w-full p-3 rounded-2xl border-2 border-cocoa flex items-center justify-between text-xs transition-all ${
-                        isSelected
-                          ? 'bg-aqua font-black shadow-pop-sm -translate-y-0.5'
-                          : 'bg-white hover:bg-cream font-bold'
-                      }`}
+                      className={`w-full p-3 rounded-2xl border-2 border-cocoa flex items-center justify-between text-xs transition-all ${isSelected
+                        ? 'bg-aqua font-black shadow-pop-sm -translate-y-0.5'
+                        : 'bg-white hover:bg-cream font-bold'
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         <span
-                          className={`h-4 w-4 rounded border border-cocoa flex items-center justify-center ${
-                            isSelected ? 'bg-cocoa text-lemon' : 'bg-white'
-                          }`}
+                          className={`h-4 w-4 rounded border border-cocoa flex items-center justify-center ${isSelected ? 'bg-cocoa text-lemon' : 'bg-white'
+                            }`}
                         >
                           {isSelected && <Check size={12} strokeWidth={3} />}
                         </span>
@@ -250,30 +246,30 @@ export default function OrderDashboardPage({
                 apiItem.spice_level === 'HOT'
                   ? 'SPICY'
                   : apiItem.spice_level === 'EXTRA_HOT'
-                  ? 'EXTRA_SPICY'
-                  : apiItem.spice_level,
+                    ? 'EXTRA_SPICY'
+                    : apiItem.spice_level,
               allergens: localItem ? localItem.allergens : ['Dairy (Desi Ghee)'],
               portions:
                 apiItem.portions && apiItem.portions.length > 0
                   ? apiItem.portions.map((p: any) => ({
-                      id: p.portion_key || String(p.id),
-                      name: p.name,
-                      priceModifier: p.price_modifier,
-                      serves: p.serves || '1–2 persons',
-                    }))
+                    id: p.portion_key || String(p.id),
+                    name: p.name,
+                    priceModifier: p.price_modifier,
+                    serves: p.serves || '1–2 persons',
+                  }))
                   : localItem
-                  ? localItem.portions
-                  : [{ id: 'p-std', name: 'Standard Handi', priceModifier: 0, serves: '1–2 persons' }],
+                    ? localItem.portions
+                    : [{ id: 'p-std', name: 'Standard Handi', priceModifier: 0, serves: '1–2 persons' }],
               addons:
                 apiItem.addons && apiItem.addons.length > 0
                   ? apiItem.addons.map((a: any) => ({
-                      id: a.addon_key || String(a.id),
-                      name: a.name,
-                      price: a.price,
-                    }))
+                    id: a.addon_key || String(a.id),
+                    name: a.name,
+                    price: a.price,
+                  }))
                   : localItem
-                  ? localItem.addons
-                  : [],
+                    ? localItem.addons
+                    : [],
               isAvailable: apiItem.is_available !== false, // Live stock status from DB
               rating: apiItem.rating || 4.9,
               ratingCount: apiItem.rating_count || 1200,
@@ -328,11 +324,11 @@ export default function OrderDashboardPage({
 
   return (
     <div className="min-h-screen bg-cream text-cocoa pb-28 font-body">
-      
+
       {/* Top Header */}
       <header className="border-b-[3px] border-cocoa bg-lemon sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-          
+
           {/* Logo & Home Link (No emojis) */}
           <div className="flex items-center gap-3">
             <button
@@ -412,7 +408,7 @@ export default function OrderDashboardPage({
 
       {/* Main Content Container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-        
+
         {/* Restaurant / Station Header Card */}
         <div className="card-pop bg-white border-[3px] border-cocoa rounded-3xl p-5 sm:p-7 shadow-pop-md">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -516,7 +512,7 @@ export default function OrderDashboardPage({
 
         {/* Filter Bar: Veg Only toggle, Bestsellers, Categories */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-y-2 border-dashed border-cocoa/25 py-3">
-          
+
           {/* Category Tabs */}
           <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
             {CATEGORIES.map((cat) => (
@@ -524,11 +520,10 @@ export default function OrderDashboardPage({
                 key={cat}
                 type="button"
                 onClick={() => setActiveCategory(cat)}
-                className={`shrink-0 rounded-full border-2 border-cocoa px-4 py-1.5 text-xs font-black transition-all ${
-                  activeCategory === cat
-                    ? 'bg-cocoa text-lemon shadow-pop-sm'
-                    : 'bg-white text-cocoa hover:bg-cream'
-                }`}
+                className={`shrink-0 rounded-full border-2 border-cocoa px-4 py-1.5 text-xs font-black transition-all ${activeCategory === cat
+                  ? 'bg-cocoa text-lemon shadow-pop-sm'
+                  : 'bg-white text-cocoa hover:bg-cream'
+                  }`}
               >
                 {cat}
               </button>
@@ -550,14 +545,12 @@ export default function OrderDashboardPage({
                 className="sr-only"
               />
               <div
-                className={`w-7 h-4 rounded-full transition-colors relative ${
-                  vegOnly ? 'bg-emerald-600' : 'bg-gray-300'
-                }`}
+                className={`w-7 h-4 rounded-full transition-colors relative ${vegOnly ? 'bg-emerald-600' : 'bg-gray-300'
+                  }`}
               >
                 <div
-                  className={`w-3 h-3 bg-white rounded-full absolute top-0.5 transition-transform ${
-                    vegOnly ? 'translate-x-3.5' : 'translate-x-0.5'
-                  }`}
+                  className={`w-3 h-3 bg-white rounded-full absolute top-0.5 transition-transform ${vegOnly ? 'translate-x-3.5' : 'translate-x-0.5'
+                    }`}
                 />
               </div>
             </label>
@@ -566,11 +559,10 @@ export default function OrderDashboardPage({
             <button
               type="button"
               onClick={() => setBestsellerOnly((prev) => !prev)}
-              className={`px-3 py-1 rounded-full border-2 border-cocoa text-xs font-black flex items-center gap-1 transition-all ${
-                bestsellerOnly
-                  ? 'bg-lemon text-cocoa shadow-pop-sm'
-                  : 'bg-white text-cocoa hover:bg-cream'
-              }`}
+              className={`px-3 py-1 rounded-full border-2 border-cocoa text-xs font-black flex items-center gap-1 transition-all ${bestsellerOnly
+                ? 'bg-lemon text-cocoa shadow-pop-sm'
+                : 'bg-white text-cocoa hover:bg-cream'
+                }`}
             >
               <Sparkles size={12} />
               <span>Bestsellers</span>
@@ -704,17 +696,16 @@ export default function OrderDashboardPage({
                   key={item.id}
                   className="py-6 flex flex-col-reverse sm:flex-row justify-between gap-6 items-start"
                 >
-                  
+
                   {/* Left Column: Details */}
                   <div className="flex-1 space-y-1.5 min-w-0 pr-4">
-                    
+
                     {/* Badges */}
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded border-2 border-cocoa bg-white flex items-center justify-center p-0.5 shrink-0">
                         <span
-                          className={`h-2 w-2 rounded-full ${
-                            item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'
-                          }`}
+                          className={`h-2 w-2 rounded-full ${item.dietary === 'VEG' ? 'bg-emerald-600' : 'bg-cherry'
+                            }`}
                         />
                       </span>
 
@@ -731,11 +722,10 @@ export default function OrderDashboardPage({
                       )}
 
                       {item.outletStatusLabel && (
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
-                          isAvailable
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                            : 'bg-red-50 text-red-700 border-red-300'
-                        }`}>
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${isAvailable
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          : 'bg-red-50 text-red-700 border-red-300'
+                          }`}>
                           {item.outletStatusLabel}
                         </span>
                       )}
@@ -784,9 +774,8 @@ export default function OrderDashboardPage({
                       <img
                         src={item.photo}
                         alt={item.name}
-                        className={`h-full w-full object-cover transition-transform duration-300 hover:scale-105 ${
-                          !isAvailable ? 'grayscale opacity-60' : ''
-                        }`}
+                        className={`h-full w-full object-cover transition-transform duration-300 hover:scale-105 ${!isAvailable ? 'grayscale opacity-60' : ''
+                          }`}
                       />
                     </div>
 
@@ -932,11 +921,10 @@ export default function OrderDashboardPage({
                       onSelectOutlet(outlet);
                       setIsOutletModalOpen(false);
                     }}
-                    className={`w-full p-3.5 rounded-2xl border-2 border-cocoa text-left flex items-start justify-between gap-3 transition-all ${
-                      isSelected
-                        ? 'bg-lemon shadow-pop-sm border-cocoa'
-                        : 'bg-white hover:bg-cream'
-                    }`}
+                    className={`w-full p-3.5 rounded-2xl border-2 border-cocoa text-left flex items-start justify-between gap-3 transition-all ${isSelected
+                      ? 'bg-lemon shadow-pop-sm border-cocoa'
+                      : 'bg-white hover:bg-cream'
+                      }`}
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">

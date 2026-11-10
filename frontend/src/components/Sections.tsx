@@ -61,15 +61,12 @@ export function ShopHeritageSection() {
     <section id="heritage" className="relative min-h-[75vh] bg-cream py-20 sm:py-28 flex flex-col justify-center">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="inline-block -rotate-1 rounded-full border-[3px] border-cocoa bg-lemon px-4 py-1 text-xs font-black uppercase tracking-[0.25em] text-cocoa shadow-pop-sm">
-            Since 1978 &bull; Authenticity
-          </span>
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="font-display text-4xl sm:text-6xl text-cherry outline-text [text-stroke-width:0.5px]">
             The Ancient Art of Dum
           </h2>
-          <p className="text-base sm:text-lg font-bold text-cocoa-soft leading-relaxed">
-            No pressure cookers. No artificial colors. Only authentic clay and brass handis sealed with dough over smoldering coals.
+          <p className="mt-3 text-base sm:text-lg font-bold text-cocoa-soft leading-relaxed">
+            Authentic clay and brass handis sealed airtight with kneaded wheat dough over slow charcoal embers.
           </p>
         </div>
 
@@ -204,16 +201,10 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="mb-12 max-w-2xl">
-          <span className="text-xs font-black uppercase tracking-widest text-cocoa-fade block">
-            Direct Platform Architecture
-          </span>
-          <h2 className="mt-2 font-display text-4xl sm:text-6xl text-cherry outline-text [text-stroke-width:0.5px]">
+        <div className="mb-10 max-w-2xl">
+          <h2 className="font-display text-4xl sm:text-6xl text-cherry outline-text [text-stroke-width:0.5px]">
             The Direct Ordering Advantage
           </h2>
-          <p className="mt-3 text-base sm:text-lg font-bold text-cocoa-soft leading-relaxed">
-            By shifting from third-party delivery apps to our direct ordering portal, you get hotter handis, honest prices, and direct kitchen support.
-          </p>
         </div>
 
         {/* Grid: Left Sticky Showcase Card + Right Stacking Cards */}
@@ -221,67 +212,69 @@ export function DirectOrderingBenefitsSection({ onOrderClick }: { onOrderClick: 
           
           {/* Left: Sticky Showcase Card */}
           <div className="lg:sticky lg:top-28">
-            <div className="group relative flex min-h-[32rem] sm:min-h-[36rem] flex-col justify-between overflow-hidden rounded-4xl bg-cocoa p-7 sm:p-9 text-cream border-[3px] border-cocoa shadow-pop-lg transition-all duration-300">
+            <div className="group relative flex min-h-[30rem] sm:min-h-[34rem] flex-col justify-between overflow-hidden rounded-3xl bg-cocoa p-7 sm:p-9 text-cream border-[3px] border-cocoa shadow-pop-lg transition-all duration-300">
               
               {/* Top Badges */}
               <div className="flex w-full justify-between items-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-black text-white border border-white/15">
-                  <span>17 Outlets Live</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-black text-white border border-white/15">
+                  <MapPin size={13} className="text-lemon" />
+                  <span>17 Stations in Hyderabad</span>
                 </span>
-                <span className="flex h-9 items-center justify-center rounded-full bg-lemon px-3.5 text-xs font-black text-cocoa">
-                  Save 15% Today
+                <span className="rounded-full bg-lemon px-3.5 py-1 text-xs font-black text-cocoa">
+                  Use Code DIRECT15
                 </span>
               </div>
 
-              {/* Center Graphic */}
-              <div className="my-6 relative flex items-center justify-center">
-                <div className="w-full max-w-sm rounded-3xl bg-white/5 border border-white/15 p-6 flex flex-col justify-between shadow-inner backdrop-blur-sm space-y-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                    <span className="text-xs font-black uppercase text-lemon flex items-center gap-1.5">
-                      <CookingPot size={15} /> Handi Dispatch Station
-                    </span>
-                    <span className="text-xs font-mono font-bold text-emerald-300">Kondapur Flagship</span>
-                  </div>
+              {/* High-Impact Comparison Visual */}
+              <div className="my-6 space-y-5">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-wider text-lemon/80">Direct Ordering Guarantee</p>
+                  <p className="font-display text-4xl sm:text-5xl text-white mt-1">
+                    Save 15% <span className="text-lemon font-normal text-3xl">Direct</span>
+                  </p>
+                </div>
 
-                  <div className="space-y-2 text-xs font-mono">
-                    <div className="flex justify-between text-cream/70">
-                      <span>Delivery App Commission</span>
-                      <span className="text-rose-400 font-bold line-through">27% Fee</span>
-                    </div>
-                    <div className="flex justify-between text-cream/70">
-                      <span>Direct Platform Fee</span>
-                      <span className="text-emerald-400 font-bold">12% Direct Cost</span>
-                    </div>
-                    <div className="flex justify-between border-t border-white/10 pt-2 font-black text-sm">
-                      <span className="text-white">Customer Savings</span>
-                      <span className="text-lemon font-display">15% Less (DIRECT15)</span>
-                    </div>
+                {/* 2-Pill Visual Comparison */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-white/5 border border-white/10 p-3.5 text-center">
+                    <p className="text-[11px] font-bold text-cream/60">Delivery Apps</p>
+                    <p className="text-lg font-black text-rose-400 line-through mt-0.5">27% Fee</p>
+                    <p className="text-[10px] text-cream/40 mt-1">Inflated menu prices</p>
                   </div>
-
-                  <div className="rounded-xl bg-lemon/20 border border-lemon/30 p-2.5 text-center text-[11px] font-bold text-lemon">
-                    All prices strictly inclusive of 5% GST
+                  <div className="rounded-2xl bg-white/10 border border-lemon/40 p-3.5 text-center bg-lemon/10">
+                    <p className="text-[11px] font-bold text-lemon">Direct Platform</p>
+                    <p className="text-lg font-black text-emerald-400 mt-0.5">12% Flat</p>
+                    <p className="text-[10px] text-emerald-300 font-bold mt-1">You save 15%</p>
                   </div>
                 </div>
+
+                {/* 3 Key Benefits */}
+                <ul className="space-y-2.5 text-xs font-semibold text-cream/90 pt-1">
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                    <span>Auto-routed to your closest station kitchen</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                    <span>Dough-sealed handis dispatched piping hot</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                    <span>All prices strictly include 5% GST</span>
+                  </li>
+                </ul>
               </div>
 
-              {/* Bottom Content */}
-              <div>
-                <h3 className="font-display text-2xl sm:text-3xl leading-tight text-lemon">
-                  Direct from Station to Your Doorstep
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm font-semibold text-cream/80 leading-relaxed">
-                  Every order is assigned to the closest station kitchen, sealed hot with dough, and tracked stage-by-stage.
-                </p>
-                <div className="mt-5">
-                  <button
-                    type="button"
-                    onClick={onOrderClick}
-                    className="pill-btn bg-lemon text-cocoa hover:bg-white text-xs sm:text-sm !py-3 !px-7 font-black transition-transform hover:scale-105 shadow-sm inline-flex items-center gap-2"
-                  >
-                    <span>Order Direct Now</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
+              {/* Bottom CTA Button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={onOrderClick}
+                  className="pill-btn w-full bg-lemon text-cocoa hover:bg-white text-sm !py-3.5 font-black transition-transform hover:scale-[1.02] shadow-sm flex items-center justify-center gap-2"
+                >
+                  <span>Start Direct Order</span>
+                  <ArrowRight size={16} />
+                </button>
               </div>
 
             </div>
@@ -432,16 +425,10 @@ export function SignatureSpecialtiesSection({ onOrderClick }: { onOrderClick: ()
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-          <span className="text-xs font-black uppercase tracking-widest text-cocoa-fade block">
-            Verified Customer Stories
-          </span>
+        <div className="text-center max-w-2xl mx-auto mb-10">
           <h2 className="font-display text-4xl sm:text-6xl text-cherry outline-text [text-stroke-width:0.5px]">
             Loved by Hyderabad
           </h2>
-          <p className="text-sm sm:text-base font-bold text-cocoa-soft">
-            Swipe or use arrow buttons to browse reviews from all 17 city stations.
-          </p>
         </div>
 
         {/* The Interactive Testimonial Cards Deck */}
@@ -572,110 +559,158 @@ export function BulkPartyCateringSection() {
 
   return (
     <section id="catering" className="relative min-h-[75vh] bg-cream py-20 sm:py-28 flex flex-col justify-center">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center space-y-3">
-          <span className="inline-block -rotate-1 rounded-full border-[3px] border-cocoa bg-tangerine px-4 py-1 text-xs font-black uppercase tracking-[0.25em] text-cocoa shadow-pop-sm">
-            Bulk &amp; Weddings
-          </span>
-          <h2 className="font-display text-4xl sm:text-5xl text-cherry outline-text [text-stroke-width:0.5px]">
-            Royal Dawat &amp; Bulk Handis
+        {/* Section Heading */}
+        <div className="text-center mb-10">
+          <h2 className="font-display text-4xl sm:text-6xl text-cherry outline-text [text-stroke-width:0.5px]">
+            Royal Dawat &amp; Bulk Catering
           </h2>
-          <p className="text-sm sm:text-base font-bold text-cocoa-soft max-w-xl mx-auto">
-            Traditional wedding degs prepared over slow charcoal embers. Directly confirmed by our central catering manager.
-          </p>
         </div>
 
-        <div className="mt-12 card-pop bg-white p-7 sm:p-10 rounded-3xl border-[3px] border-cocoa shadow-pop-lg">
-          {submitted ? (
-            <div className="text-center py-8 space-y-3">
-              <span className="h-14 w-14 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center text-cherry mx-auto shadow-pop-sm">
-                <CheckCircle2 size={32} />
-              </span>
-              <h3 className="font-display text-2xl text-cherry">Inquiry Dispatched to Catering Team</h3>
-              <p className="text-xs font-bold text-cocoa-soft max-w-md mx-auto leading-relaxed">
-                Our central catering supervisor will call you at <strong className="text-cocoa">{contactPhone}</strong> within 30 minutes with our dawat deg price sheet and customized accompaniment options.
-              </p>
+        {/* Premium Full-Width Catering Card */}
+        <div className="rounded-3xl border-[3px] border-cocoa shadow-pop-lg overflow-hidden bg-white">
+          <div className="grid grid-cols-1 lg:grid-cols-12">
+            
+            {/* Left Column: Catering Benefits & Hotline */}
+            <div className="lg:col-span-5 bg-cocoa text-cream p-8 sm:p-10 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-cocoa">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full bg-lemon px-3.5 py-1 text-xs font-black text-cocoa">
+                  Whole Handis on Dum
+                </span>
+                <h3 className="font-display text-2xl sm:text-3xl text-white mt-4 leading-tight">
+                  Dawat Degs for 15 to 500+ Guests
+                </h3>
+                
+                <ul className="mt-6 space-y-3.5 text-xs sm:text-sm font-semibold text-cream/90">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <span>Slow charcoal embers cooking with dough seal</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <span>Includes Mirchi Ka Salan, Raita &amp; Double Ka Meetha</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <span>Direct catering manager confirmation within 30 mins</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                    <span>Zero delivery app commissions on your dawat</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Direct Hotline Box */}
+              <div className="mt-8 rounded-2xl bg-white/10 border border-white/15 p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-lemon flex items-center justify-center text-cocoa shrink-0">
+                  <Phone size={20} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-cream/70 tracking-wider">
+                    Direct Catering Hotline
+                  </p>
+                  <p className="font-display text-base sm:text-lg text-white font-bold">
+                    +91 40 2300 1978
+                  </p>
+                </div>
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1">
-                    Your Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    placeholder="e.g. Asaduddin Khan"
-                    className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white focus:ring-2 focus:ring-lemon"
-                  />
+
+            {/* Right Column: Inquiry Form */}
+            <div className="lg:col-span-7 p-8 sm:p-10 flex flex-col justify-center bg-white">
+              {submitted ? (
+                <div className="text-center py-8 space-y-3">
+                  <span className="h-16 w-16 rounded-full bg-lemon border-2 border-cocoa flex items-center justify-center text-cherry mx-auto shadow-pop-sm">
+                    <CheckCircle2 size={36} />
+                  </span>
+                  <h3 className="font-display text-2xl text-cherry">Inquiry Received</h3>
+                  <p className="text-xs sm:text-sm font-bold text-cocoa-soft max-w-md mx-auto leading-relaxed">
+                    Our central catering manager will call you at <strong className="text-cocoa">{contactPhone}</strong> within 30 minutes with our seasonal deg pricing and custom menu options.
+                  </p>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1.5">
+                        Your Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="e.g. Asaduddin Khan"
+                        className="w-full px-3.5 py-3 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white focus:ring-2 focus:ring-lemon shadow-sm"
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1">
-                    Mobile Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={contactPhone}
-                    onChange={(e) => setContactPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white focus:ring-2 focus:ring-lemon"
-                  />
-                </div>
-              </div>
+                    <div>
+                      <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1.5">
+                        Mobile Phone *
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={contactPhone}
+                        onChange={(e) => setContactPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="w-full px-3.5 py-3 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white focus:ring-2 focus:ring-lemon shadow-sm"
+                      />
+                    </div>
+                  </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1">
-                    Number of Guests (Pax)
-                  </label>
-                  <select
-                    value={pax}
-                    onChange={(e) => setPax(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white"
-                  >
-                    <option value="15">15–20 Pax (Mini Deg)</option>
-                    <option value="25">25–35 Pax (Standard Deg)</option>
-                    <option value="50">50–60 Pax (Royal Dawat Deg)</option>
-                    <option value="100">100+ Pax (Full Wedding Degs)</option>
-                  </select>
-                </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1.5">
+                        Number of Guests (Pax)
+                      </label>
+                      <select
+                        value={pax}
+                        onChange={(e) => setPax(e.target.value)}
+                        className="w-full px-3.5 py-3 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white shadow-sm"
+                      >
+                        <option value="15">15–20 Pax (Mini Deg)</option>
+                        <option value="25">25–35 Pax (Standard Deg)</option>
+                        <option value="50">50–60 Pax (Royal Dawat Deg)</option>
+                        <option value="100">100+ Pax (Full Wedding Degs)</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1">
-                    Event Date (Min 4 hrs notice) *
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white"
-                  />
-                </div>
-              </div>
+                    <div>
+                      <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1.5">
+                        Event Date (Min 4 hrs notice) *
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full px-3.5 py-3 text-xs font-bold rounded-xl border-2 border-cocoa bg-cream outline-none focus:bg-white shadow-sm"
+                      />
+                    </div>
+                  </div>
 
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  className="pill-btn w-full bg-cherry text-white text-sm sm:text-base !py-3.5 flex items-center justify-center gap-2 shadow-pop-sm hover:scale-[1.01] active:scale-95 transition-all"
-                >
-                  <span>Request Instant Catering Call &bull; No Commission</span>
-                  <ArrowRight size={18} />
-                </button>
-              </div>
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="pill-btn w-full bg-cherry text-white text-sm sm:text-base !py-3.5 flex items-center justify-center gap-2 shadow-pop-md hover:scale-[1.01] active:scale-95 transition-all font-black"
+                    >
+                      <span>Request Catering Callback</span>
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
 
-              <p className="text-[11px] text-center font-bold text-cocoa-fade flex items-center justify-center gap-1.5 pt-1">
-                <Phone size={13} className="text-cherry" />
-                <span>Urgent bulk party inquiry? Call our direct hotline: <strong className="text-cocoa">+91 40 2300 1978</strong></span>
-              </p>
-            </form>
-          )}
+                  <p className="text-[11px] text-center font-bold text-cocoa-fade pt-1">
+                    Direct bulk pricing with zero commission markups.
+                  </p>
+                </form>
+              )}
+            </div>
+
+          </div>
         </div>
 
       </div>

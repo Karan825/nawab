@@ -224,8 +224,8 @@ export default function App() {
         <Hero onStartOrder={handleStartOrder} />
         <Marquee />
         <ShopHeritageSection />
-        <SignatureSpecialtiesSection onOrderClick={handleStartOrder} />
         <DirectOrderingBenefitsSection onOrderClick={handleStartOrder} />
+        <SignatureSpecialtiesSection onOrderClick={handleStartOrder} />
         <BulkPartyCateringSection />
       </main>
 
