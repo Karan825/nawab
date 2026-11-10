@@ -74,10 +74,10 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
   return (
     <section id="top" className="relative w-full overflow-hidden bg-cream pt-20 sm:pt-24 pb-8 sm:pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center min-h-[75vh]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center min-h-[75vh]">
           
           {/* Left Column: Brand Story & Headline */}
-          <div className="lg:col-span-6 space-y-6 text-left">
+          <div className="lg:col-span-5 xl:col-span-5 space-y-6 text-left">
             
             {/* Heritage Tagline Badge */}
             <div className="flex items-center justify-start">
@@ -132,9 +132,9 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
             </div>
           </div>
 
-          {/* Right Column: 5-Card Fanned Out Specialties Showcase Side by Side */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-center relative overflow-visible py-4">
-            <div className="w-full flex justify-center">
+          {/* Right Column: 5-Card Fanned Out Specialties Showcase (Larger & Shifted Right) */}
+          <div className="lg:col-span-7 xl:col-span-7 flex flex-col items-center lg:items-end justify-center relative overflow-visible py-4 lg:pr-2">
+            <div className="w-full flex justify-center lg:justify-end">
               <div className="cards-stage" title="Hover to fan out the handi dishes">
                 {HERO_DISHES.map((dish) => {
                   const isDark = dish.isDark;
@@ -151,7 +151,7 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
                       {/* Top Badge & Corner CTA */}
                       <div className="flex items-center justify-between gap-2">
                         <span
-                          className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-cocoa ${
+                          className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border border-cocoa ${
                             isDark ? 'bg-lemon text-cocoa' : 'bg-aqua text-cocoa'
                           }`}
                         >
@@ -164,17 +164,17 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
                             e.stopPropagation();
                             onStartOrder();
                           }}
-                          className={`inline-flex items-center gap-1 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-cocoa shadow-sm transition-transform hover:scale-105 ${
+                          className={`inline-flex items-center gap-1 text-[11px] font-black px-3 py-1 rounded-full border border-cocoa shadow-sm transition-transform hover:scale-105 ${
                             isDark ? 'bg-white text-cocoa' : 'bg-cherry text-white'
                           }`}
                         >
                           <span>Order</span>
-                          <ArrowUpRight size={12} strokeWidth={3} />
+                          <ArrowUpRight size={13} strokeWidth={3} />
                         </button>
                       </div>
 
                       {/* Dish Image */}
-                      <div className="my-2 rounded-2xl overflow-hidden border-2 border-cocoa bg-cream-dark h-32 sm:h-36 w-full relative group">
+                      <div className="my-2.5 rounded-2xl overflow-hidden border-2 border-cocoa bg-cream-dark h-36 sm:h-40 w-full relative group">
                         <img
                           src={dish.imageSrc}
                           alt={dish.title}
@@ -186,8 +186,8 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
                       </div>
 
                       {/* Dish Details */}
-                      <div className="space-y-0.5">
-                        <p className={`font-display text-base sm:text-lg leading-tight truncate ${isDark ? 'text-lemon' : 'text-cherry'}`}>
+                      <div className="space-y-1">
+                        <p className={`font-display text-lg sm:text-xl leading-tight truncate ${isDark ? 'text-lemon' : 'text-cherry'}`}>
                           {dish.title}
                         </p>
                         <p className={`text-[11px] font-bold line-clamp-2 leading-snug ${isDark ? 'text-cream/80' : 'text-cocoa-soft'}`}>

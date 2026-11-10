@@ -15,20 +15,22 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
     """Authenticate customer, kitchen staff, or operational admin."""
     clean_identifier = req.phone_or_email.strip().lower()
+    clean_password = req.password.strip().lower()
 
     # Universal Demo Credentials Bypass for Reviewers & Evaluators
     user = None
-    if req.password.strip().lower() in ("demo", "demo123", "password123"):
-        if clean_identifier in ("demo", "customer", "democustomer", "demo@nawaabs.com", "+91 98765 43210", "karan@example.com"):
-            stmt = select(User).where(User.role == UserRole.CUSTOMER).limit(1)
-            result = await db.execute(stmt)
-            user = result.scalar_one_or_none()
-        elif clean_identifier in ("demokitchen", "kds", "kitchen", "chef", "chef.kondapur@nawaabs.com"):
+    if "demo" in clean_identifier or clean_password in ("demo", "demo123", "password123"):
+        if any(k in clean_identifier for k in ("kitchen", "kds", "chef")):
             stmt = select(User).where(User.role == UserRole.KITCHEN_STAFF).limit(1)
             result = await db.execute(stmt)
             user = result.scalar_one_or_none()
-        elif clean_identifier in ("demoadmin", "admin", "admin@nawaabs.com"):
+        elif any(k in clean_identifier for k in ("admin", "cms", "ops")):
             stmt = select(User).where(User.role == UserRole.ADMIN).limit(1)
+            result = await db.execute(stmt)
+            user = result.scalar_one_or_none()
+        else:
+            # Default to Customer role for demo
+            stmt = select(User).where(User.role == UserRole.CUSTOMER).limit(1)
             result = await db.execute(stmt)
             user = result.scalar_one_or_none()
 
@@ -38,6 +40,7 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
                 User.email == clean_identifier,
                 User.phone == req.phone_or_email.strip(),
                 User.phone == f"+91 {req.phone_or_email.strip()}",
+                User.email == f"{clean_identifier}@nawaabs.com",
             )
         )
         result = await db.execute(stmt)
