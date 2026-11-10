@@ -161,7 +161,7 @@ If setting up services individually on Render:
    - On the Render dashboard, click **"New +"** &rarr; **"PostgreSQL"**.
    - **Name:** `nawab-db`
    - **Database:** `restaurant_db`
-   - **User:** `postgres`
+   - **User:** `nawab_user` (Note: `postgres` is a reserved name on Render)
    - **Plan:** Free
    - Click **"Create Database"**.
    - Once created, copy the **"Internal Database URL"** (for services within Render) or **"External Database URL"**.
@@ -172,8 +172,8 @@ If setting up services individually on Render:
    - **Name:** `nawab-backend`
    - **Root Directory:** `backend`
    - **Runtime:** `Python`
-   - **Build Command:** `chmod +x build.sh && ./build.sh` (or `pip install -r requirements.txt && alembic upgrade head && python scripts/seed.py`)
-   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `chmod +x start.sh && ./start.sh`
    - **Plan:** Free
 
 3. **Configure Environment Variables:**
