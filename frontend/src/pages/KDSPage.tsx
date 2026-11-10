@@ -24,9 +24,10 @@ import { apiUrl, wsUrl } from '../config';
 interface KDSPageProps {
   orders?: Order[];
   onAdvanceOrder?: (orderId: string, nextStatus: OrderStatus) => void;
+  onBackToHome?: () => void;
 }
 
-export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageProps = {}) {
+export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHome }: KDSPageProps = {}) {
   const [selectedOutletId, setSelectedOutletId] = useState<string>(OUTLETS[0].id);
   const [internalOrders, setInternalOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [loading, setLoading] = useState(false);
@@ -303,13 +304,14 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
       {/* Top Station Bar */}
       <header className="p-4 sm:p-5 border-b-[3px] border-cream/30 bg-cocoa-soft flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-3.5">
-          <a
-            href="/"
+          <button
+            type="button"
+            onClick={onBackToHome}
             className="h-10 w-10 rounded-full bg-cream text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm hover:bg-lemon transition-colors shrink-0"
             title="Return to Storefront"
           >
             <ArrowLeft size={18} />
-          </a>
+          </button>
 
           <div className="h-11 w-11 rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm shrink-0">
             <ChefHat size={24} className="text-cocoa" />
@@ -320,9 +322,6 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
               <h1 className="font-display text-xl sm:text-2xl text-lemon tracking-wide leading-tight">
                 Kitchen Display System (KDS)
               </h1>
-              <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-500/40">
-                Live (3s)
-              </span>
             </div>
             <p className="text-xs font-bold text-cream/70 flex items-center gap-1.5 mt-0.5">
               <MapPin size={13} className="text-cherry shrink-0" />

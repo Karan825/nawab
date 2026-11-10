@@ -37,7 +37,12 @@ interface MenuItemAPI {
   custom_status_label?: string | null;
 }
 
-export default function AdminPage() {
+interface AdminPageProps {
+  onGoToKDS?: () => void;
+  onBackToHome?: () => void;
+}
+
+export default function AdminPage({ onGoToKDS, onBackToHome }: AdminPageProps = {}) {
   const [items, setItems] = useState<MenuItemAPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<number | null>(null);
@@ -231,13 +236,14 @@ export default function AdminPage() {
       {/* Top Header */}
       <header className="p-4 sm:p-6 border-b-[3px] border-cocoa bg-lemon flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
         <div className="flex items-center gap-4">
-          <a
-            href="/"
+          <button
+            type="button"
+            onClick={onBackToHome}
             className="h-10 w-10 rounded-full bg-white text-cocoa border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-colors shrink-0"
             title="Return to Storefront"
           >
             <ArrowLeft size={20} />
-          </a>
+          </button>
 
           <div>
             <div className="flex items-center gap-2">
@@ -277,13 +283,14 @@ export default function AdminPage() {
             </select>
           </div>
 
-          <a
-            href="/kds"
-            className="pill-btn bg-tangerine text-cocoa text-xs !py-2 !px-4 flex items-center gap-1.5 shadow-pop-sm"
+          <button
+            type="button"
+            onClick={onGoToKDS}
+            className="pill-btn bg-tangerine text-cocoa text-xs !py-2 !px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
           >
             <ChefHat size={15} />
             <span>Open KDS</span>
-          </a>
+          </button>
         </div>
       </header>
 

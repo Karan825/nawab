@@ -419,32 +419,32 @@ export default function OrderDashboardPage({
           <button
             type="button"
             onClick={() => setIsOutletModalOpen(true)}
-            className="flex items-center gap-2 bg-white border-2 border-cocoa px-3.5 py-1.5 rounded-2xl shadow-pop-sm hover:bg-cream transition-colors max-w-xs sm:max-w-sm truncate"
+            className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-cocoa px-2.5 sm:px-3.5 py-1.5 rounded-2xl shadow-pop-sm hover:bg-cream transition-colors max-w-[125px] sm:max-w-xs truncate"
             title="Click to switch delivery outlet"
           >
-            <MapPin size={15} className="text-cherry shrink-0" />
+            <MapPin size={14} className="text-cherry shrink-0" />
             <div className="text-left min-w-0 pr-1">
               <span className="block text-[8px] uppercase font-black tracking-wider text-cocoa-fade leading-none">
-                Station Kitchen
+                Station
               </span>
               <span className="font-display text-xs sm:text-sm text-cocoa truncate block leading-tight mt-0.5">
                 {selectedOutlet.name}
               </span>
             </div>
-            <ChevronDown size={14} className="text-cocoa-fade shrink-0 ml-auto" />
+            <ChevronDown size={13} className="text-cocoa-fade shrink-0 ml-auto" />
           </button>
 
           {/* User Profile, Live Tracking & Cart Button */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             {/* Live Order Tracking Button */}
             <button
               type="button"
               onClick={() => setIsTrackingOpen(true)}
-              className="pill-btn bg-white text-cocoa text-xs sm:text-sm !py-2 !px-3 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:bg-lemon transition-all"
+              className="pill-btn bg-white text-cocoa text-xs sm:text-sm !py-2 !px-2.5 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:bg-lemon transition-all"
               title="Track live station kitchen orders"
             >
               <Receipt size={14} className="text-cherry shrink-0" />
-              <span>Track Orders</span>
+              <span>Track<span className="hidden sm:inline">&nbsp;Orders</span></span>
             </button>
 
             <div className="hidden lg:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">
@@ -455,9 +455,9 @@ export default function OrderDashboardPage({
             <button
               type="button"
               onClick={onOpenCart}
-              className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2 !px-4 flex items-center gap-2 shadow-pop-sm hover:scale-105 active:scale-95"
+              className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2 !px-3 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
             >
-              <ShoppingBag size={16} />
+              <ShoppingBag size={15} />
               <span>₹{totalCartPrice}</span>
               {totalCartCount > 0 && (
                 <span className="h-5 w-5 rounded-full bg-lemon border border-cocoa text-cocoa text-[10px] font-black flex items-center justify-center">
@@ -484,10 +484,6 @@ export default function OrderDashboardPage({
                 <span className="text-[10px] font-black uppercase tracking-wider bg-lemon border border-cocoa px-2.5 py-0.5 rounded-full">
                   {selectedOutlet.type === 'CLOUD_KITCHEN' ? 'Cloud Kitchen' : 'Flagship Dine-In'}
                 </span>
-                <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                  Kitchen Active
-                </span>
               </div>
 
               <p className="text-xs font-semibold text-cocoa-soft flex items-center gap-1.5">
@@ -512,19 +508,6 @@ export default function OrderDashboardPage({
                   FSSAI: {selectedOutlet.fssaiLicense}
                 </span>
               </div>
-            </div>
-
-            {/* Direct Order Benefit Badge */}
-            <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-3.5 text-center sm:text-right shrink-0">
-              <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
-                Direct Kitchen Order
-              </span>
-              <p className="font-display text-sm text-cherry mt-0.5">
-                Zero Swiggy / App Markups
-              </p>
-              <p className="text-[11px] font-bold text-cocoa mt-0.5">
-                All prices include 5% GST
-              </p>
             </div>
           </div>
         </div>

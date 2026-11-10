@@ -5,3 +5,4 @@ try {
 } catch (e) {
   console.warn('Note on 404 copy:', e);
 }
+

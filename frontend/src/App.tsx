@@ -196,7 +196,13 @@ export default function App() {
         />
       );
     }
-    return <KDSPage orders={orders} onAdvanceOrder={handleAdvanceKDSOrder} />;
+    return (
+      <KDSPage
+        orders={orders}
+        onAdvanceOrder={handleAdvanceKDSOrder}
+        onBackToHome={() => navigate('/')}
+      />
+    );
   }
 
   if (route === '/admin') {
@@ -209,7 +215,12 @@ export default function App() {
         />
       );
     }
-    return <AdminPage />;
+    return (
+      <AdminPage
+        onGoToKDS={() => navigate('/kds')}
+        onBackToHome={() => navigate('/')}
+      />
+    );
   }
 
   if (route === '/checkout') {

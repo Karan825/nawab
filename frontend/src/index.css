@@ -147,27 +147,43 @@
 
 @media (max-width: 640px) {
   .cards-stage {
-    max-width: 320px;
-    height: 400px;
+    max-width: 310px;
+    height: 380px;
   }
   .stack-card {
-    width: 245px;
-    height: 350px;
-    padding: 1rem;
+    width: 235px;
+    height: 340px;
+    padding: 0.875rem;
   }
   .cards-stage:hover .stack-card[data-index="0"] {
-    transform: translateX(-55px) translateY(10px) rotate(-8deg) scale(0.92);
+    transform: translateX(-45px) translateY(8px) rotate(-6deg) scale(0.92);
   }
   .cards-stage:hover .stack-card[data-index="1"] {
-    transform: translateX(-28px) translateY(5px) rotate(-4deg) scale(0.96);
+    transform: translateX(-22px) translateY(4px) rotate(-3deg) scale(0.96);
   }
   .cards-stage:hover .stack-card[data-index="2"] {
-    transform: translateX(0px) translateY(-8px) rotate(0deg) scale(1.02);
+    transform: translateX(0px) translateY(-6px) rotate(0deg) scale(1.02);
   }
   .cards-stage:hover .stack-card[data-index="3"] {
-    transform: translateX(28px) translateY(5px) rotate(4deg) scale(0.96);
+    transform: translateX(22px) translateY(4px) rotate(3deg) scale(0.96);
   }
   .cards-stage:hover .stack-card[data-index="4"] {
-    transform: translateX(55px) translateY(10px) rotate(8deg) scale(0.92);
+    transform: translateX(45px) translateY(8px) rotate(6deg) scale(0.92);
+  }
+
+  .cards-stage .stack-card[data-index="0"]:hover {
+    transform: translateX(-45px) translateY(-10px) rotate(-6deg) scale(1.02) !important;
+  }
+  .cards-stage .stack-card[data-index="1"]:hover {
+    transform: translateX(-22px) translateY(-10px) rotate(-3deg) scale(1.02) !important;
+  }
+  .cards-stage .stack-card[data-index="2"]:hover {
+    transform: translateX(0px) translateY(-12px) rotate(0deg) scale(1.04) !important;
+  }
+  .cards-stage .stack-card[data-index="3"]:hover {
+    transform: translateX(22px) translateY(-10px) rotate(3deg) scale(1.02) !important;
+  }
+  .cards-stage .stack-card[data-index="4"]:hover {
+    transform: translateX(45px) translateY(-10px) rotate(6deg) scale(1.02) !important;
   }
 }

@@ -326,10 +326,10 @@ export default function LoginModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-cocoa/75 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="card-pop relative w-full max-w-md bg-cream border-[4px] border-cocoa rounded-3xl shadow-pop-lg overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="card-pop relative w-full max-w-md bg-cream border-[4px] border-cocoa rounded-3xl shadow-pop-lg max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
         
         {/* Modal Header */}
-        <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
+        <div className="p-5 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
             <span className="h-10 w-10 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm">
               <UtensilsCrossed size={18} strokeWidth={2.5} />
@@ -354,7 +354,7 @@ export default function LoginModal({
         </div>
 
         {/* Tab Switcher: Sign In vs Sign Up */}
-        <div className="grid grid-cols-2 border-b-[3px] border-cocoa bg-white text-xs font-black">
+        <div className="grid grid-cols-2 border-b-[3px] border-cocoa bg-white text-xs font-black shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -387,14 +387,14 @@ export default function LoginModal({
 
         {/* Error Notification */}
         {errorMessage && (
-          <div className="p-3 mx-6 mt-4 rounded-xl bg-rose-50 border-2 border-rose-300 text-xs font-bold text-rose-800">
+          <div className="p-3 mx-6 mt-4 rounded-xl bg-rose-50 border-2 border-rose-300 text-xs font-bold text-rose-800 shrink-0">
             {errorMessage}
           </div>
         )}
 
         {/* Mode 1: Sign In */}
         {mode === 'LOGIN' ? (
-          <form onSubmit={handleLoginSubmit} className="p-6 space-y-4 text-cocoa">
+          <form onSubmit={handleLoginSubmit} className="p-5 sm:p-6 space-y-4 text-cocoa overflow-y-auto flex-1">
             {/* Reviewer Demo Quick Bypass */}
             <div className="rounded-2xl bg-lemon/25 border-2 border-cocoa p-3 space-y-2">
               <div className="flex items-center justify-between">
@@ -512,7 +512,7 @@ export default function LoginModal({
           </form>
         ) : (
           /* Mode 2: Sign Up */
-          <form onSubmit={handleSignupSubmit} className="p-6 space-y-3.5 text-cocoa">
+          <form onSubmit={handleSignupSubmit} className="p-5 sm:p-6 space-y-3.5 text-cocoa overflow-y-auto flex-1">
             <div>
               <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1 flex items-center gap-1">
                 <User size={12} /> Full Name

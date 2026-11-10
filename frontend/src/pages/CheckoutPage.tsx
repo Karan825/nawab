@@ -331,7 +331,7 @@ export default function CheckoutPage({
           {/* Order Progress Tracker */}
           <div className="bg-lemon/40 border-2 border-cocoa rounded-2xl p-4">
             <h4 className="font-display text-sm text-cocoa mb-3">Live Order Status</h4>
-            <div className="grid grid-cols-5 gap-1 text-[10px] font-black">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-[10px] font-black">
               <div className="bg-cherry text-white p-2 rounded-xl border border-cocoa text-center">
                 1. Placed
               </div>
