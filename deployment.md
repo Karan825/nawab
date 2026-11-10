@@ -139,19 +139,55 @@ Build and run the entire stack (PostgreSQL, FastAPI backend, and Nginx frontend)
 docker compose up -d --build
 ```
 
-### Option B: Cloud Deployment (Vercel + Railway / Render)
-1. **Frontend (Vercel):**
-   - Connect repository `https://github.com/Karan825/nawab`.
-   - Root directory: `frontend`.
-   - Build command: `npm run build`.
-   - Output directory: `dist`.
-   - Configure rewrite proxy to backend domain.
-2. **Backend (Render / Railway):**
-   - Connect repository `https://github.com/Karan825/nawab`.
-   - Root directory: `backend`.
-   - Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
-   - Attach a managed PostgreSQL database instance.
-   - Run `alembic upgrade head` and `python scripts/seed.py` on initial deploy.
+### Option B: Deploying Backend on Render (Step by Step)
+
+#### Method 1: Automatic Blueprint (Easiest & Recommended)
+1. Go to [https://dashboard.render.com](https://dashboard.render.com) and log in.
+2. Click **"New +"** in the top navigation and select **"Blueprint"**.
+3. Connect your GitHub repository: `https://github.com/Karan825/nawab`.
+4. Render will automatically detect [`render.yaml`](file:///c:/Users/karan/Downloads/Project/render.yaml) from the repository root:
+   - It automatically provisions **PostgreSQL Database** (`nawab-db`).
+   - It automatically provisions **FastAPI Web Service** (`nawab-backend`).
+   - It automatically links `DATABASE_URL` between the database and the web service.
+5. Click **"Apply"** to begin deployment.
+6. The build script automatically runs migrations (`alembic upgrade head`) and seeds 17 Hyderabad outlets, full menu, and demo users (`python scripts/seed.py`).
+
+---
+
+#### Method 2: Manual Web Service Setup on Render
+If setting up services individually on Render:
+
+1. **Create Free PostgreSQL Database:**
+   - On the Render dashboard, click **"New +"** &rarr; **"PostgreSQL"**.
+   - **Name:** `nawab-db`
+   - **Database:** `restaurant_db`
+   - **User:** `postgres`
+   - **Plan:** Free
+   - Click **"Create Database"**.
+   - Once created, copy the **"Internal Database URL"** (for services within Render) or **"External Database URL"**.
+
+2. **Create Web Service for FastAPI Backend:**
+   - Click **"New +"** &rarr; **"Web Service"**.
+   - Connect your repository: `https://github.com/Karan825/nawab`.
+   - **Name:** `nawab-backend`
+   - **Root Directory:** `backend`
+   - **Runtime:** `Python`
+   - **Build Command:** `chmod +x build.sh && ./build.sh` (or `pip install -r requirements.txt && alembic upgrade head && python scripts/seed.py`)
+   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Plan:** Free
+
+3. **Configure Environment Variables:**
+   Under the **"Environment Variables"** tab, add:
+   - `DATABASE_URL`: *(Paste your Render PostgreSQL connection string. The app automatically normalizes it to `postgresql+asyncpg://`)*
+   - `SECRET_KEY`: `nawaabs_biryani_kds_super_secure_jwt_secret_key_2026_hyderabad`
+   - `ENVIRONMENT`: `production`
+   - `DEBUG`: `false`
+   - `CORS_ORIGINS`: `*`
+
+4. **Verify Deployment:**
+   - Once the deploy completes with green status, open your backend URL:
+   - Liveness check: `https://your-service.onrender.com/health` &rarr; returns `{"status":"healthy"}`
+   - Interactive Swagger API Docs: `https://your-service.onrender.com/docs`
 
 ---
 

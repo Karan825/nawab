@@ -124,7 +124,7 @@ interface AdvantageCard {
   rotateClass: string;
   topOffset: string;
   zIndex: number;
-  icon: React.ComponentType<{ className?: string; size?: number; strokeWidth?: number }>;
+  icon: React.ComponentType<any>;
 }
 
 const ADVANTAGE_CARDS: AdvantageCard[] = [

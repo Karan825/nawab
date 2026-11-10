@@ -32,6 +32,9 @@ export interface MenuItem {
   ratingCount?: number;
   bestseller?: boolean;
   outletAvailability?: Record<string, { isAvailable: boolean; statusLabel?: string; priceOverride?: number }>;
+  effectivePrice?: number;
+  effectiveAvailable?: boolean;
+  outletStatusLabel?: string;
 }
 
 export type Drink = MenuItem;
