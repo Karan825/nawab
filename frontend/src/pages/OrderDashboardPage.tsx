@@ -391,25 +391,25 @@ export default function OrderDashboardPage({
 
       {/* Top Header */}
       <header className="border-b-[3px] border-cocoa bg-lemon sticky top-0 z-40 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between gap-1.5 sm:gap-4">
 
           {/* Logo & Home Link (No emojis) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               type="button"
               onClick={onBackToHome}
-              className="flex items-center gap-2.5 group text-left"
+              className="flex items-center gap-1.5 sm:gap-2.5 group text-left"
               title="Return to Nawaab's Home"
             >
-              <span className="h-11 w-11 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm group-hover:-rotate-6 transition-transform">
-                <UtensilsCrossed size={20} strokeWidth={2.5} />
+              <span className="h-9 w-9 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cocoa shadow-pop-sm group-hover:-rotate-6 transition-transform shrink-0">
+                <UtensilsCrossed size={17} className="sm:w-5 sm:h-5" strokeWidth={2.5} />
               </span>
-              <div>
-                <span className="font-display text-xl sm:text-2xl text-cherry outline-text [text-stroke-width:0.5px] block leading-none">
+              <div className="leading-none">
+                <span className="font-display text-lg sm:text-2xl text-cherry outline-text [text-stroke-width:0.5px] block leading-none">
                   Nawaab's
                 </span>
-                <span className="text-[9px] font-black tracking-widest text-cocoa-fade uppercase">
-                  DIRECT ORDER
+                <span className="text-[8px] sm:text-[9px] font-black tracking-widest text-cocoa-fade uppercase">
+                  DIRECT
                 </span>
               </div>
             </button>
@@ -419,32 +419,32 @@ export default function OrderDashboardPage({
           <button
             type="button"
             onClick={() => setIsOutletModalOpen(true)}
-            className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-cocoa px-2.5 sm:px-3.5 py-1.5 rounded-2xl shadow-pop-sm hover:bg-cream transition-colors max-w-[125px] sm:max-w-xs truncate"
+            className="flex items-center gap-1 sm:gap-2 bg-white border-2 border-cocoa px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl shadow-pop-sm hover:bg-cream transition-colors max-w-[100px] xs:max-w-[125px] sm:max-w-xs truncate shrink min-w-0"
             title="Click to switch delivery outlet"
           >
-            <MapPin size={14} className="text-cherry shrink-0" />
-            <div className="text-left min-w-0 pr-1">
-              <span className="block text-[8px] uppercase font-black tracking-wider text-cocoa-fade leading-none">
+            <MapPin size={13} className="text-cherry shrink-0" />
+            <div className="text-left min-w-0 pr-0.5 sm:pr-1 truncate">
+              <span className="block text-[7px] sm:text-[8px] uppercase font-black tracking-wider text-cocoa-fade leading-none">
                 Station
               </span>
-              <span className="font-display text-xs sm:text-sm text-cocoa truncate block leading-tight mt-0.5">
+              <span className="font-display text-[11px] sm:text-sm text-cocoa truncate block leading-tight mt-0.5">
                 {selectedOutlet.name}
               </span>
             </div>
-            <ChevronDown size={13} className="text-cocoa-fade shrink-0 ml-auto" />
+            <ChevronDown size={12} className="text-cocoa-fade shrink-0 ml-auto hidden xs:block" />
           </button>
 
           {/* User Profile, Live Tracking & Cart Button */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Live Order Tracking Button */}
             <button
               type="button"
               onClick={() => setIsTrackingOpen(true)}
-              className="pill-btn bg-white text-cocoa text-xs sm:text-sm !py-2 !px-2.5 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:bg-lemon transition-all"
+              className="pill-btn bg-white text-cocoa text-xs sm:text-sm !py-1.5 !px-2 sm:!py-2 sm:!px-4 flex items-center gap-1 sm:gap-1.5 shadow-pop-sm hover:bg-lemon transition-all"
               title="Track live station kitchen orders"
             >
-              <Receipt size={14} className="text-cherry shrink-0" />
-              <span>Track<span className="hidden sm:inline">&nbsp;Orders</span></span>
+              <Receipt size={13} className="text-cherry shrink-0" />
+              <span>Track<span className="hidden md:inline">&nbsp;Orders</span></span>
             </button>
 
             <div className="hidden lg:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">
@@ -455,12 +455,12 @@ export default function OrderDashboardPage({
             <button
               type="button"
               onClick={onOpenCart}
-              className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2 !px-3 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
+              className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-1.5 !px-2.5 sm:!py-2 sm:!px-4 flex items-center gap-1 sm:gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
             >
-              <ShoppingBag size={15} />
+              <ShoppingBag size={14} className="sm:w-4 sm:h-4" />
               <span>₹{totalCartPrice}</span>
               {totalCartCount > 0 && (
-                <span className="h-5 w-5 rounded-full bg-lemon border border-cocoa text-cocoa text-[10px] font-black flex items-center justify-center">
+                <span className="h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-lemon border border-cocoa text-cocoa text-[9px] sm:text-[10px] font-black flex items-center justify-center">
                   {totalCartCount}
                 </span>
               )}

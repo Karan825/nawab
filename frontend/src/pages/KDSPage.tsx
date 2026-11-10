@@ -302,51 +302,65 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHo
   return (
     <div className="min-h-screen bg-cocoa text-cream flex flex-col font-body">
       {/* Top Station Bar */}
-      <header className="p-4 sm:p-5 border-b-[3px] border-cream/30 bg-cocoa-soft flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
-        <div className="flex items-center gap-3.5">
+      <header className="p-3 sm:p-5 border-b-[3px] border-cream/30 bg-cocoa-soft flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 sticky top-0 z-30 shadow-md">
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
           <button
             type="button"
             onClick={onBackToHome}
-            className="h-10 w-10 rounded-full bg-cream text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm hover:bg-lemon transition-colors shrink-0"
+            className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-cream text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm hover:bg-lemon transition-colors shrink-0"
             title="Return to Storefront"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
           </button>
 
-          <div className="h-11 w-11 rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm shrink-0">
-            <ChefHat size={24} className="text-cocoa" />
+          <div className="h-9 w-9 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl bg-lemon text-cocoa border-2 border-cream flex items-center justify-center shadow-pop-sm shrink-0">
+            <ChefHat size={18} className="sm:w-[24px] sm:h-[24px] text-cocoa" />
           </div>
 
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-display text-xl sm:text-2xl text-lemon tracking-wide leading-tight">
-                Kitchen Display System (KDS)
-              </h1>
-            </div>
-            <p className="text-xs font-bold text-cream/70 flex items-center gap-1.5 mt-0.5">
-              <MapPin size={13} className="text-cherry shrink-0" />
-              <span>{currentOutlet.name}</span> &bull;
-              <span>Min Prep: {currentOutlet.minPrepTimeMinutes + surgeBufferMinutes}m</span> &bull;
-              <span className="text-lemon">FSSAI: {currentOutlet.fssaiLicense}</span>
+          <div className="min-w-0 flex-1">
+            <h1 className="font-display text-lg sm:text-2xl text-lemon tracking-wide leading-tight truncate">
+              Kitchen Display System (KDS)
+            </h1>
+            <p className="text-[11px] sm:text-xs font-bold text-cream/70 flex items-center gap-1 sm:gap-1.5 mt-0.5 truncate">
+              <MapPin size={12} className="text-cherry shrink-0" />
+              <span className="truncate">{currentOutlet.name}</span>
+              <span className="hidden sm:inline">&bull; Min Prep: {currentOutlet.minPrepTimeMinutes + surgeBufferMinutes}m</span>
+              <span className="hidden md:inline">&bull; <span className="text-lemon">FSSAI: {currentOutlet.fssaiLicense}</span></span>
             </p>
           </div>
         </div>
 
         {/* Station Switcher & Audio Controls */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 justify-between sm:justify-end">
+          {/* Station Selector Dropdown */}
+          <div className="flex-1 sm:flex-initial flex items-center gap-1.5 sm:gap-2 bg-cocoa border-2 border-cream/40 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-pop-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-cream/70 hidden sm:inline pl-1 shrink-0">Station:</span>
+            <select
+              value={selectedOutletId}
+              onChange={(e) => setSelectedOutletId(e.target.value)}
+              className="w-full sm:w-auto bg-cocoa-soft font-black text-[11px] sm:text-xs text-lemon rounded-lg sm:rounded-xl px-2 py-1 sm:px-2.5 sm:py-1.5 border border-cream/30 outline-none cursor-pointer truncate"
+            >
+              {OUTLETS.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Audio Chime Toggle */}
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            className={`h-10 px-3 rounded-2xl border-2 flex items-center gap-1.5 text-xs font-black shadow-pop-sm transition-all ${
+            className={`h-8 sm:h-10 px-2.5 sm:px-3 rounded-xl sm:rounded-2xl border-2 flex items-center gap-1.5 text-xs font-black shadow-pop-sm transition-all shrink-0 ${
               soundEnabled
                 ? 'bg-lemon text-cocoa border-cream'
                 : 'bg-cocoa border-cream/40 text-cream/50'
             }`}
             title="Toggle kitchen chime sound"
           >
-            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            <span className="hidden sm:inline">{soundEnabled ? 'Chime ON' : 'Muted'}</span>
+            {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            <span className="hidden md:inline">{soundEnabled ? 'Chime ON' : 'Muted'}</span>
           </button>
 
           {/* Sync Button */}
@@ -356,45 +370,29 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHo
               fetchStationMenu();
               playKitchenChime();
             }}
-            className="h-10 w-10 rounded-2xl bg-cocoa border-2 border-cream/40 flex items-center justify-center text-lemon hover:bg-cocoa-soft shadow-pop-sm transition-colors"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl bg-cocoa border-2 border-cream/40 flex items-center justify-center text-lemon hover:bg-cocoa-soft shadow-pop-sm transition-colors shrink-0"
             title="Sync Orders & Inventory"
           >
-            <RefreshCw size={15} className={loading || inventoryLoading ? 'animate-spin' : ''} />
+            <RefreshCw size={14} className={loading || inventoryLoading ? 'animate-spin' : ''} />
           </button>
-
-          {/* Station Selector Dropdown */}
-          <div className="flex items-center gap-2 bg-cocoa border-2 border-cream/40 rounded-2xl p-1.5 shadow-pop-sm">
-            <span className="text-xs font-bold text-cream/70 hidden sm:inline pl-1">Station:</span>
-            <select
-              value={selectedOutletId}
-              onChange={(e) => setSelectedOutletId(e.target.value)}
-              className="bg-cocoa-soft font-black text-xs text-lemon rounded-xl px-2.5 py-1.5 border border-cream/30 outline-none cursor-pointer"
-            >
-              {OUTLETS.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.name}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
       </header>
 
       {/* Main KDS Mode Switcher (Orders Queue vs Station Stock 86 vs Surge Buffer) */}
-      <div className="bg-cocoa-soft/80 border-b-2 border-cream/20 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 sticky top-[73px] z-20 backdrop-blur-sm">
-        <div className="flex items-center gap-2">
+      <div className="bg-cocoa-soft/80 border-b-2 border-cream/20 px-3 sm:px-6 py-2 flex items-center justify-between gap-3 sticky top-[98px] sm:top-[73px] z-20 backdrop-blur-sm overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Tab 1: Orders Queue */}
           <button
             type="button"
             onClick={() => setActiveTab('ORDERS')}
-            className={`px-4 py-2 rounded-2xl text-xs font-black flex items-center gap-2 border-2 transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs font-black flex items-center gap-1.5 sm:gap-2 border-2 transition-all whitespace-nowrap ${
               activeTab === 'ORDERS'
                 ? 'bg-lemon text-cocoa border-cream shadow-pop-sm'
                 : 'bg-cocoa text-cream/80 border-cream/30 hover:bg-cocoa-soft'
             }`}
           >
-            <Layers size={14} />
-            <span>Live Order Queue</span>
+            <Layers size={13} />
+            <span>Orders Queue</span>
             <span className="px-1.5 py-0.2 rounded-full bg-cherry text-white text-[10px] font-black">
               {outletOrders.filter((o) => o.status !== 'HANDED_TO_RIDER').length}
             </span>
@@ -404,14 +402,14 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHo
           <button
             type="button"
             onClick={() => setActiveTab('INVENTORY')}
-            className={`px-4 py-2 rounded-2xl text-xs font-black flex items-center gap-2 border-2 transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs font-black flex items-center gap-1.5 sm:gap-2 border-2 transition-all whitespace-nowrap ${
               activeTab === 'INVENTORY'
                 ? 'bg-lemon text-cocoa border-cream shadow-pop-sm'
                 : 'bg-cocoa text-cream/80 border-cream/30 hover:bg-cocoa-soft'
             }`}
           >
-            <PackageX size={14} />
-            <span>Station Stock (Item 86)</span>
+            <PackageX size={13} />
+            <span>Station Stock (86)</span>
             {outOfStockCount > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-red-600 text-white text-[10px] font-black">
                 {outOfStockCount} Out
@@ -423,14 +421,14 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHo
           <button
             type="button"
             onClick={() => setActiveTab('SURGE')}
-            className={`px-4 py-2 rounded-2xl text-xs font-black flex items-center gap-2 border-2 transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs font-black flex items-center gap-1.5 sm:gap-2 border-2 transition-all whitespace-nowrap ${
               activeTab === 'SURGE'
                 ? 'bg-lemon text-cocoa border-cream shadow-pop-sm'
                 : 'bg-cocoa text-cream/80 border-cream/30 hover:bg-cocoa-soft'
             }`}
           >
-            <Flame size={14} />
-            <span>Rush Surge Mode</span>
+            <Flame size={13} />
+            <span>Surge Rush</span>
             {surgeBufferMinutes > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-tangerine text-cocoa text-[10px] font-black">
                 +{surgeBufferMinutes}m
@@ -440,8 +438,8 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder, onBackToHo
         </div>
 
         {/* Live sync timestamp */}
-        <span className="text-[11px] font-mono text-cream/50">
-          Sync: {lastSynced.toLocaleTimeString()}
+        <span className="text-[10px] sm:text-[11px] font-mono text-cream/50 shrink-0 hidden sm:inline">
+          Sync: {lastSynced.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
 

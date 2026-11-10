@@ -27,22 +27,22 @@ export default function Navbar({
       <div
         className={`transition-all duration-300 ${
           scrolled
-            ? 'bg-cream/95 shadow-[0_4px_0_0_#3A2318] backdrop-blur-md py-3'
-            : 'bg-cream/90 backdrop-blur-sm py-4'
+            ? 'bg-cream/95 shadow-[0_4px_0_0_#3A2318] backdrop-blur-md py-2.5 sm:py-3'
+            : 'bg-cream/90 backdrop-blur-sm py-3 sm:py-4'
         }`}
       >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 lg:px-8">
           
           {/* Brand Logo & Tagline */}
-          <a href="#top" className="flex items-center gap-3 group shrink-0">
-            <span className="relative inline-flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-6 text-cocoa">
-              <UtensilsCrossed size={22} strokeWidth={2.5} />
+          <a href="#top" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+            <span className="relative inline-flex h-9 w-9 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl border-2 sm:border-[3px] border-cocoa bg-lemon shadow-pop-sm transition-transform duration-200 group-hover:-rotate-6 text-cocoa shrink-0">
+              <UtensilsCrossed size={17} className="sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} />
             </span>
             <span className="flex flex-col leading-none">
-              <span className="font-display text-2xl sm:text-3xl text-cherry outline-text [text-stroke-width:0.5px]">
+              <span className="font-display text-xl sm:text-3xl text-cherry outline-text [text-stroke-width:0.5px]">
                 Nawaab's
               </span>
-              <span className="text-[10px] sm:text-[11px] font-black tracking-[0.35em] text-cocoa-fade uppercase mt-0.5">
+              <span className="text-[8px] sm:text-[11px] font-black tracking-[0.22em] sm:tracking-[0.35em] text-cocoa-fade uppercase mt-0.5">
                 BIRYANI CO.
               </span>
             </span>
@@ -77,9 +77,9 @@ export default function Navbar({
           </div>
 
           {/* Actions: Direct Order & User State */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {isLoggedIn ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={onGoToOrder}
@@ -93,18 +93,18 @@ export default function Navbar({
                 <button
                   type="button"
                   onClick={onGoToOrder}
-                  className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2.5 !px-5 sm:!px-6 flex items-center gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
+                  className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-1.5 !px-3 sm:!py-2.5 sm:!px-6 flex items-center gap-1.5 sm:gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
                 >
-                  <ShoppingBag size={15} />
+                  <ShoppingBag size={14} className="sm:w-[15px] sm:h-[15px]" />
                   <span>Order Now</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={onOpenLogin}
-                  className="pill-btn bg-white text-cocoa border-2 border-cocoa text-xs sm:text-sm !py-2.5 !px-4 sm:!px-5 shadow-pop-sm hover:bg-lemon transition-all"
+                  className="pill-btn bg-white text-cocoa border-2 border-cocoa text-xs sm:text-sm !py-1.5 !px-2.5 sm:!py-2.5 sm:!px-5 shadow-pop-sm hover:bg-lemon transition-all"
                 >
                   <span>Sign In</span>
                 </button>
@@ -112,9 +112,9 @@ export default function Navbar({
                 <button
                   type="button"
                   onClick={onGoToOrder}
-                  className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-2.5 !px-5 sm:!px-6 flex items-center gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
+                  className="pill-btn bg-cherry text-white text-xs sm:text-sm !py-1.5 !px-3 sm:!py-2.5 sm:!px-6 flex items-center gap-1 sm:gap-2 shadow-pop-sm hover:scale-105 active:scale-95 transition-all"
                 >
-                  <ShoppingBag size={15} />
+                  <ShoppingBag size={14} className="sm:w-[15px] sm:h-[15px]" />
                   <span>Order Now</span>
                 </button>
               </div>

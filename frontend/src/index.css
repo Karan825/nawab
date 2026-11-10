@@ -118,31 +118,33 @@
   transform: translateX(140px) translateY(18px) rotate(14deg) scale(0.94);
 }
 
-/* Individual card hover states - maintains horizontal offset so it NEVER jumps or flickers */
-.cards-stage .stack-card[data-index="0"]:hover {
-  transform: translateX(-140px) translateY(-16px) rotate(-8deg) scale(1.06) !important;
-  z-index: 30 !important;
-  box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
-}
-.cards-stage .stack-card[data-index="1"]:hover {
-  transform: translateX(-70px) translateY(-18px) rotate(-4deg) scale(1.06) !important;
-  z-index: 30 !important;
-  box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
-}
-.cards-stage .stack-card[data-index="2"]:hover {
-  transform: translateX(0px) translateY(-22px) rotate(0deg) scale(1.08) !important;
-  z-index: 30 !important;
-  box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
-}
-.cards-stage .stack-card[data-index="3"]:hover {
-  transform: translateX(70px) translateY(-18px) rotate(4deg) scale(1.06) !important;
-  z-index: 30 !important;
-  box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
-}
-.cards-stage .stack-card[data-index="4"]:hover {
-  transform: translateX(140px) translateY(-16px) rotate(8deg) scale(1.06) !important;
-  z-index: 30 !important;
-  box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+/* Individual card hover states - maintains horizontal offset on desktop */
+@media (min-width: 641px) {
+  .cards-stage .stack-card[data-index="0"]:hover {
+    transform: translateX(-140px) translateY(-16px) rotate(-8deg) scale(1.06) !important;
+    z-index: 30 !important;
+    box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+  }
+  .cards-stage .stack-card[data-index="1"]:hover {
+    transform: translateX(-70px) translateY(-18px) rotate(-4deg) scale(1.06) !important;
+    z-index: 30 !important;
+    box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+  }
+  .cards-stage .stack-card[data-index="2"]:hover {
+    transform: translateX(0px) translateY(-22px) rotate(0deg) scale(1.08) !important;
+    z-index: 30 !important;
+    box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+  }
+  .cards-stage .stack-card[data-index="3"]:hover {
+    transform: translateX(70px) translateY(-18px) rotate(4deg) scale(1.06) !important;
+    z-index: 30 !important;
+    box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+  }
+  .cards-stage .stack-card[data-index="4"]:hover {
+    transform: translateX(140px) translateY(-16px) rotate(8deg) scale(1.06) !important;
+    z-index: 30 !important;
+    box-shadow: 0 24px 48px -10px rgba(45, 31, 29, 0.35);
+  }
 }
 
 @media (max-width: 640px) {

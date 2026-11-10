@@ -234,46 +234,46 @@ export default function AdminPage({ onGoToKDS, onBackToHome }: AdminPageProps = 
       )}
 
       {/* Top Header */}
-      <header className="p-4 sm:p-6 border-b-[3px] border-cocoa bg-lemon flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
-        <div className="flex items-center gap-4">
+      <header className="p-3.5 sm:p-6 border-b-[3px] border-cocoa bg-lemon flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 sticky top-0 z-30 shadow-md">
+        <div className="flex items-center gap-3 sm:gap-4">
           <button
             type="button"
             onClick={onBackToHome}
-            className="h-10 w-10 rounded-full bg-white text-cocoa border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-colors shrink-0"
+            className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-white text-cocoa border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-colors shrink-0"
             title="Return to Storefront"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
           </button>
 
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-aqua text-cocoa px-2.5 py-0.5 rounded-full border border-cocoa">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-aqua text-cocoa px-2 sm:px-2.5 py-0.5 rounded-full border border-cocoa shrink-0">
                 Admin Central CMS
               </span>
-              <span className="text-xs font-bold text-cocoa-fade">17 Locations Synchronized</span>
+              <span className="text-[11px] sm:text-xs font-bold text-cocoa-fade truncate">17 Outlets Synced</span>
             </div>
-            <h1 className="font-display text-2xl sm:text-3xl text-cherry outline-text [text-stroke-width:0.5px] mt-0.5">
+            <h1 className="font-display text-lg sm:text-3xl text-cherry outline-text [text-stroke-width:0.5px] mt-0.5 truncate">
               Menu &amp; Operations Console
             </h1>
           </div>
         </div>
 
         {/* Actions & Station Filter */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 justify-between sm:justify-end">
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="pill-btn bg-cherry text-white text-xs !py-2 !px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 transition-all"
+            className="pill-btn bg-cherry text-white text-xs !py-1.5 !px-3 sm:!py-2 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 transition-all shrink-0"
           >
-            <Plus size={16} strokeWidth={3} />
-            <span>Add New Dish</span>
+            <Plus size={15} strokeWidth={3} />
+            <span>Add Dish</span>
           </button>
 
-          <div className="flex items-center gap-2 bg-white rounded-2xl border-2 border-cocoa px-3 py-1.5 shadow-pop-sm">
-            <span className="text-xs font-bold text-cocoa-fade">Outlet Scope:</span>
+          <div className="flex-1 sm:flex-initial flex items-center gap-1.5 bg-white rounded-xl sm:rounded-2xl border-2 border-cocoa px-2.5 sm:px-3 py-1 sm:py-1.5 shadow-pop-sm min-w-0">
+            <span className="text-[11px] sm:text-xs font-bold text-cocoa-fade shrink-0">Scope:</span>
             <select
               value={selectedOutletId}
               onChange={(e) => setSelectedOutletId(e.target.value)}
-              className="bg-transparent font-black text-xs text-cocoa outline-none cursor-pointer"
+              className="w-full sm:w-auto bg-transparent font-black text-[11px] sm:text-xs text-cocoa outline-none cursor-pointer truncate"
             >
               {OUTLETS.map((o) => (
                 <option key={o.id} value={o.id}>
@@ -286,43 +286,43 @@ export default function AdminPage({ onGoToKDS, onBackToHome }: AdminPageProps = 
           <button
             type="button"
             onClick={onGoToKDS}
-            className="pill-btn bg-tangerine text-cocoa text-xs !py-2 !px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95"
+            className="pill-btn bg-tangerine text-cocoa text-xs !py-1.5 !px-3 sm:!py-2 sm:!px-4 flex items-center gap-1.5 shadow-pop-sm hover:scale-105 active:scale-95 shrink-0"
           >
-            <ChefHat size={15} />
-            <span>Open KDS</span>
+            <ChefHat size={14} />
+            <span>KDS</span>
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full space-y-8">
+      <main className="flex-1 p-3.5 sm:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
         {/* Search, Stats & Sync Status */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="relative flex items-center w-full max-w-md">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="relative flex items-center w-full max-w-full sm:max-w-md">
             <Search size={16} className="absolute left-4 text-cocoa-fade pointer-events-none" />
             <input
               type="text"
               placeholder="Search dishes, categories, ingredients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-2.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon shadow-pop-sm"
+              className="w-full pl-11 sm:pl-12 pr-4 py-2 sm:py-2.5 rounded-full border-2 border-cocoa text-xs font-bold bg-white outline-none focus:ring-2 focus:ring-lemon shadow-pop-sm"
             />
           </div>
 
-          <div className="flex items-center gap-3 text-xs font-bold">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs font-bold overflow-x-auto pb-1 no-scrollbar shrink-0">
             <button
               onClick={fetchMenu}
               disabled={loading}
-              className="bg-white border-2 border-cocoa px-3 py-1.5 rounded-full shadow-pop-sm hover:bg-lemon flex items-center gap-1.5 transition-colors"
+              className="bg-white border-2 border-cocoa px-3 py-1.5 rounded-full shadow-pop-sm hover:bg-lemon flex items-center gap-1.5 transition-colors shrink-0"
               title="Refresh catalog from database"
             >
               <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
               <span>Refresh DB</span>
             </button>
-            <span className="bg-white border-2 border-cocoa px-3.5 py-1.5 rounded-full shadow-pop-sm">
-              Total Catalog: <strong>{items.length} items</strong>
+            <span className="bg-white border-2 border-cocoa px-3 py-1.5 rounded-full shadow-pop-sm shrink-0 whitespace-nowrap">
+              Catalog: <strong>{items.length}</strong>
             </span>
-            <span className="bg-emerald-100 border-2 border-emerald-400 text-emerald-900 px-3.5 py-1.5 rounded-full shadow-pop-sm">
+            <span className="bg-emerald-100 border-2 border-emerald-400 text-emerald-900 px-3 py-1.5 rounded-full shadow-pop-sm shrink-0 whitespace-nowrap">
               In Stock: <strong>{items.filter((i) => i.is_available !== false).length}</strong>
             </span>
           </div>

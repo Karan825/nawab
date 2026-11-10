@@ -391,20 +391,20 @@ export default function CheckoutPage({
       {/* Checkout Navbar */}
       <header className="border-b-[3px] border-cocoa bg-lemon sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-4">
             <button
               type="button"
               onClick={onBackToMenu}
-              className="h-10 w-10 rounded-full bg-white border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-transform active:scale-95"
+              className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-white border-2 border-cocoa flex items-center justify-center shadow-pop-sm hover:bg-cream transition-transform active:scale-95 shrink-0"
               title="Return to Menu"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
+            <div className="min-w-0">
+              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-cocoa-fade block">
                 Nawaab's Biryani Co. Direct
               </span>
-              <h1 className="font-display text-xl sm:text-2xl text-cherry outline-text [text-stroke-width:0.5px]">
+              <h1 className="font-display text-lg sm:text-2xl text-cherry outline-text [text-stroke-width:0.5px] truncate">
                 Express Secure Checkout
               </h1>
             </div>
