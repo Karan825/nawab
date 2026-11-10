@@ -116,10 +116,10 @@ export default function RoleAuthGate({
 
   return (
     <div className="min-h-screen bg-cream text-cocoa flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-md card-pop bg-white border-[4px] border-cocoa rounded-3xl shadow-pop-lg overflow-hidden animate-in zoom-in-95 duration-150">
-        
+      <div className="w-full max-w-md card-pop bg-white border-[4px] border-cocoa rounded-3xl shadow-pop-lg max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+
         {/* Header */}
-        <div className="p-6 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between">
+        <div className="p-6 border-b-[3px] border-cocoa bg-lemon flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <span className="h-11 w-11 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center text-cherry shadow-pop-sm">
               <ShieldCheck size={22} strokeWidth={2.5} />
@@ -145,8 +145,8 @@ export default function RoleAuthGate({
         </div>
 
         {/* Form Body */}
-        <div className="p-6 space-y-4">
-          
+        <div className="p-6 space-y-4 overflow-y-auto flex-1">
+
           {/* Reviewer 1-Click Demo Bypass */}
           <div className="rounded-2xl bg-lemon/35 border-2 border-cocoa p-3.5 space-y-2">
             <div className="flex items-center justify-between">
