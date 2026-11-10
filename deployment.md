@@ -2,7 +2,9 @@
 ## Nawaab's Biryani Co. Direct Ordering Platform & Kitchen Display System (KDS)
 
 **GitHub Repository URL:** [https://github.com/Karan825/nawab](https://github.com/Karan825/nawab)  
-**Live App Deployment URL:** [https://nawab-ordering.vercel.app](https://github.com/Karan825/nawab)  
+**Live Frontend Deployment (GitHub Pages):** [https://karan825.github.io/nawab/](https://karan825.github.io/nawab/)  
+**Live Backend API (Render):** [https://nawab-backend.onrender.com](https://nawab-backend.onrender.com)  
+**Interactive API Docs (Swagger):** [https://nawab-backend.onrender.com/docs](https://nawab-backend.onrender.com/docs)  
 
 ---
 
@@ -188,6 +190,32 @@ If setting up services individually on Render:
    - Once the deploy completes with green status, open your backend URL:
    - Liveness check: `https://your-service.onrender.com/health` &rarr; returns `{"status":"healthy"}`
    - Interactive Swagger API Docs: `https://your-service.onrender.com/docs`
+
+---
+
+### Option C: Deploying Frontend to GitHub Pages (github.io)
+
+The repository includes a pre-configured automated GitHub Actions workflow at `.github/workflows/deploy.yml` that builds and deploys the frontend directly to GitHub Pages whenever code is pushed to `main`.
+
+#### 1-Minute GitHub Setup:
+1. Go to your GitHub repository: [https://github.com/Karan825/nawab](https://github.com/Karan825/nawab)
+2. Click on the **Settings** tab.
+3. In the left sidebar, click on **Pages** (under the "Code and automation" section).
+4. Under **Build and deployment** → **Source**, select:
+   - **"GitHub Actions"** (Do *not* select "Deploy from a branch").
+5. That's it! Every time you push to `main` (or click **"Run workflow"** under the **Actions** tab), GitHub automatically builds the Vite app and publishes it to:
+   - **Live Site:** [https://karan825.github.io/nawab/](https://karan825.github.io/nawab/)
+
+#### How the Frontend Connects to the Backend:
+- **Zero Config Required:** The frontend configuration in `frontend/src/config.ts` and the deploy workflow automatically detect that the site is running on GitHub Pages (`github.io`) and route API traffic to:
+  `https://nawab-backend.onrender.com`
+- **WebSocket Integration:** The KDS live kitchen queue automatically establishes a secure WebSocket connection to:
+  `wss://nawab-backend.onrender.com/ws/kds/{outletId}`
+- **Optional Environment Variable Override:**
+  If you ever want to point the frontend to a custom backend domain, you can set a GitHub Repository Variable or Secret:
+  - **Name:** `VITE_API_URL`
+  - **Value:** `https://your-custom-backend.com`
+  *(If not set, it defaults seamlessly to `https://nawab-backend.onrender.com` without any manual input).*
 
 ---
 

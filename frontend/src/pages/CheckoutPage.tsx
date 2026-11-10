@@ -22,6 +22,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { CartItem, Outlet, Order, PortionOption, AddonOption } from '../data';
+import { apiUrl } from '../config';
 
 interface CheckoutPageProps {
   cartItems: CartItem[];
@@ -132,7 +133,7 @@ export default function CheckoutPage({
         })),
       };
 
-      const orderRes = await fetch('/api/orders', {
+      const orderRes = await fetch(apiUrl('/api/orders'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload),
@@ -146,7 +147,7 @@ export default function CheckoutPage({
 
       // 2. Simulate Payment with Idempotency Key (Invariant 5)
       const idempotencyKey = `idemp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      const payRes = await fetch('/api/payments/simulate', {
+      const payRes = await fetch(apiUrl('/api/payments/simulate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

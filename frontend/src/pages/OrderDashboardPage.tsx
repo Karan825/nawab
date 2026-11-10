@@ -20,6 +20,7 @@ import {
   Compass
 } from 'lucide-react';
 import OrderTrackingModal from '../components/OrderTrackingModal';
+import { apiUrl } from '../config';
 import {
   Outlet,
   MenuItem,
@@ -256,7 +257,7 @@ export default function OrderDashboardPage({
     const outletId = selectedOutlet?.id || OUTLETS[0].id;
 
     const fetchLiveMenu = () => {
-      fetch(`/api/menu/outlet/${outletId}`)
+      fetch(apiUrl(`/api/menu/outlet/${outletId}`))
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (isMounted && Array.isArray(data) && data.length > 0) {

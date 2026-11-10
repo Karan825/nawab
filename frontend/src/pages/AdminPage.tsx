@@ -15,6 +15,7 @@ import {
   DollarSign
 } from 'lucide-react';
 import { OUTLETS, type Outlet } from '../data';
+import { apiUrl } from '../config';
 
 interface MenuItemAPI {
   id: number;
@@ -65,13 +66,13 @@ export default function AdminPage() {
   const fetchMenu = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/menu/outlet/${selectedOutletId}`);
+      const res = await fetch(apiUrl(`/api/menu/outlet/${selectedOutletId}`));
       if (res.ok) {
         const data = await res.json();
         setItems(data);
       } else {
         // Fallback to global menu
-        const fallbackRes = await fetch('/api/menu');
+        const fallbackRes = await fetch(apiUrl('/api/menu'));
         if (fallbackRes.ok) {
           const fbData = await fallbackRes.json();
           setItems(fbData);
@@ -93,7 +94,7 @@ export default function AdminPage() {
     if (isNaN(newPriceVal) || newPriceVal <= 0) return;
     setSavingId(item.id);
     try {
-      const res = await fetch(`/api/menu/${item.id}`, {
+      const res = await fetch(apiUrl(`/api/menu/${item.id}`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ base_price: newPriceVal }),
@@ -118,7 +119,7 @@ export default function AdminPage() {
     const nextAvailability = !item.is_available;
     setSavingId(item.id);
     try {
-      const res = await fetch(`/api/menu/outlet/${selectedOutletId}/item/${item.id}/override`, {
+      const res = await fetch(apiUrl(`/api/menu/outlet/${selectedOutletId}/item/${item.id}/override`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,7 +159,7 @@ export default function AdminPage() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`/api/menu/${item.id}`, { method: 'DELETE' });
+      const res = await fetch(apiUrl(`/api/menu/${item.id}`), { method: 'DELETE' });
       if (res.ok) {
         setItems((prev) => prev.filter((it) => it.id !== item.id));
         showToast(`"${item.name}" successfully removed from central catalog.`);
@@ -175,7 +176,7 @@ export default function AdminPage() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/menu', {
+      const res = await fetch(apiUrl('/api/menu'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

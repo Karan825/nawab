@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles, UtensilsCrossed, ArrowLeft } from 'lucide-react';
+import { apiUrl } from '../config';
 
 interface RoleAuthGateProps {
   requiredRole: 'KITCHEN_STAFF' | 'ADMIN';
@@ -33,7 +34,7 @@ export default function RoleAuthGate({
     const isAdminDemo = finalId === 'demoadmin' || finalId === 'admin@nawaabs.com';
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

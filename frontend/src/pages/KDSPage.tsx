@@ -19,6 +19,7 @@ import {
   Info
 } from 'lucide-react';
 import { Order, OrderStatus, OUTLETS, INITIAL_ORDERS, MENU_ITEMS } from '../data';
+import { apiUrl, wsUrl } from '../config';
 
 interface KDSPageProps {
   orders?: Order[];
@@ -77,7 +78,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
   const fetchLiveOrders = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/orders?outlet_id=${selectedOutletId}`);
+      const res = await fetch(apiUrl(`/api/orders?outlet_id=${selectedOutletId}`));
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) {
@@ -135,7 +136,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
   const fetchStationMenu = async () => {
     try {
       setInventoryLoading(true);
-      const res = await fetch(`/api/menu/outlet/${selectedOutletId}`);
+      const res = await fetch(apiUrl(`/api/menu/outlet/${selectedOutletId}`));
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -183,7 +184,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
     );
 
     try {
-      const res = await fetch(`/api/menu/outlet/${selectedOutletId}/item/${item.id}/override`, {
+      const res = await fetch(apiUrl(`/api/menu/outlet/${selectedOutletId}/item/${item.id}/override`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -221,9 +222,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
   useEffect(() => {
     let ws: WebSocket | null = null;
     try {
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws/kds/${numericOutletId}`;
-      ws = new WebSocket(wsUrl);
+      ws = new WebSocket(wsUrl(`/ws/kds/${numericOutletId}`));
 
       ws.onmessage = (event) => {
         try {
@@ -268,7 +267,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
 
     // 2. Real API Call to PostgreSQL
     try {
-      const res = await fetch(`/api/orders/${order.orderNumber}/status`, {
+      const res = await fetch(apiUrl(`/api/orders/${order.orderNumber}/status`), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: next, note: `Station advance to ${next}` }),

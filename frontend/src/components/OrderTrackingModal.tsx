@@ -13,6 +13,7 @@ import {
   Receipt
 } from 'lucide-react';
 import { Order, OrderStatus } from '../data';
+import { apiUrl } from '../config';
 
 interface OrderTrackingModalProps {
   isOpen: boolean;
@@ -41,7 +42,7 @@ export default function OrderTrackingModal({
   // Fetch orders from live backend with fallback
   const fetchLiveOrders = async () => {
     try {
-      const res = await fetch('/api/orders');
+      const res = await fetch(apiUrl('/api/orders'));
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {

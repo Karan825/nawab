@@ -29,8 +29,18 @@ import {
   type OrderStatus,
 } from './data';
 
+// Helper to normalize path for GitHub Pages (/nawab/...) and custom domains (/)
+const getNormalizedRoute = (rawPath: string): string => {
+  let path = rawPath.replace(/^\/nawab(\/|$)/, '/');
+  if (path.length > 1 && path.endsWith('/')) {
+    path = path.slice(0, -1);
+  }
+  if (!path.startsWith('/')) path = '/' + path;
+  return path;
+};
+
 export default function App() {
-  const [route, setRoute] = useState(window.location.pathname);
+  const [route, setRoute] = useState(() => getNormalizedRoute(window.location.pathname));
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [selectedOutlet, setSelectedOutlet] = useState<Outlet>(OUTLETS[0]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -54,14 +64,19 @@ export default function App() {
 
   // Handle client-side history navigation
   useEffect(() => {
-    const handlePopState = () => setRoute(window.location.pathname);
+    const handlePopState = () => setRoute(getNormalizedRoute(window.location.pathname));
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const navigate = (path: string) => {
-    window.history.pushState({}, '', path);
-    setRoute(path);
+  const navigate = (targetPath: string) => {
+    const isGithubPages = window.location.pathname.startsWith('/nawab');
+    const normalizedTarget = targetPath.startsWith('/') ? targetPath : '/' + targetPath;
+    const fullPath = isGithubPages
+      ? `/nawab${normalizedTarget === '/' ? '' : normalizedTarget}`
+      : normalizedTarget;
+    window.history.pushState({}, '', fullPath);
+    setRoute(normalizedTarget);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

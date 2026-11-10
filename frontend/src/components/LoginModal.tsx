@@ -15,6 +15,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { OUTLETS, findNearestOutlet, type Outlet } from '../data';
+import { apiUrl } from '../config';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -110,7 +111,7 @@ export default function LoginModal({
     setErrorMessage('');
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -178,7 +179,7 @@ export default function LoginModal({
     const isCustomerDemo = cleanId === 'demo' || cleanId === 'karan@example.com';
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -284,7 +285,7 @@ export default function LoginModal({
 
     try {
       const chosenOutlet = OUTLETS.find((o) => o.id === selectedOutletId) || initialOutlet;
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(apiUrl('/api/auth/signup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
