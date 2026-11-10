@@ -75,19 +75,8 @@ export default function LoginModal({
       );
       onClose();
     } catch (err: any) {
-      // Graceful fallback for local mock / offline mode
-      console.warn('Backend login notice:', err.message);
-      const chosenOutlet = OUTLETS.find((o) => o.id === selectedOutletId) || initialOutlet;
-      onLoginSuccess(
-        {
-          name: 'Karan Sharma',
-          phone: '+91 98765 43210',
-          email: 'karan@example.com',
-          address: 'Flat 402, Aditya Sunshine, Kondapur',
-        },
-        chosenOutlet
-      );
-      onClose();
+      console.warn('Login authentication failed:', err.message);
+      setErrorMessage(err.message || 'Invalid email/phone or password. Please try again.');
     } finally {
       setIsLoading(false);
     }

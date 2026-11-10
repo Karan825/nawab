@@ -83,7 +83,7 @@ export default function OrderTrackModal({ order, onClose }: OrderTrackModalProps
                       isPast
                         ? 'bg-emerald-500 text-white'
                         : isCurrent
-                        ? 'bg-lemon text-cocoa shadow-pop-sm ring-4 ring-lemon/40 animate-pulse'
+                        ? 'bg-lemon text-cocoa shadow-pop-sm ring-2 ring-cocoa'
                         : 'bg-white text-cocoa-fade'
                     }`}
                   >

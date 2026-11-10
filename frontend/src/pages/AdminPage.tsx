@@ -396,7 +396,7 @@ export default function AdminPage() {
                           title="Edit price (includes 5% GST) and click outside to save"
                         />
                         {savingId === item.id && (
-                          <span className="text-[10px] font-black text-emerald-700 animate-pulse">
+                          <span className="text-[10px] font-black text-emerald-700">
                             Saving...
                           </span>
                         )}

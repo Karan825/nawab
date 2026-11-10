@@ -8,8 +8,6 @@ import {
   DirectOrderingBenefitsSection,
   BulkPartyCateringSection,
   Footer,
-  PopularStrip,
-  Divider,
 } from './components/Sections';
 import LoginModal from './components/LoginModal';
 import CartDrawer from './components/CartDrawer';
@@ -226,12 +224,9 @@ export default function App() {
         <Hero onStartOrder={handleStartOrder} />
         <Marquee />
         <ShopHeritageSection />
-        <Divider />
         <SignatureSpecialtiesSection onOrderClick={handleStartOrder} />
         <DirectOrderingBenefitsSection onOrderClick={handleStartOrder} />
-        <Divider flip />
         <BulkPartyCateringSection />
-        <PopularStrip />
       </main>
 
       <Footer />

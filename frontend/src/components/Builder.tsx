@@ -113,7 +113,6 @@ function CupPreview({
               r={(i % 3) + 2}
               fill="#FFFFFF"
               opacity="0.35"
-              className="animate-pulse"
               style={{ animationDelay: `${i * 0.2}s` }}
             />
           ))}

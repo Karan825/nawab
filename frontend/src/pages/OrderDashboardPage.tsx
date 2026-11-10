@@ -385,7 +385,6 @@ export default function OrderDashboardPage({
             >
               <Receipt size={14} className="text-cherry shrink-0" />
               <span>Track Orders</span>
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             </button>
 
             <div className="hidden lg:flex items-center gap-1.5 text-xs font-bold bg-white/75 border border-cocoa/30 px-3 py-1.5 rounded-xl">

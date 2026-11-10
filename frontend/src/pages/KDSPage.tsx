@@ -175,8 +175,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
               <h1 className="font-display text-2xl sm:text-3xl text-lemon tracking-wide leading-tight">
                 Kitchen Display System (KDS)
               </h1>
-              <span className="flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40">
                 Live Sync (3s)
               </span>
             </div>
@@ -276,7 +275,7 @@ export default function KDSPage({ orders: propOrders, onAdvanceOrder }: KDSPageP
 
                     {/* Late Flashing Banner */}
                     {isLate && (
-                      <div className="bg-cherry text-white px-4 py-2 flex items-center justify-between text-xs font-black animate-pulse">
+                      <div className="bg-cherry text-white px-4 py-2 flex items-center justify-between text-xs font-black ring-2 ring-white/40">
                         <span className="flex items-center gap-1.5">
                           <AlertTriangle size={16} /> KITCHEN ALERT: LATE BY {order.lateMinutes || 4} MINS!
                         </span>

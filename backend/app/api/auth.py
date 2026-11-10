@@ -17,23 +17,27 @@ async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):
     clean_identifier = req.phone_or_email.strip()
     stmt = select(User).where(
         or_(
-            User.email == clean_identifier,
+            User.email == clean_identifier.lower(),
             User.phone == clean_identifier,
             User.phone == f"+91 {clean_identifier}",
+            User.email == clean_identifier,
         )
     )
     result = await db.execute(stmt)
     user = result.scalar_one_or_none()
 
     if not user:
-        if req.phone_or_email in ["+91 98765 43210", "9876543210", "karan@example.com"]:
-            stmt = select(User).where(User.email == "karan@example.com")
-            user = (await db.execute(stmt)).scalar_one_or_none()
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid credentials: user not found",
-            )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials: user not found. Please verify your email or phone number.",
+        )
+
+    # Tight Security: verify password with Argon2id
+    if not verify_password(req.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials: incorrect password. Please re-enter.",
+        )
 
     token = create_access_token(subject=user.id, expires_delta=timedelta(days=7))
     return TokenResponse(

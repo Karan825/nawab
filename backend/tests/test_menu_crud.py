@@ -70,3 +70,4 @@ async def test_menu_crud_and_price_sync():
         # 7. Item should no longer appear in active menu
         res_after = await client.get("/api/menu")
         assert not any(it["id"] == item_id for it in res_after.json())
+

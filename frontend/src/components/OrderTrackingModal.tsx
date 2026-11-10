@@ -128,9 +128,8 @@ export default function OrderTrackingModal({
                 <span className="text-[10px] font-black uppercase tracking-wider bg-cherry text-white px-2 py-0.5 rounded-full">
                   Live Order Tracker
                 </span>
-                <span className="text-[10px] font-bold text-cocoa-fade flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Live Syncing
+                <span className="text-[10px] font-bold text-cocoa-fade">
+                  Live Station Sync
                 </span>
               </div>
               <h3 className="font-display text-xl text-cocoa leading-tight mt-0.5">
