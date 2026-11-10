@@ -248,19 +248,29 @@ export default function OrderDashboardPage({
 
   // Live menu fetched directly from PostgreSQL database with instant fallback
   const [liveMenuItems, setLiveMenuItems] = useState<MenuItem[]>(() =>
-    getMenuItemsForOutlet(selectedOutlet.id)
+    getMenuItemsForOutlet(selectedOutlet?.id || OUTLETS[0].id)
   );
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`/api/menu/outlet/${selectedOutlet.id}`)
+    const outletId = selectedOutlet?.id || OUTLETS[0].id;
+    fetch(`/api/menu/outlet/${outletId}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (isMounted && Array.isArray(data) && data.length > 0) {
           const mapped: MenuItem[] = data.map((apiItem: any) => {
             const localItem = MENU_ITEMS.find(
-              (m) => m.id === apiItem.slug || m.id === String(apiItem.id)
+              (m) => m.id === apiItem.slug || m.id === String(apiItem.id) || m.name.toLowerCase() === apiItem.name.toLowerCase()
             );
+
+            // Normalize category for frontend tabs
+            const rawCat = apiItem.category || 'Biryani';
+            let cat: any = rawCat;
+            if (rawCat === 'Kebabs & Tandoor' || rawCat === 'Starters') cat = 'Starters';
+            else if (rawCat === 'Beverages' || rawCat === 'Chai') cat = 'Chai';
+            else if (rawCat === 'Desserts') cat = 'Desserts';
+            else if (rawCat === 'Haleem & Curries' || rawCat === 'Biryani') cat = 'Biryani';
+
             return {
               id: apiItem.slug || String(apiItem.id),
               name: apiItem.name,
@@ -268,7 +278,10 @@ export default function OrderDashboardPage({
               description: apiItem.description || '',
               ingredients: localItem ? localItem.ingredients : ['Pure Nizami Spices', 'Desi Ghee'],
               price: apiItem.base_price, // Live database price
-              category: apiItem.category as any,
+              effectivePrice: apiItem.base_price,
+              effectiveAvailable: apiItem.is_available !== false,
+              outletStatusLabel: apiItem.custom_status_label || undefined,
+              category: cat,
               photo:
                 apiItem.image_url ||
                 (localItem
@@ -321,7 +334,7 @@ export default function OrderDashboardPage({
     return () => {
       isMounted = false;
     };
-  }, [selectedOutlet.id]);
+  }, [selectedOutlet?.id]);
 
   // Filter items
   const filteredItems = useMemo(() => {
@@ -647,68 +660,76 @@ export default function OrderDashboardPage({
 
           <div className="grid sm:grid-cols-2 gap-3 pt-1">
             {/* Suggestion 1: Royal Chicken Dum Biryani */}
-            {outletMenuItems.find((m) => m.id === 'royal-chicken-biryani') && (
-              <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
-                <div className="space-y-0.5 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase tracking-wider bg-cherry text-white px-2 py-0.5 rounded-full">
-                      Top Past Order
-                    </span>
-                    <span className="text-[10px] font-bold text-cocoa-fade">Ordered 2 times</span>
+            {(() => {
+              const item = liveMenuItems.find(
+                (m) => m.name.toLowerCase().includes('chicken dum') || m.id.includes('chicken')
+              );
+              if (!item) return null;
+              const price = (item as any).effectivePrice ?? item.price;
+              return (
+                <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-black uppercase tracking-wider bg-cherry text-white px-2 py-0.5 rounded-full">
+                        Top Past Order
+                      </span>
+                      <span className="text-[10px] font-bold text-cocoa-fade">Ordered 2 times</span>
+                    </div>
+                    <h4 className="font-display text-sm text-cocoa truncate">
+                      {item.name}
+                    </h4>
+                    <p className="text-[11px] font-bold text-cherry">
+                      ₹{price} <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
+                    </p>
                   </div>
-                  <h4 className="font-display text-sm text-cocoa truncate">
-                    Royal Chicken Dum Biryani
-                  </h4>
-                  <p className="text-[11px] font-bold text-cherry">
-                    ₹380 <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
-                  </p>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const item = outletMenuItems.find((m) => m.id === 'royal-chicken-biryani');
-                    if (item) handleAddClick(item);
-                  }}
-                  className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
-                >
-                  <Plus size={13} strokeWidth={3} />
-                  <span>ADD</span>
-                </button>
-              </div>
-            )}
+                  <button
+                    type="button"
+                    onClick={() => handleAddClick(item)}
+                    className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
+                  >
+                    <Plus size={13} strokeWidth={3} />
+                    <span>ADD</span>
+                  </button>
+                </div>
+              );
+            })()}
 
             {/* Suggestion 2: Double Ka Meetha */}
-            {outletMenuItems.find((m) => m.id === 'double-ka-meetha') && (
-              <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
-                <div className="space-y-0.5 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase tracking-wider bg-aqua text-cocoa px-2 py-0.5 rounded-full">
-                      Frequent Pairing
-                    </span>
-                    <span className="text-[10px] font-bold text-cocoa-fade">Dessert Favorite</span>
+            {(() => {
+              const item = liveMenuItems.find(
+                (m) => m.name.toLowerCase().includes('double ka meetha') || m.id.includes('double')
+              );
+              if (!item) return null;
+              const price = (item as any).effectivePrice ?? item.price;
+              return (
+                <div className="bg-white border-2 border-cocoa rounded-2xl p-3 flex items-center justify-between gap-3 shadow-pop-sm">
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-black uppercase tracking-wider bg-aqua text-cocoa px-2 py-0.5 rounded-full">
+                        Frequent Pairing
+                      </span>
+                      <span className="text-[10px] font-bold text-cocoa-fade">Dessert Favorite</span>
+                    </div>
+                    <h4 className="font-display text-sm text-cocoa truncate">
+                      {item.name}
+                    </h4>
+                    <p className="text-[11px] font-bold text-cherry">
+                      ₹{price} <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
+                    </p>
                   </div>
-                  <h4 className="font-display text-sm text-cocoa truncate">
-                    Asaf Jahi Double Ka Meetha
-                  </h4>
-                  <p className="text-[11px] font-bold text-cherry">
-                    ₹140 <span className="text-[9px] text-cocoa-fade font-normal">(5% GST incl.)</span>
-                  </p>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const item = outletMenuItems.find((m) => m.id === 'double-ka-meetha');
-                    if (item) handleAddClick(item);
-                  }}
-                  className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
-                >
-                  <Plus size={13} strokeWidth={3} />
-                  <span>ADD</span>
-                </button>
-              </div>
-            )}
+                  <button
+                    type="button"
+                    onClick={() => handleAddClick(item)}
+                    className="pill-btn bg-lemon text-cocoa text-xs !py-1.5 !px-3 shadow-pop-sm shrink-0 flex items-center gap-1 hover:bg-lemon-deep active:scale-95"
+                  >
+                    <Plus size={13} strokeWidth={3} />
+                    <span>ADD</span>
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
@@ -726,7 +747,7 @@ export default function OrderDashboardPage({
           <div className="divide-y-2 divide-dashed divide-cocoa/20">
             {filteredItems.map((item) => {
               const inCartQty = getItemCartQty(item.id);
-              const isAvailable = item.effectiveAvailable;
+              const isAvailable = (item as any).effectiveAvailable !== false && item.isAvailable !== false;
 
               return (
                 <div
@@ -776,7 +797,7 @@ export default function OrderDashboardPage({
                     {/* Price with 5% inclusive notice */}
                     <div className="flex items-baseline gap-2">
                       <span className="font-display text-lg sm:text-xl text-cherry">
-                        ₹{item.effectivePrice}
+                        ₹{(item as any).effectivePrice ?? item.price}
                       </span>
                       <span className="text-[10px] font-bold text-cocoa-fade">
                         (5% GST Included)
@@ -799,7 +820,7 @@ export default function OrderDashboardPage({
 
                     {/* Portions summary */}
                     <p className="text-[11px] font-bold text-cocoa-fade pt-1">
-                      {item.portions.length > 1
+                      {(item.portions?.length ?? 1) > 1
                         ? `Customizable in ${item.portions.length} sizes (Regular, Family, Jumbo)`
                         : 'Single serving'}
                     </p>
@@ -856,7 +877,7 @@ export default function OrderDashboardPage({
                       )}
                     </div>
 
-                    {item.portions.length > 1 && isAvailable && (
+                    {(item.portions?.length ?? 1) > 1 && isAvailable && (
                       <span className="text-[9px] font-bold text-cocoa-fade mt-1.5 block">
                         Customizable
                       </span>
@@ -866,6 +887,28 @@ export default function OrderDashboardPage({
                 </div>
               );
             })}
+
+            {filteredItems.length === 0 && (
+              <div className="py-16 text-center space-y-3 bg-white border-2 border-cocoa rounded-3xl p-6 shadow-pop-sm my-4">
+                <UtensilsCrossed size={36} className="text-cocoa/30 mx-auto" />
+                <h3 className="font-display text-xl text-cocoa">No authentic dishes match this filter</h3>
+                <p className="text-xs text-cocoa-soft max-w-sm mx-auto">
+                  Try switching categories or clearing search keywords to view our full royal lineup.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory('All');
+                    setSearchQuery('');
+                    setVegOnly(false);
+                    setBestsellerOnly(false);
+                  }}
+                  className="pill-btn bg-lemon text-cocoa text-xs font-black !py-2 !px-5 border-2 border-cocoa shadow-pop-sm hover:bg-lemon-deep"
+                >
+                  Show All Dishes
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

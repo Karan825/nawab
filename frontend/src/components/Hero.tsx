@@ -102,17 +102,17 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
               <button
                 type="button"
                 onClick={onStartOrder}
-                className="pill-btn bg-cherry text-white text-base !py-3.5 !px-7 flex items-center justify-center gap-2.5 shadow-pop-md hover:scale-105 active:scale-95 transition-all"
+                className="pill-btn bg-cherry text-white text-base !py-3.5 !px-8 flex items-center justify-center gap-2.5 shadow-pop-md hover:scale-105 active:scale-95 transition-all font-display tracking-wide"
               >
-                <span>{isLoggedIn ? 'Go to Menu & Order' : 'Order Direct (Save 15%)'}</span>
+                <span>Order Online</span>
                 <ArrowRight size={18} strokeWidth={2.5} />
               </button>
 
               <a
                 href="#heritage"
-                className="pill-btn bg-white text-cocoa text-base !py-3.5 !px-6 flex items-center justify-center gap-2 border-2 border-cocoa shadow-pop-md hover:bg-lemon transition-all"
+                className="pill-btn bg-white text-cocoa text-base !py-3.5 !px-7 flex items-center justify-center gap-2 border-2 border-cocoa shadow-pop-md hover:bg-lemon transition-all font-display tracking-wide"
               >
-                <span>Our 1978 Heritage</span>
+                <span>Our Story</span>
               </a>
             </div>
 

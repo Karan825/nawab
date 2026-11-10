@@ -142,13 +142,24 @@ export default function App() {
   };
 
   const handleLoginSuccess = (
-    user: { name: string; phone: string; address: string },
+    user: { name: string; phone: string; address: string; email?: string; role?: string },
     chosenOutlet: Outlet
   ) => {
-    setCustomerUser(user);
-    setSelectedOutlet(chosenOutlet);
-    setIsLoggedIn(true);
-    navigate('/order');
+    if (user.role === 'KITCHEN_STAFF') {
+      localStorage.setItem('user_role', 'KITCHEN_STAFF');
+      setKitchenStaffUser(user);
+      navigate('/kds');
+    } else if (user.role === 'ADMIN') {
+      localStorage.setItem('user_role', 'ADMIN');
+      setAdminUser(user);
+      navigate('/admin');
+    } else {
+      localStorage.setItem('user_role', 'CUSTOMER');
+      setCustomerUser(user as any);
+      setSelectedOutlet(chosenOutlet);
+      setIsLoggedIn(true);
+      navigate('/order');
+    }
   };
 
   const handleStartOrder = () => {
