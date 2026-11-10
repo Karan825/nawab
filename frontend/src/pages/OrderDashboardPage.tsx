@@ -254,85 +254,93 @@ export default function OrderDashboardPage({
   useEffect(() => {
     let isMounted = true;
     const outletId = selectedOutlet?.id || OUTLETS[0].id;
-    fetch(`/api/menu/outlet/${outletId}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (isMounted && Array.isArray(data) && data.length > 0) {
-          const mapped: MenuItem[] = data.map((apiItem: any) => {
-            const localItem = MENU_ITEMS.find(
-              (m) => m.id === apiItem.slug || m.id === String(apiItem.id) || m.name.toLowerCase() === apiItem.name.toLowerCase()
-            );
 
-            // Normalize category for frontend tabs
-            const rawCat = apiItem.category || 'Biryani';
-            let cat: any = rawCat;
-            if (rawCat === 'Kebabs & Tandoor' || rawCat === 'Starters') cat = 'Starters';
-            else if (rawCat === 'Beverages' || rawCat === 'Chai') cat = 'Chai';
-            else if (rawCat === 'Desserts') cat = 'Desserts';
-            else if (rawCat === 'Haleem & Curries' || rawCat === 'Biryani') cat = 'Biryani';
+    const fetchLiveMenu = () => {
+      fetch(`/api/menu/outlet/${outletId}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (isMounted && Array.isArray(data) && data.length > 0) {
+            const mapped: MenuItem[] = data.map((apiItem: any) => {
+              const localItem = MENU_ITEMS.find(
+                (m) => m.id === apiItem.slug || m.id === String(apiItem.id) || m.name.toLowerCase() === apiItem.name.toLowerCase()
+              );
 
-            return {
-              id: apiItem.slug || String(apiItem.id),
-              name: apiItem.name,
-              tagline: apiItem.tagline || '',
-              description: apiItem.description || '',
-              ingredients: localItem ? localItem.ingredients : ['Pure Nizami Spices', 'Desi Ghee'],
-              price: apiItem.base_price, // Live database price
-              effectivePrice: apiItem.base_price,
-              effectiveAvailable: apiItem.is_available !== false,
-              outletStatusLabel: apiItem.custom_status_label || undefined,
-              category: cat,
-              photo:
-                apiItem.image_url ||
-                (localItem
-                  ? localItem.photo
-                  : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80'),
-              colors: localItem
-                ? localItem.colors
-                : { top: '#FFDE59', bottom: '#D63031', foam: '#FFFDF7' },
-              badge: apiItem.bestseller ? 'Bestseller' : undefined,
-              dietary: apiItem.dietary,
-              spiceLevel:
-                apiItem.spice_level === 'HOT'
-                  ? 'SPICY'
-                  : apiItem.spice_level === 'EXTRA_HOT'
-                    ? 'EXTRA_SPICY'
-                    : apiItem.spice_level,
-              allergens: localItem ? localItem.allergens : ['Dairy (Desi Ghee)'],
-              portions:
-                apiItem.portions && apiItem.portions.length > 0
-                  ? apiItem.portions.map((p: any) => ({
-                    id: p.portion_key || String(p.id),
-                    name: p.name,
-                    priceModifier: p.price_modifier,
-                    serves: p.serves || '1–2 persons',
-                  }))
-                  : localItem
-                    ? localItem.portions
-                    : [{ id: 'p-std', name: 'Standard Handi', priceModifier: 0, serves: '1–2 persons' }],
-              addons:
-                apiItem.addons && apiItem.addons.length > 0
-                  ? apiItem.addons.map((a: any) => ({
-                    id: a.addon_key || String(a.id),
-                    name: a.name,
-                    price: a.price,
-                  }))
-                  : localItem
-                    ? localItem.addons
-                    : [],
-              isAvailable: apiItem.is_available !== false, // Live stock status from DB
-              rating: apiItem.rating || 4.9,
-              ratingCount: apiItem.rating_count || 1200,
-              bestseller: apiItem.bestseller,
-            };
-          });
-          setLiveMenuItems(mapped);
-        }
-      })
-      .catch((e) => console.warn('Live menu fetch note:', e));
+              // Normalize category for frontend tabs
+              const rawCat = apiItem.category || 'Biryani';
+              let cat: any = rawCat;
+              if (rawCat === 'Kebabs & Tandoor' || rawCat === 'Starters') cat = 'Starters';
+              else if (rawCat === 'Beverages' || rawCat === 'Chai') cat = 'Chai';
+              else if (rawCat === 'Desserts') cat = 'Desserts';
+              else if (rawCat === 'Haleem & Curries' || rawCat === 'Biryani') cat = 'Biryani';
+
+              return {
+                id: apiItem.slug || String(apiItem.id),
+                name: apiItem.name,
+                tagline: apiItem.tagline || '',
+                description: apiItem.description || '',
+                ingredients: localItem ? localItem.ingredients : ['Pure Nizami Spices', 'Desi Ghee'],
+                price: apiItem.base_price, // Live database price
+                effectivePrice: apiItem.base_price,
+                effectiveAvailable: apiItem.is_available !== false,
+                outletStatusLabel: apiItem.custom_status_label || undefined,
+                category: cat,
+                photo:
+                  apiItem.image_url ||
+                  (localItem
+                    ? localItem.photo
+                    : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80'),
+                colors: localItem
+                  ? localItem.colors
+                  : { top: '#FFDE59', bottom: '#D63031', foam: '#FFFDF7' },
+                badge: apiItem.bestseller ? 'Bestseller' : undefined,
+                dietary: apiItem.dietary,
+                spiceLevel:
+                  apiItem.spice_level === 'HOT'
+                    ? 'SPICY'
+                    : apiItem.spice_level === 'EXTRA_HOT'
+                      ? 'EXTRA_SPICY'
+                      : apiItem.spice_level,
+                allergens: localItem ? localItem.allergens : ['Dairy (Desi Ghee)'],
+                portions:
+                  apiItem.portions && apiItem.portions.length > 0
+                    ? apiItem.portions.map((p: any) => ({
+                      id: p.portion_key || String(p.id),
+                      name: p.name,
+                      priceModifier: p.price_modifier,
+                      serves: p.serves || '1–2 persons',
+                    }))
+                    : localItem
+                      ? localItem.portions
+                      : [{ id: 'p-std', name: 'Standard Handi', priceModifier: 0, serves: '1–2 persons' }],
+                addons:
+                  apiItem.addons && apiItem.addons.length > 0
+                    ? apiItem.addons.map((a: any) => ({
+                      id: a.addon_key || String(a.id),
+                      name: a.name,
+                      price: a.price,
+                    }))
+                    : localItem
+                      ? localItem.addons
+                      : [],
+                isAvailable: apiItem.is_available !== false, // Live stock status from DB
+                rating: apiItem.rating || 4.9,
+                ratingCount: apiItem.rating_count || 1200,
+                bestseller: apiItem.bestseller,
+              };
+            });
+            setLiveMenuItems(mapped);
+          }
+        })
+        .catch((e) => console.warn('Live menu fetch note:', e));
+    };
+
+    fetchLiveMenu();
+    // Continuous polling every 4 seconds to sync kitchen 86ing stock changes immediately
+    const pollInterval = setInterval(fetchLiveMenu, 4000);
 
     return () => {
       isMounted = false;
+      clearInterval(pollInterval);
     };
   }, [selectedOutlet?.id]);
 
@@ -365,6 +373,11 @@ export default function OrderDashboardPage({
   };
 
   const handleAddClick = (item: MenuItem) => {
+    const isAvail = (item as any).effectiveAvailable !== false && item.isAvailable !== false;
+    if (!isAvail) {
+      alert(`"${item.name}" is currently sold out at ${selectedOutlet.name}. Please select another Nizami delicacy.`);
+      return;
+    }
     if (item.portions.length > 1 || item.addons.length > 0) {
       setCustomizingItem(item);
     } else {

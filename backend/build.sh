@@ -12,3 +12,4 @@ echo "🌱 Seeding 17 Hyderabad outlets, menu items, users, and assignment order
 python scripts/seed.py
 
 echo "✅ Backend build and database initialization complete!"
+

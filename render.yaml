@@ -27,3 +27,4 @@ databases:
     region: singapore
     databaseName: restaurant_db
     user: postgres
+
