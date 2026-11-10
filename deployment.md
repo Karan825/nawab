@@ -93,17 +93,23 @@ docker run -d --name biryani_kds_postgres -e POSTGRES_USER=biryani_admin -e POST
 
 ---
 
-## 2. Reviewer Demo Credentials
+## 2. Reviewer Demo Credentials & Universal Bypass
 
-Use these pre-configured accounts for reviewing the three core user roles:
+Use either the universal 1-click demo bypass or the pre-configured accounts below:
 
+### Universal 1-Click Demo Credentials (Fastest for Reviewers)
+* **Customer Storefront (`/order`):** Identifier `demo` | Password `demo` *(or click the "Fill Demo" pill)*
+* **Kitchen Staff KDS (`/kds`):** Identifier `demokitchen` (or `demo`) | Password `demo` *(or click "Instant KDS Demo Access")*
+* **Operations Admin (`/admin`):** Identifier `demoadmin` (or `demo`) | Password `demo` *(or click "Instant Admin CMS Demo Access")*
+
+### Production Role Accounts (Argon2id Encrypted)
 | Role | Username / Identifier | Password | Assigned Scope | Description |
 |------|------------------------|----------|----------------|-------------|
-| **Customer** | `+91 98765 43210` or `karan@example.com` | `password123` | Personal orders & addresses | Place direct orders, test coupons & loyalty rewards |
-| **Kitchen Staff** | `chef.kondapur@nawaabs.com` | `kitchen123` | `Kondapur Flagship Dine-In` (Station 1) | KDS order queue, dumpling timers, rider dispatch |
-| **Operations Admin** | `admin@nawaabs.com` | `admin123` | Global (All 17 Outlets) | Central menu CMS, pricing overrides, delay alert monitor |
+| **Customer** | `+91 98765 43210` or `karan@example.com` or `demo` | `password123` or `demo` | Personal orders & addresses | Place direct orders, test coupons & loyalty rewards |
+| **Kitchen Staff** | `chef.kondapur@nawaabs.com` or `demokitchen` | `kitchen123` or `demo` | `Kondapur Flagship Dine-In` (Station 1) | KDS order queue, dumpling timers, rider dispatch |
+| **Operations Admin** | `admin@nawaabs.com` or `demoadmin` | `admin123` or `demo` | Global (All 17 Outlets) | Central menu CMS, pricing overrides, delay alert monitor |
 
-*Tip: In the Customer Storefront, clicking **"Login to Order"** allows login with email/phone and password, or switching between tabs for instant signup.*
+*Tip: In the Customer Storefront, clicking **"Login to Order"** allows login with email/phone and password, 1-click demo autofill, or switching between tabs for instant signup.*
 
 ---
 

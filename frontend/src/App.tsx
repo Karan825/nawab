@@ -16,6 +16,7 @@ import KDSPage from './pages/KDSPage';
 import AdminPage from './pages/AdminPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderDashboardPage from './pages/OrderDashboardPage';
+import RoleAuthGate from './components/RoleAuthGate';
 import {
   OUTLETS,
   INITIAL_ORDERS,
@@ -41,6 +42,14 @@ export default function App() {
     name: 'Karan Sharma',
     phone: '+91 98765 43210',
     address: 'Flat 402, Aditya Sunshine, Kondapur',
+  });
+  const [kitchenStaffUser, setKitchenStaffUser] = useState<any>(() => {
+    const role = localStorage.getItem('user_role');
+    return role === 'KITCHEN_STAFF' || role === 'ADMIN' ? { role } : null;
+  });
+  const [adminUser, setAdminUser] = useState<any>(() => {
+    const role = localStorage.getItem('user_role');
+    return role === 'ADMIN' ? { role } : null;
   });
 
   // Handle client-side history navigation
@@ -152,10 +161,28 @@ export default function App() {
 
   // Dedicated Route Views
   if (route === '/kds') {
+    if (!kitchenStaffUser) {
+      return (
+        <RoleAuthGate
+          requiredRole="KITCHEN_STAFF"
+          onAuthenticated={(user) => setKitchenStaffUser(user)}
+          onBackToHome={() => navigate('/')}
+        />
+      );
+    }
     return <KDSPage orders={orders} onAdvanceOrder={handleAdvanceKDSOrder} />;
   }
 
   if (route === '/admin') {
+    if (!adminUser) {
+      return (
+        <RoleAuthGate
+          requiredRole="ADMIN"
+          onAuthenticated={(user) => setAdminUser(user)}
+          onBackToHome={() => navigate('/')}
+        />
+      );
+    }
     return <AdminPage />;
   }
 

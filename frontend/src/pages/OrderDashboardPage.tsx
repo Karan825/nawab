@@ -16,7 +16,8 @@ import {
   UtensilsCrossed,
   Info,
   RotateCcw,
-  Receipt
+  Receipt,
+  Compass
 } from 'lucide-react';
 import OrderTrackingModal from '../components/OrderTrackingModal';
 import {
@@ -26,9 +27,12 @@ import {
   AddonOption,
   CartItem,
   OUTLETS,
+  MENU_ITEMS,
   CATEGORIES,
   Category,
   getMenuItemsForOutlet,
+  findNearestOutlet,
+  calculateHaversineDistanceKm,
 } from '../data';
 
 interface OrderDashboardPageProps {
@@ -205,6 +209,39 @@ export default function OrderDashboardPage({
   const [bestsellerOnly, setBestsellerOnly] = useState(false);
   const [isOutletModalOpen, setIsOutletModalOpen] = useState(false);
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+
+  // GPS & Location state
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationMessage, setLocationMessage] = useState<string | null>(null);
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationMessage('Geolocation is not supported by your browser.');
+      return;
+    }
+    setDetectingLocation(true);
+    setLocationMessage(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setDetectingLocation(false);
+        const { latitude, longitude } = pos.coords;
+        setUserLocation({ lat: latitude, lon: longitude });
+        const result = findNearestOutlet(latitude, longitude, OUTLETS);
+        onSelectOutlet(result.outlet);
+        if (result.isDeliverable) {
+          setLocationMessage(`GPS Active: Selected ${result.outlet.name} (${result.distanceKm} km away, within direct delivery radius)`);
+        } else {
+          setLocationMessage(`Nearest physical station is ${result.outlet.name} (${result.distanceKm} km). Routed via Central Cloud Kitchen.`);
+        }
+      },
+      (err) => {
+        setDetectingLocation(false);
+        setLocationMessage('Could not access GPS. Please choose your station kitchen manually.');
+      },
+      { timeout: 8000 }
+    );
+  };
 
   // Customizer state
   const [customizingItem, setCustomizingItem] = useState<MenuItem | null>(null);
@@ -910,9 +947,40 @@ export default function OrderDashboardPage({
               </button>
             </div>
 
+            <div className="p-4 bg-lemon/35 border-b-2 border-cocoa flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-xs font-black text-cocoa block flex items-center gap-1.5">
+                  <Compass size={14} className="text-cherry" />
+                  Auto-detect Nearest Station
+                </span>
+                <span className="text-[11px] font-bold text-cocoa-fade block mt-0.5">
+                  {locationMessage || 'Uses your GPS coordinates to assign the closest station within delivery radius'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleDetectLocation}
+                disabled={detectingLocation}
+                className="pill-btn bg-cherry text-white text-xs !py-2 !px-4 flex items-center gap-1.5 shadow-pop-sm shrink-0 hover:scale-105 active:scale-95 disabled:opacity-50"
+              >
+                <Compass size={14} className={detectingLocation ? 'animate-spin' : ''} />
+                <span>{detectingLocation ? 'Locating...' : 'Detect GPS Location'}</span>
+              </button>
+            </div>
+
             <div className="p-4 overflow-y-auto space-y-2.5 flex-1 overscroll-contain">
               {OUTLETS.map((outlet) => {
                 const isSelected = selectedOutlet.id === outlet.id;
+                const distance = userLocation
+                  ? calculateHaversineDistanceKm(
+                      userLocation.lat,
+                      userLocation.lon,
+                      outlet.latitude,
+                      outlet.longitude
+                    )
+                  : null;
+                const isWithinRadius = distance !== null ? distance <= outlet.deliveryRadiusKm : true;
+
                 return (
                   <button
                     key={outlet.id}
@@ -921,10 +989,11 @@ export default function OrderDashboardPage({
                       onSelectOutlet(outlet);
                       setIsOutletModalOpen(false);
                     }}
-                    className={`w-full p-3.5 rounded-2xl border-2 border-cocoa text-left flex items-start justify-between gap-3 transition-all ${isSelected
-                      ? 'bg-lemon shadow-pop-sm border-cocoa'
-                      : 'bg-white hover:bg-cream'
-                      }`}
+                    className={`w-full p-3.5 rounded-2xl border-2 border-cocoa text-left flex items-start justify-between gap-3 transition-all ${
+                      isSelected
+                        ? 'bg-lemon shadow-pop-sm border-cocoa'
+                        : 'bg-white hover:bg-cream'
+                    }`}
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -932,6 +1001,17 @@ export default function OrderDashboardPage({
                         <span className="text-[9px] uppercase font-black bg-white border border-cocoa px-2 py-0.5 rounded-full text-cocoa">
                           {outlet.type === 'CLOUD_KITCHEN' ? 'Cloud Kitchen' : 'Dine-In'}
                         </span>
+                        {distance !== null && (
+                          <span
+                            className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${
+                              isWithinRadius
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                : 'bg-amber-50 text-amber-800 border-amber-300'
+                            }`}
+                          >
+                            {distance} km &bull; {isWithinRadius ? 'Direct Radius' : 'Cloud Kitchen Dispatch'}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs font-semibold text-cocoa-soft truncate max-w-sm">
                         {outlet.address}

@@ -145,3 +145,26 @@ async def test_authoritative_backend_pricing_and_gst_invariants(client: AsyncCli
     bad_adv = await client.patch(f"/api/orders/{order['order_number']}/status", json={"status": "HANDED_TO_RIDER"})
     assert bad_adv.status_code == 400
     assert "Illegal state transition" in bad_adv.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_universal_demo_credentials_and_argon2_auth(client: AsyncClient):
+    # 1. Customer Demo login
+    res_cust = await client.post("/api/auth/login", json={"phone_or_email": "demo", "password": "demo"})
+    assert res_cust.status_code == 200, res_cust.text
+    assert res_cust.json()["user"]["role"] == "CUSTOMER"
+
+    # 2. Kitchen Staff Demo login
+    res_kds = await client.post("/api/auth/login", json={"phone_or_email": "demokitchen", "password": "demo"})
+    assert res_kds.status_code == 200, res_kds.text
+    assert res_kds.json()["user"]["role"] == "KITCHEN_STAFF"
+
+    # 3. Admin Demo login
+    res_adm = await client.post("/api/auth/login", json={"phone_or_email": "demoadmin", "password": "demo"})
+    assert res_adm.status_code == 200, res_adm.text
+    assert res_adm.json()["user"]["role"] == "ADMIN"
+
+    # 4. Invalid Password rejection
+    res_bad = await client.post("/api/auth/login", json={"phone_or_email": "karan@example.com", "password": "wrongpassword!"})
+    assert res_bad.status_code == 401
+

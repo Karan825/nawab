@@ -210,9 +210,6 @@ export default function Hero({ onStartOrder, isLoggedIn = false }: HeroProps) {
                 })}
               </div>
             </div>
-            <span className="text-[11px] font-black uppercase tracking-widest text-cocoa-fade mt-3 block text-center">
-              Hover to fan out dishes &bull; Click card to inspect
-            </span>
           </div>
 
         </div>

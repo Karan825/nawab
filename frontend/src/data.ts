@@ -354,6 +354,8 @@ export interface Outlet {
   address: string;
   area: string;
   city: string;
+  latitude: number;
+  longitude: number;
   deliveryRadiusKm: number;
   minPrepTimeMinutes: number;
   fssaiLicense: string;
@@ -369,6 +371,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Plot 42, Main Road, Near Botanical Gardens, Kondapur',
     area: 'Kondapur',
     city: 'Hyderabad',
+    latitude: 17.4622,
+    longitude: 78.3568,
     deliveryRadiusKm: 6.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374901',
@@ -381,6 +385,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Road No. 12, Opposite City Center Mall, Banjara Hills',
     area: 'Banjara Hills',
     city: 'Hyderabad',
+    latitude: 17.4156,
+    longitude: 78.4357,
     deliveryRadiusKm: 7.0,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374904',
@@ -393,6 +399,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Road No. 36, Near Peddamma Temple Metro, Jubilee Hills',
     area: 'Jubilee Hills',
     city: 'Hyderabad',
+    latitude: 17.4319,
+    longitude: 78.4073,
     deliveryRadiusKm: 6.0,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374905',
@@ -405,6 +413,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Survey 64, Opposite Mindspace Junction, Madhapur',
     area: 'Madhapur',
     city: 'Hyderabad',
+    latitude: 17.4483,
+    longitude: 78.3915,
     deliveryRadiusKm: 5.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374906',
@@ -417,6 +427,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Old Mumbai Highway, Near Bio-Diversity Park, Gachibowli',
     area: 'Gachibowli',
     city: 'Hyderabad',
+    latitude: 17.4435,
+    longitude: 78.3570,
     deliveryRadiusKm: 6.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374907',
@@ -429,6 +441,8 @@ export const OUTLETS: Outlet[] = [
     address: 'KPHB Phase 3, Near Remedy Hospital, Kukatpally',
     area: 'Kukatpally',
     city: 'Hyderabad',
+    latitude: 17.4933,
+    longitude: 78.3995,
     deliveryRadiusKm: 5.5,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374903',
@@ -441,6 +455,8 @@ export const OUTLETS: Outlet[] = [
     address: 'MG Road, Near Paradise Circle, Secunderabad',
     area: 'Secunderabad',
     city: 'Hyderabad',
+    latitude: 17.4399,
+    longitude: 78.4983,
     deliveryRadiusKm: 6.0,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374908',
@@ -453,6 +469,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Patharghatti Main Road, Near Madina Building, Old City',
     area: 'Charminar',
     city: 'Hyderabad',
+    latitude: 17.3616,
+    longitude: 78.4747,
     deliveryRadiusKm: 5.0,
     minPrepTimeMinutes: 30,
     fssaiLicense: '23619028374909',
@@ -465,6 +483,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Prakash Nagar, Beside Shoppers Stop, SP Road, Begumpet',
     area: 'Begumpet',
     city: 'Hyderabad',
+    latitude: 17.4448,
+    longitude: 78.4678,
     deliveryRadiusKm: 6.0,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374910',
@@ -477,6 +497,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Street No. 3, Near Liberty Circle, Himayatnagar',
     area: 'Himayatnagar',
     city: 'Hyderabad',
+    latitude: 17.4042,
+    longitude: 78.4851,
     deliveryRadiusKm: 5.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374911',
@@ -489,6 +511,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Dharam Karam Road, Beside Metro Station, Ameerpet',
     area: 'Ameerpet',
     city: 'Hyderabad',
+    latitude: 17.4375,
+    longitude: 78.4482,
     deliveryRadiusKm: 5.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374912',
@@ -501,6 +525,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Main Road, Opposite Rumaan Hotel, Tolichowki',
     area: 'Tolichowki',
     city: 'Hyderabad',
+    latitude: 17.4018,
+    longitude: 78.4112,
     deliveryRadiusKm: 6.0,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374913',
@@ -513,6 +539,8 @@ export const OUTLETS: Outlet[] = [
     address: 'PVNR Expressway Pillar 48, Mehdipatnam',
     area: 'Mehdipatnam',
     city: 'Hyderabad',
+    latitude: 17.3916,
+    longitude: 78.4419,
     deliveryRadiusKm: 6.0,
     minPrepTimeMinutes: 25,
     fssaiLicense: '23619028374914',
@@ -525,6 +553,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Main Road, Near Konark Theatre, Dilsukhnagar',
     area: 'Dilsukhnagar',
     city: 'Hyderabad',
+    latitude: 17.3685,
+    longitude: 78.5247,
     deliveryRadiusKm: 6.5,
     minPrepTimeMinutes: 20,
     fssaiLicense: '23619028374915',
@@ -539,6 +569,8 @@ export const OUTLETS: Outlet[] = [
     address: 'DLF Cyber City Lane, Gachibowli, Financial District',
     area: 'Gachibowli',
     city: 'Hyderabad',
+    latitude: 17.4435,
+    longitude: 78.3570,
     deliveryRadiusKm: 7.0,
     minPrepTimeMinutes: 15,
     fssaiLicense: '23619028374902',
@@ -551,6 +583,8 @@ export const OUTLETS: Outlet[] = [
     address: 'Puppalguda Main Road, Golden Temple Road, Manikonda',
     area: 'Manikonda',
     city: 'Hyderabad',
+    latitude: 17.4011,
+    longitude: 78.3792,
     deliveryRadiusKm: 7.5,
     minPrepTimeMinutes: 15,
     fssaiLicense: '23619028374916',
@@ -563,12 +597,72 @@ export const OUTLETS: Outlet[] = [
     address: 'Allwyn Colony Junction, Near Metro Terminal, Miyapur',
     area: 'Miyapur',
     city: 'Hyderabad',
+    latitude: 17.4968,
+    longitude: 78.3614,
     deliveryRadiusKm: 7.0,
     minPrepTimeMinutes: 15,
     fssaiLicense: '23619028374917',
     openingHours: '11:00 AM – 11:30 PM',
   },
 ];
+
+// Haversine Distance Calculator (km)
+export function calculateHaversineDistanceKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c * 10) / 10;
+}
+
+export function findNearestOutlet(
+  userLat: number,
+  userLon: number,
+  outlets: Outlet[] = OUTLETS
+): { outlet: Outlet; distanceKm: number; isDeliverable: boolean; fallbackOutlet?: Outlet } {
+  let closest = outlets[0];
+  let minDistance = 999999;
+
+  for (const outlet of outlets) {
+    const dist = calculateHaversineDistanceKm(userLat, userLon, outlet.latitude, outlet.longitude);
+    if (dist < minDistance) {
+      minDistance = dist;
+      closest = outlet;
+    }
+  }
+
+  const isDeliverable = minDistance <= closest.deliveryRadiusKm;
+  let fallbackOutlet: Outlet | undefined = undefined;
+  if (!isDeliverable) {
+    const cloudKitchens = outlets.filter((o) => o.type === 'CLOUD_KITCHEN');
+    let minCloudDist = 999999;
+    for (const ck of cloudKitchens) {
+      const d = calculateHaversineDistanceKm(userLat, userLon, ck.latitude, ck.longitude);
+      if (d < minCloudDist) {
+        minCloudDist = d;
+        fallbackOutlet = ck;
+      }
+    }
+  }
+
+  return {
+    outlet: closest,
+    distanceKm: minDistance,
+    isDeliverable,
+    fallbackOutlet,
+  };
+}
 
 export type OrderStatus =
   | 'PLACED'

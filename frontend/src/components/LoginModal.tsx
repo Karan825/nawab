@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, Phone, MapPin, ArrowRight, User, Eye, EyeOff, UtensilsCrossed } from 'lucide-react';
-import { OUTLETS, type Outlet } from '../data';
+import {
+  X,
+  Lock,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowRight,
+  User,
+  Eye,
+  EyeOff,
+  UtensilsCrossed,
+  Compass,
+  Sparkles,
+  CheckCircle2
+} from 'lucide-react';
+import { OUTLETS, findNearestOutlet, type Outlet } from '../data';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -35,6 +49,49 @@ export default function LoginModal({
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationNotice, setLocationNotice] = useState<string | null>(null);
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationNotice('Geolocation is not supported by your browser.');
+      return;
+    }
+    setDetectingLocation(true);
+    setLocationNotice(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setDetectingLocation(false);
+        const { latitude, longitude } = pos.coords;
+        const result = findNearestOutlet(latitude, longitude, OUTLETS);
+        setSelectedOutletId(result.outlet.id);
+        if (result.isDeliverable) {
+          setLocationNotice(`GPS detected! Auto-selected ${result.outlet.name} (${result.distanceKm} km away, within delivery radius).`);
+        } else {
+          setLocationNotice(`Nearest physical station is ${result.outlet.name} (${result.distanceKm} km). Routed via Central Cloud Kitchen.`);
+        }
+      },
+      (err) => {
+        setDetectingLocation(false);
+        setLocationNotice('Could not access GPS. Please choose your Hyderabad locality manually.');
+      },
+      { timeout: 8000 }
+    );
+  };
+
+  const handleFillDemo = (role: 'CUSTOMER' | 'KITCHEN' | 'ADMIN') => {
+    if (role === 'CUSTOMER') {
+      setLoginIdentifier('demo');
+      setLoginPassword('demo');
+    } else if (role === 'KITCHEN') {
+      setLoginIdentifier('demokitchen');
+      setLoginPassword('demo');
+    } else {
+      setLoginIdentifier('demoadmin');
+      setLoginPassword('demo');
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -210,6 +267,39 @@ export default function LoginModal({
         {/* Mode 1: Sign In */}
         {mode === 'LOGIN' ? (
           <form onSubmit={handleLoginSubmit} className="p-6 space-y-4 text-cocoa">
+            {/* Reviewer Demo Quick Bypass */}
+            <div className="rounded-2xl bg-lemon/25 border-2 border-cocoa p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-wider text-cocoa-fade flex items-center gap-1">
+                  <Sparkles size={12} className="text-cherry" /> Reviewer Demo Bypass
+                </span>
+                <span className="text-[10px] font-mono font-bold text-cocoa">demo / demo</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleFillDemo('CUSTOMER')}
+                  className="pill-btn bg-white text-cocoa text-[10px] !py-1 !px-2.5 shadow-sm font-black border border-cocoa/40 hover:bg-lemon"
+                >
+                  Customer (Karan)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFillDemo('KITCHEN')}
+                  className="pill-btn bg-white text-cocoa text-[10px] !py-1 !px-2.5 shadow-sm font-black border border-cocoa/40 hover:bg-lemon"
+                >
+                  Kitchen (KDS Chef)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFillDemo('ADMIN')}
+                  className="pill-btn bg-white text-cocoa text-[10px] !py-1 !px-2.5 shadow-sm font-black border border-cocoa/40 hover:bg-lemon"
+                >
+                  Admin (CMS)
+                </button>
+              </div>
+            </div>
+
             <div>
               <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1 flex items-center gap-1">
                 <Mail size={12} /> Email or Mobile Phone
@@ -220,7 +310,7 @@ export default function LoginModal({
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-xs font-bold rounded-xl border-2 border-cocoa bg-white outline-none focus:ring-2 focus:ring-lemon"
-                placeholder="karan@example.com or +91 98765 43210"
+                placeholder="karan@example.com or +91 98765 43210 (or 'demo')"
               />
             </div>
 
@@ -235,7 +325,7 @@ export default function LoginModal({
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   className="w-full px-3.5 py-2.5 pr-10 text-xs font-bold rounded-xl border-2 border-cocoa bg-white outline-none focus:ring-2 focus:ring-lemon"
-                  placeholder="Enter your secure password"
+                  placeholder="Enter your secure password (or 'demo')"
                 />
                 <button
                   type="button"
@@ -248,9 +338,20 @@ export default function LoginModal({
             </div>
 
             <div>
-              <label className="block text-[11px] font-black uppercase text-cocoa-fade mb-1 flex items-center gap-1">
-                <MapPin size={12} /> Delivery Area (Hyderabad Station)
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-[11px] font-black uppercase text-cocoa-fade flex items-center gap-1">
+                  <MapPin size={12} /> Delivery Area (Hyderabad Station)
+                </label>
+                <button
+                  type="button"
+                  onClick={handleDetectLocation}
+                  disabled={detectingLocation}
+                  className="inline-flex items-center gap-1 text-[10px] font-black text-cherry hover:underline"
+                >
+                  <Compass size={11} className={detectingLocation ? 'animate-spin' : ''} />
+                  <span>{detectingLocation ? 'Detecting...' : 'Auto-Detect (GPS)'}</span>
+                </button>
+              </div>
               <select
                 value={selectedOutletId}
                 onChange={(e) => setSelectedOutletId(e.target.value)}
@@ -262,6 +363,12 @@ export default function LoginModal({
                   </option>
                 ))}
               </select>
+              {locationNotice && (
+                <p className="mt-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 p-2 rounded-lg flex items-center gap-1.5">
+                  <CheckCircle2 size={13} className="shrink-0 text-emerald-600" />
+                  <span>{locationNotice}</span>
+                </p>
+              )}
             </div>
 
             <div className="pt-2">
